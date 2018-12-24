@@ -1,0 +1,47 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Project",
+            "type": "shell",
+            "command": "pipenv install --dev -e .[test]",
+            "group": "build",
+            "problemMatcher": []
+        },
+//        {
+//            "label": "Install Non-Python Dependencies",
+//            "type": "shell",
+//            "command": "python install-deps.py",
+//            "group": "build",
+//            "problemMatcher": []
+//        },
+        {
+            "label": "Destroy Pipenv",
+            "type": "shell",
+            "command": "pipenv --rm",
+            "group": "build"
+        },
+        {
+            "label": "Test Project",
+            "type": "shell",
+            "command": "pipenv run pytest --cov-report html --cov=dlcc --annotate-output=annotations.json --html=report.html --self-contained-html -s dlcc",
+            "group": "test",
+            "options": {
+                "env": {
+                }
+            }
+        },
+        {
+            "label": "Test Current File",
+            "type": "shell",
+            "command": "pipenv run pytest -s ${relativeFile}",
+            "group": "test",
+            "options": {
+                "env": {
+                }
+            }
+        }
+    ]
+}

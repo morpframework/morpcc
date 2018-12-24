@@ -1,0 +1,5 @@
+<html metal:use-macro="main_template.macros.main">
+    <body metal:fill-slot="body">
+        Hello World
+    </body>
+</html>

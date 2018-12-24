@@ -1,0 +1,13 @@
+server:
+  host: 127.0.0.1
+  port: 5000
+
+application:
+  app: dlcc.app:App
+  authnz_provider: dlcc.app:SQLAuthApp
+  authn_storage: sqlstorage
+  authn_policy: morpfw.auth.policy.jwtapikey:AuthnPolicy
+  mounted_apps:
+  - dlcc.app:SQLAuthApp
+
+

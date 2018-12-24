@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+dlcc = {editable = true, path = "."}
+morpfw = "==0.2.1a1.dev7"
+pip = "==18.0"
+rulez = "==0.1.1"
+elasticsearch = "==5.5.3"
+
+[dev-packages]
+pylint = "*"
+pydocstyle = "*"
+mypy = "*"
+"autopep8" = "*"
+dlcc = {editable = true, path = ".", extras = ["test"]}
+
+[requires]
+python_version = "3.7"
