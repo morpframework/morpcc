@@ -1,5 +1,6 @@
 import morpfw
+from ..baseapp.root import Root
 
 
-class AppRoot(object):
+class AppRoot(Root):
     pass
