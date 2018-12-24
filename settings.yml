@@ -3,11 +3,29 @@ server:
   port: 5000
 
 application:
+  title: DLCC
   app: dlcc.app:App
   authnz_provider: dlcc.app:SQLAuthApp
   authn_storage: sqlstorage
   authn_policy: morpfw.auth.policy.jwtapikey:AuthnPolicy
   mounted_apps:
   - dlcc.app:SQLAuthApp
-
-
+  navigation:
+  - section: General
+    children:
+    - title: Home
+      icon: home
+      children:
+        - title: Home
+          href: /
+        - title: Profile
+          href: /profile
+  - section: Administrative
+    children:
+    - title: Settings
+      icon: cog
+      children:
+        - title: Site
+          href: /site-settings
+        - title: Personal
+          href: /personal-settings

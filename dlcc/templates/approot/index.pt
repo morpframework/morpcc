@@ -1,5 +1,5 @@
-<html metal:use-macro="main_template.macros.main">
-    <body metal:fill-slot="body">
-        Hello World
+<html metal:use-macro="main_template.macros.master">
+    <body metal:fill-slot="main">
+       <h1>Hello World</h1>
     </body>
 </html>
