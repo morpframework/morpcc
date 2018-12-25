@@ -25,7 +25,25 @@ def process_login(context, request):
                        'Please check your username / password')
         return
 
-    return request.notify('success', 'Hello!', 'Welcome!!')
+    @request.after
+    def remember(response):
+        """Remember the identity of the user logged in."""
+        # We pass the extra info to the identity object.
+        response.headers.add('Access-Control-Expose-Headers', 'Authorization')
+        identity = morepath.Identity(username)
+        request.app.remember_identity(response, request, identity)
+    request.notify('success', 'Hello!', 'Welcome!!')
+    return morepath.redirect(request.GET.get('came_from',
+                                             request.relative_url('/')))
+
+
+@App.view(model=Root, name='logout')
+def logout(context, request):
+    @request.after
+    def forget(response):
+        request.app.forget_identity(response, request)
+
+    return morepath.redirect(request.relative_url('/'))
 
 
 @App.html(model=HTTPNotFound, template='master/error_404.pt')
