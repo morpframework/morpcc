@@ -1,10 +1,10 @@
-from morpfw.crud import permission
 from ..app import App
 from .model import AppRoot
+from ..baseapp import permission
 from webob import static
 import os
 
 
-@App.html(model=AppRoot, template='approot/index.pt', permission=permission.View)
+@App.html(model=AppRoot, template='approot/index.pt', permission=permission.ViewHome)
 def index(context, request):
     return {}
