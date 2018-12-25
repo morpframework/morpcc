@@ -64,7 +64,7 @@ function init_sidebar() {
 			contentHeight = bodyHeight < leftColHeight ? leftColHeight : bodyHeight;
 
 		// normalize content
-		contentHeight -= $NAV_MENU.height() + footerHeight + 60;
+		contentHeight -= $NAV_MENU.height() + footerHeight + 50;
 		$RIGHT_COL.css('min-height', contentHeight);
 	};
 

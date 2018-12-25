@@ -22,6 +22,7 @@ A data lake management tool built on top of MorpFW""",
           "morpfw",
           "more.chameleon",
           "more.static",
+          "deform",
           "beaker"
       ],
       entry_points="""

@@ -34,6 +34,8 @@
     <link href="/static/gentelella/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
     <link href="/static/gentelella/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
     <link href="/static/gentelella/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
+
+    <link href="/static/main.css" rel="stylesheet">
   </head>
 
   <body class="nav-md">
@@ -295,6 +297,8 @@
     <script src="/static/gentelella/vendors/pnotify/dist/pnotify.js"></script>
     <script src="/static/gentelella/vendors/pnotify/dist/pnotify.buttons.js"></script>
     <script src="/static/gentelella/vendors/pnotify/dist/pnotify.nonblock.js"></script>
+
+    <script src="/deform_static/scripts/deform.js"></script>
 
     <!-- Custom Theme Scripts -->
     <script src="/static/gentelella/build/js/custom.js"></script>
