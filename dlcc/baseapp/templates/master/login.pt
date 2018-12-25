@@ -1,103 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Gentelella Alela! | </title>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap -->
-    <link href="/static/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="/static/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <!-- NProgress -->
-    <link href="/static/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
-    <!-- Animate.css -->
-    <link href="/static/gentelella/vendors/animate.css/animate.min.css" rel="stylesheet">
+  <title>Gentelella Alela! | </title>
 
-    <!-- Custom Theme Style -->
-    <link href="/static/gentelella/build/css/custom.min.css" rel="stylesheet">
-  </head>
 
-  <body class="login">
-    <div>
-      <a class="hiddenanchor" id="signup"></a>
-      <a class="hiddenanchor" id="signin"></a>
+  <!-- Bootstrap -->
+  <link href="/static/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="/static/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <!-- NProgress -->
+  <link href="/static/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
+  <!-- Animate.css -->
+  <link href="/static/gentelella/vendors/animate.css/animate.min.css" rel="stylesheet">
 
-      <div class="login_wrapper">
-        <div class="animate form login_form">
-          <section class="login_content">
-            <form>
-              <h1>Login Form</h1>
-              <div>
-                <input type="text" class="form-control" placeholder="Username" required="" />
-              </div>
-              <div>
-                <input type="password" class="form-control" placeholder="Password" required="" />
-              </div>
-              <div>
-                <a class="btn btn-default submit" tal:attributes="href request.url">Log in</a>
-                <a class="reset_pass" href="#">Lost your password?</a>
-              </div>
+  <!-- PNotify -->
+  <link href="/static/gentelella/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+  <link href="/static/gentelella/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+  <link href="/static/gentelella/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
 
-              <div class="clearfix"></div>
+  <!-- Custom Theme Style -->
+  <link href="/static/gentelella/build/css/custom.min.css" rel="stylesheet">
+</head>
 
-              <div class="separator">
-                <p class="change_link">New to site?
-                  <a href="#signup" class="to_register"> Create Account </a>
-                </p>
+<body class="login">
+  <div>
+    <a class="hiddenanchor" id="signup"></a>
+    <a class="hiddenanchor" id="signin"></a>
 
-                <div class="clearfix"></div>
-                <br />
+    <div class="login_wrapper">
+      <div class="animate form login_form">
+        <section class="login_content">
+          <form tal:attributes="action request.url" method="POST">
+            <h1>Login Form</h1>
+            <div>
+              <input name="username" type="text" class="form-control" placeholder="Username" required="" />
+            </div>
+            <div>
+              <input name="password" type="password" class="form-control" placeholder="Password" required="" />
+            </div>
+            <div>
+              <button id="login-button" class="btn btn-default submit">Log in</button>
+              <a class="reset_pass" href="#">Lost your password?</a>
+            </div>
 
-                <div>
-                  <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>
-                  <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
-                </div>
-              </div>
-            </form>
-          </section>
-        </div>
+            <div class="clearfix"></div>
 
-        <div id="register" class="animate form registration_form">
-          <section class="login_content">
-            <form>
-              <h1>Create Account</h1>
-              <div>
-                <input type="text" class="form-control" placeholder="Username" required="" />
-              </div>
-              <div>
-                <input type="email" class="form-control" placeholder="Email" required="" />
-              </div>
-              <div>
-                <input type="password" class="form-control" placeholder="Password" required="" />
-              </div>
-              <div>
-                 <a class="btn btn-default submit" tal:attributes="href request.relative_url('/register')">Submit</a>
-              </div>
+            <div class="separator">
+              <p class="change_link">New to site?
+                <a href="#signup" class="to_register"> Create Account </a>
+              </p>
 
               <div class="clearfix"></div>
+              <br />
 
-              <div class="separator">
-                <p class="change_link">Already a member ?
-                  <a href="#signin" class="to_register"> Log in </a>
-                </p>
-
-                <div class="clearfix"></div>
-                <br />
-
-                <div>
-                  <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>
-                  <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
-                </div>
+              <div>
+                <h1>
+                  <i class="fa fa-paw"></i> Gentelella Alela!</h1>
+                <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
               </div>
-            </form>
-          </section>
-        </div>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <div id="register" class="animate form registration_form">
+        <section class="login_content">
+          <form>
+            <h1>Create Account</h1>
+            <div>
+              <input type="text" class="form-control" placeholder="Username" required="" />
+            </div>
+            <div>
+              <input type="email" class="form-control" placeholder="Email" required="" />
+            </div>
+            <div>
+              <input type="password" class="form-control" placeholder="Password" required="" />
+            </div>
+            <div>
+              <a class="btn btn-default submit" tal:attributes="href request.relative_url('/register')">Submit</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="separator">
+              <p class="change_link">Already a member ?
+                <a href="#signin" class="to_register"> Log in </a>
+              </p>
+
+              <div class="clearfix"></div>
+              <br />
+
+              <div>
+                <h1>
+                  <i class="fa fa-paw"></i> Gentelella Alela!</h1>
+                <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+              </div>
+            </div>
+          </form>
+        </section>
       </div>
     </div>
-  </body>
+  </div>
+
+  <div id="notifications" style="display:none">
+    <span tal:repeat="message request.messages()" tal:attributes="data-category message['category'];
+    data-message message['message'];
+    data-title message['title']"></span>
+  </div>
+
+  <script src="/static/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+  <!-- PNotify -->
+  <script src="/static/gentelella/vendors/pnotify/dist/pnotify.js"></script>
+  <script src="/static/gentelella/vendors/pnotify/dist/pnotify.buttons.js"></script>
+  <script src="/static/gentelella/vendors/pnotify/dist/pnotify.nonblock.js"></script>
+
+
+  <script src="/static/main.js"></script>
+</body>
+
 </html>

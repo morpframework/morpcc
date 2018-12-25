@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 dlcc = {editable = true, path = "."}
-morpfw = "==0.2.1a1.dev7"
+morpfw = "==0.2.1a1.dev8"
 pip = "==18.0"
 rulez = "==0.1.1"
 elasticsearch = "==5.5.3"

@@ -5,11 +5,11 @@ server:
 application:
   title: DLCC
   app: dlcc.app:App
-  authnz_provider: dlcc.app:SQLAuthApp
+  authnz_provider: dlcc.baseapp.app:SQLAuthApp
   authn_storage: sqlstorage
   authn_policy: morpfw.auth.policy.jwtapikey:AuthnPolicy
   mounted_apps:
-  - dlcc.app:SQLAuthApp
+  - dlcc.baseapp.app:SQLAuthApp
   navigation:
   - section: General
     children:
@@ -29,3 +29,6 @@ application:
           href: /site-settings
         - title: Personal
           href: /personal-settings
+
+beaker_session:
+  session.cookie_expires: True

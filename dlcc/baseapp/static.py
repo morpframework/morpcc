@@ -16,6 +16,5 @@ def get_staticroot(absorb):
 
 @App.view(model=StaticRoot)
 def serve_static(context, request):
-    path = os.path.join(os.path.dirname(__file__),
-                        'static_files', 'node_modules')
+    path = os.path.join(os.path.dirname(__file__), 'static_files')
     return request.get_response(static.FileApp(os.path.join(path, context.path)))

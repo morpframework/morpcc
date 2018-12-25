@@ -1,14 +1,31 @@
 import morpfw
 import morepath
 from morepath.authentication import NO_IDENTITY
+from morpfw.auth.user.path import get_user_collection
 from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError
 from .app import App
+from .app import SQLAuthApp
 from .root import Root
 
 
 @App.html(model=Root, name='login', template='master/login.pt')
 def login(context, request):
     pass
+
+
+@App.html(model=Root, name='login', template='master/login.pt', request_method='POST')
+def process_login(context, request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    newreq = request.copy(app=SQLAuthApp())
+    collection = get_user_collection(newreq)
+
+    if not collection.authenticate(username, password):
+        request.notify('error', 'Invalid Login',
+                       'Please check your username / password')
+        return
+
+    return request.notify('success', 'Hello!', 'Welcome!!')
 
 
 @App.html(model=HTTPNotFound, template='master/error_404.pt')
