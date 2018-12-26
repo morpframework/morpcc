@@ -107,6 +107,14 @@ def process_profile(context, request):
             personalinfo_f.field.cstruct = userdata
 
         if not failed:
+            updatedata = {}
+            for f in ['email']:
+                updatedata[f] = data[f]
+            user.update(updatedata)
+
+        if not failed:
+            request.notify('success', 'Profile updated',
+                           'Your profile have been successfully updated')
             return morepath.redirect(request.url)
     elif active_form == 'password-form':
         try:
@@ -126,7 +134,7 @@ def process_profile(context, request):
 
         if not failed:
             request.notify('success', 'Password changed',
-                           'Password have been successfully changed')
+                           'Your password have been successfully changed')
             return morepath.redirect(request.url)
 
     else:
@@ -136,7 +144,7 @@ def process_profile(context, request):
         return morepath.redirect(request.url)
 
     return {
-        'page_title': 'Profile',
+        'page_title': 'Personal Settings',
         'forms': [{
             'form_title': 'Personal Information',
             'form': personalinfo_f,
