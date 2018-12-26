@@ -8,14 +8,17 @@ from ..permission import ViewHome
 
 @App.html(model=CollectionUI, template='master/crud/listing.pt', permission=ViewHome)
 def listing(context, request):
+    column_options = []
+    columns = []
+    for c in context.columns:
+        columns.append(c['title'])
+        column_options.append({
+            'name': c['name']
+        })
     return {
         'page_title': context.page_title,
-        'column_options': [
-            {'name': 'uuid'},
-            {'name': 'username'},
-            {'name': 'created'},
-            {'name': 'state'}
-        ]
+        'columns': columns,
+        'column_options': column_options
     }
 
 
@@ -106,7 +109,10 @@ def datatable(context, request):
         row = []
         jsonobj = o.data.as_json()
         for c in data['columns']:
-            row.append(jsonobj[c['name']])
+            if c['name'].startswith('structure:'):
+                row.append(context.get_structure_column(o, request, c['name']))
+            else:
+                row.append(jsonobj[c['name']])
         rows.append(row)
     return {
         'draw': data['draw'],

@@ -13,7 +13,7 @@
                         <table id="content-listing" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
-                                    <th tal:repeat="c column_options" tal:content="c['name']"></th>
+                                    <th tal:repeat="c columns" tal:content="c"></th>
                                 </tr>
                             </thead>
                             <tbody>
