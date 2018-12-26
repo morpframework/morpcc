@@ -26,8 +26,8 @@ application:
     - title: Settings
       icon: cog
       children:
-        - title: Site
-          href: /site-settings
+        - title: Users
+          href: /manage-users
         - title: Personal
           href: /personal-settings
 

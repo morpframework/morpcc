@@ -1,5 +1,7 @@
 import re
 import rulez
+import json
+import html
 from ..root import CollectionUI
 from ..app import App
 from boolean.boolean import ParseError
@@ -12,13 +14,18 @@ def listing(context, request):
     columns = []
     for c in context.columns:
         columns.append(c['title'])
+        sortable = True
+        if c['name'].startswith('structure:'):
+            sortable = False
         column_options.append({
-            'name': c['name']
+            'name': c['name'],
+            'orderable': sortable
         })
     return {
         'page_title': context.page_title,
+        'listing_title': context.listing_title,
         'columns': columns,
-        'column_options': column_options
+        'column_options': json.dumps(column_options)
     }
 
 
@@ -60,7 +67,11 @@ def _parse_dtdata(data):
     for k, v in orders:
         i, o = order_pattern.match(k).groups()
         order_data.setdefault(int(i), {})
-        order_data[int(i)][o] = v
+        if o == 'column':
+            order_data[int(i)][o] = int(v)
+        else:
+            order_data[int(i)][o] = v
+
     result['order'] = []
     for k in sorted(order_data.keys()):
         result['order'].append(order_data[k])
@@ -97,11 +108,20 @@ def datatable(context, request):
         except ParseError:
             pass
 
+    order_by = None
+    if data['order']:
+        colidx = data['order'][0]['column']
+        order_col = data['columns'][colidx]['name']
+        if order_col.startswith('structure:'):
+            order_by = None
+        else:
+            order_by = (order_col, data['order'][0]['dir'])
     try:
         objs = collection.search(
-            query=search, limit=data['length'], offset=data['start'])
+            query=search, limit=data['length'], offset=data['start'], order_by=order_by)
     except NotImplementedError:
-        objs = collection.search(limit=data['length'], offset=data['start'])
+        objs = collection.search(
+            limit=data['length'], offset=data['start'], order_by=order_by)
     total = collection.aggregate(
         group={'count': {'function': 'count', 'field': 'uuid'}})
     rows = []
@@ -112,7 +132,7 @@ def datatable(context, request):
             if c['name'].startswith('structure:'):
                 row.append(context.get_structure_column(o, request, c['name']))
             else:
-                row.append(jsonobj[c['name']])
+                row.append(html.escape(jsonobj[c['name']]))
         rows.append(row)
     return {
         'draw': data['draw'],

@@ -8,7 +8,7 @@
         <div metal:fill-slot="page-body" class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div metal:use-macro="load_template('master/panel.pt').macros.panel">
-                    <h2 metal:fill-slot="panel-title">Listing</h2>
+                    <h2 metal:fill-slot="panel-title">${listing_title}</h2>
                     <div metal:fill-slot="panel-content">
                         <table id="content-listing" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                             <thead>
@@ -30,7 +30,7 @@
                 $('#content-listing').DataTable({
                     serverSide: true,
                     processing: true,
-                    ajax: "${request.link(context, 'datatable.json')}",
+                    ajax: "${request.link(context, '+datatable.json')}",
                     columns: ${column_options}
                 });
             })

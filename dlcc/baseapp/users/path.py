@@ -9,3 +9,12 @@ def get_user_collection_ui(request):
     newreq = request.copy(app=authapp)
     col = get_user_collection(newreq)
     return UserCollectionUI(newreq, col)
+
+
+@App.path(model=UserModelUI, path='/manage-users/{username}',
+          variables=lambda obj: {'username': obj.model.data['username']})
+def get_user_model_ui(request, username):
+    authapp = request.app.get_authnz_provider()
+    newreq = request.copy(app=authapp)
+    col = get_user(newreq, username)
+    return UserModelUI(newreq, col)
