@@ -124,6 +124,12 @@ def process_profile(context, request):
             password_f = e
 
         if not failed:
+            if not user.validate(data['password_current']):
+                exc = colander.Invalid(password_f, 'Invalid password')
+                password_f.widget.handle_error(password_f, exc)
+                failed = True
+
+        if not failed:
             try:
                 user.change_password(
                     data['password_current'], data['password'])
