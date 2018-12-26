@@ -38,10 +38,15 @@
     <link href="/static/gentelella/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
     <link href="/static/gentelella/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
 
-    <!-- Pickadate -->
-    <link href="/deform_static/pickadate/themes/classic.css" rel="stylesheet">
-    <link href="/deform_static/pickadate/themes/classic.date.css" rel="stylesheet">
-    <link href="/deform_static/pickadate/themes/classic.time.css" rel="stylesheet">
+
+    <!-- Datatables -->
+    <link href="/static/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="/static/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="/static/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="/static/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="/static/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+
+    <!-- deform -->
     <link href="/deform_static/select2/select2.css" rel="stylesheet">
     <link href="/deform_static/tinymce/skins/lightgray/skin.min.css" rel="stylesheet">
     <!--    <link href="/deform_static/tinymce/skins/lightgray/content.min.css" rel="stylesheet">
@@ -50,9 +55,16 @@
 
     <link href="/static/main.css" rel="stylesheet">
 
+
+    <metal:slot define-slot="style_slot">
+    </metal:slot>
+
     <script src="/static/gentelella/vendors/jquery/dist/jquery.min.js"></script>
 
     <script src="/deform_static/scripts/deform.js"></script>
+
+    <metal:slot define-slot="header_script_slot">
+    </metal:slot>
   </head>
 
   <body class="nav-md">
@@ -316,10 +328,25 @@
     <script src="/static/gentelella/vendors/pnotify/dist/pnotify.buttons.js"></script>
     <script src="/static/gentelella/vendors/pnotify/dist/pnotify.nonblock.js"></script>
 
-    <script src="/deform_static/pickadate/picker.js"></script>
-    <script src="/deform_static/pickadate/picker.date.js"></script>
-    <script src="/deform_static/pickadate/picker.time.js"></script>
-    <script src="/deform_static/pickadate/legacy.js"></script>
+    <!-- DataTables -->
+    <script src="/static/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/static/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="/static/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/static/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="/static/gentelella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/static/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/static/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="/static/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/static/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="/static/gentelella/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/static/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="/static/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <script src="/static/gentelella/vendors/jszip/dist/jszip.min.js"></script>
+    <script src="/static/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
+    <script src="/static/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
+
+
+    <!-- deform -->
     <script src="/deform_static/select2/select2.js"></script>
     <script src="/deform_static/tinymce/tinymce.min.js"></script>
 
@@ -329,6 +356,9 @@
 
     <!-- Morpfw script -->
     <script src="/static/main.js"></script>
+
+    <metal:slot define-slot="footer_script_slot">
+    </metal:slot>
 
   </body>
 

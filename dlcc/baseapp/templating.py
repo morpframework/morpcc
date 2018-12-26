@@ -19,7 +19,7 @@ def get_chameleon_render(loader, name, original_render):
     def render(content, request: morepath.Request):
         main_template = loader.load('master/main_template.pt', 'xml')
         load_template = functools.partial(loader.load, format='xml')
-        context = resolve_model(request)
+        context = resolve_model(request.copy(app=request.app))
         variables = {'request': request,
                      'context': context,
                      'main_template': main_template,
