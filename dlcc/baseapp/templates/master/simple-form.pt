@@ -7,29 +7,29 @@
         </h3>
         <div metal:fill-slot="page-body" class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
-                <div metal:use-macro="load_template('master/panel.pt').macros.panel">
-                    <h2 metal:fill-slot="panel-title">${form_title}</h2>
-                    <div metal:fill-slot="panel-content" tal:define="form_data form_data|None;
+                <metal:macro define-macro="form">
+                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+                        <h2 metal:fill-slot="panel-title">${form_title}</h2>
+                        <div metal:fill-slot="panel-content" tal:define="form_data form_data|None;
                                                                     readonly readonly|None">
-                        <tal:cond condition="form_data">
-                            <tal:cond condition="readonly">
-                                <div tal:replace="structure:form.render(form_data, readonly=True)">
+                            <tal:cond condition="form_data">
+                                <tal:cond condition="readonly">
+                                    <div tal:replace="structure:form.render(form_data, readonly=True)">
+                                    </div>
+                                </tal:cond>
+                                <tal:cond condition="not:readonly">
+                                    <div tal:replace="structure:form.render(form_data)">
+
+                                    </div>
+                                </tal:cond>
+                            </tal:cond>
+                            <tal:cond condition="not:form_data">
+                                <div tal:replace="structure:form.render()">
                                 </div>
                             </tal:cond>
-                            <tal:cond condition="not:readonly">
-                                <div tal:replace="structure:form.render(form_data)">
-
-                                </div>
-                            </tal:cond>
-                        </tal:cond>
-                        <tal:cond condition="not:form_data">
-                            <div tal:replace="structure:form.render()">
-                            </div>
-                        </tal:cond>
-
-
+                        </div>
                     </div>
-                </div>
+                </metal:macro>
             </div>
         </div>
     </body>

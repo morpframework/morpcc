@@ -17,11 +17,13 @@ class WebAppRequest(DBSessionRequest):
         session.setdefault('messages', [])
         session['messages'].append({'category': category, 'title': title,
                                     'message': message})
+        session.save()
 
     def messages(self):
         session = self.environ['beaker.session']
         result = session.get('messages', [])
         session['messages'] = []
+        session.save()
         return result
 
 
