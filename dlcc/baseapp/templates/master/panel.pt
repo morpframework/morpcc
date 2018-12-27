@@ -5,13 +5,13 @@
                 <div class="x_title">
                     <h2 metal:define-slot="panel-title">Panel Title</h2>
                     <ul class="nav navbar-right panel_toolbox">
+                        <metal:slot define-slot="panel-toolbox">
+                        </metal:slot>
                         <li>
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
                             </a>
                         </li>
-                        <metal:slot define-slot="panel-toolbox">
-                        </metal:slot>
                     </ul>
                     <div class="clearfix"></div>
                 </div>

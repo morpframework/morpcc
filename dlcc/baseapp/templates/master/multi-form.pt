@@ -12,7 +12,7 @@
                                     form_title form['form_title'];
                                     readonly form['readonly']|None;
                                     form form['form'];">
-                    <metal:use use-macro="load_template('master/simple-form.pt').macros.form">
+                    <metal:use use-macro="load_template('master/simple-form.pt').macros.form_panel">
                     </metal:use>
                 </div>
             </div>

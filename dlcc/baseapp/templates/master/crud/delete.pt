@@ -9,6 +9,11 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div metal:use-macro="load_template('master/panel.pt').macros.panel">
                     <h2 metal:fill-slot="panel-title">${form_title}</h2>
+                    <ul>
+                        <metal:macro fill-slot="panel-toolbox">
+                            <metal:toolbox use-macro="load_template('master/crud/form.pt').macros.toolbox"/>
+                        </metal:macro>
+                    </ul>
                     <div metal:fill-slot="panel-content">
 
 

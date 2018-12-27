@@ -56,7 +56,7 @@ class CollectionUI(object):
             'url': request.link(uiobj, '+%s' % uiobj.default_view),
             'title': 'View'
         }, {
-            'icon': 'pencil',
+            'icon': 'edit',
             'url': request.link(uiobj, '+edit'),
             'title': 'Edit'
         }, {

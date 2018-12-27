@@ -41,7 +41,7 @@ def process_create(context, request):
     if not failed:
         obj = context.collection.create(data)
         obj.save()
-        return morepath.redirect(request.link(context.modelui_class(request, obj)))
+        return morepath.redirect(request.link(context.modelui_class(request, obj, context)))
 
     return {
         'page_title': 'Create %s' % html.escape(

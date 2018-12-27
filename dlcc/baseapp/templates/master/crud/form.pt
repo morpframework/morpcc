@@ -1,0 +1,58 @@
+<html metal:use-macro="load_template('master/page.pt').macros.master">
+
+    <body>
+        <h3>
+            <span metal:fill-slot="page-title">
+            ${page_title}
+            </span>
+        </h3>
+        <div metal:fill-slot="page-body" class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+                    <h2 metal:fill-slot="panel-title">${form_title}</h2>
+                    <ul>
+                        <metal:slot fill-slot="panel-toolbox">
+                            <metal:macro define-macro="toolbox">
+                                <li>
+                                    <a tal:attributes="href request.link(context, '+%s' % context.default_view)">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a tal:attributes="href request.link(context, '+edit')" tal:condition="permits('morpfw.crud.permission:Edit')">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a tal:attributes="href request.link(context, '+delete')" tal:condition="permits('morpfw.crud.permission:Delete')">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </li>
+                                <li class="dropdown" tal:define="transitions transitions|None" tal:condition="transitions and permits('morpfw.crud.permission:Edit')">
+
+                                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                        <i class="fa fa-cogs"></i>
+                                    </a>
+
+                                    <ul role="menu" class="dropdown-menu">
+                                        <li tal:repeat="transition transitions" onclick="$('#transition-value').val('${transition}');$('#transition-form').submit();">
+                                            <a>${transition}</a>
+                                        </li>
+                                    </ul>
+                                    <form id="transition-form" method="POST" tal:attributes="action request.link(context, '+statemachine')" style="display: none">
+                                        <input id="transition-value" type="hidden" name="transition" value="" />
+                                    </form>
+                                </li>
+                            </metal:macro>
+                        </metal:slot>
+                    </ul>
+                    <div metal:fill-slot="panel-content" tal:define="form_data form_data|None;
+                                                                    readonly readonly|None">
+                        <metal:macro use-macro="load_template('master/simple-form.pt').macros.form" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>

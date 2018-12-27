@@ -7,7 +7,7 @@ from ...app import App
 from ...util import jsonobject_to_colander
 
 
-@App.html(model=ModelUI, name='edit', template='master/simple-form.pt',
+@App.html(model=ModelUI, name='edit', template='master/crud/form.pt',
           permission=crudperms.Edit)
 def edit(context, request):
     formschema = jsonobject_to_colander(
@@ -22,7 +22,7 @@ def edit(context, request):
     }
 
 
-@App.html(model=ModelUI, name='edit', template='master/simple-form.pt',
+@App.html(model=ModelUI, name='edit', template='master/crud/form.pt',
           permission=crudperms.Edit, request_method='POST')
 def process_edit(context, request):
     formschema = jsonobject_to_colander(
