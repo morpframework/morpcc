@@ -3,6 +3,8 @@ import morepath
 from ..app import App
 from ..app import SQLAuthApp
 from ..root import Root
+import html
+import urllib.parse
 
 
 @App.html(model=Root, name='login', template='master/login.pt')
@@ -30,8 +32,12 @@ def process_login(context, request):
         identity = morepath.Identity(username)
         request.app.remember_identity(response, request, identity)
     request.notify('success', 'Hello!', 'Welcome!!')
-    return morepath.redirect(request.GET.get('came_from',
-                                             request.relative_url('/')))
+    came_from = request.GET.get('came_from', '')
+    if came_from:
+        came_from = urllib.parse.unquote(came_from)
+    else:
+        came_from = request.relative_url('/')
+    return morepath.redirect(came_from)
 
 
 @App.view(model=Root, name='logout')

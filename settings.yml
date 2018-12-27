@@ -27,9 +27,12 @@ application:
       icon: cog
       children:
         - title: Users
-          href: /manage-users
+          href: /manage-users/+listing
+        - title: Groups
+          href: /manage-groups/+listing
         - title: Personal
           href: /personal-settings
+
 
 beaker_session:
   session.cookie_expires: True

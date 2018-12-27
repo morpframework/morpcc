@@ -2,13 +2,24 @@ import re
 import rulez
 import json
 import html
-from ..root import CollectionUI
+import morepath
+from .model import CollectionUI, ModelUI
 from ..app import App
 from boolean.boolean import ParseError
 from ..permission import ViewHome
+from ..util import jsonobject_to_colander
+import colander
+import deform
+from morpfw.crud import permission as crudperms
 
 
-@App.html(model=CollectionUI, template='master/crud/listing.pt', permission=ViewHome)
+@App.view(model=CollectionUI)
+def collection_index(context, request):
+    return morepath.redirect(request.link(context, '+%s' % context.default_view))
+
+
+@App.html(model=CollectionUI, name='listing', template='master/crud/listing.pt',
+          permission=crudperms.Search)
 def listing(context, request):
     column_options = []
     columns = []
@@ -92,7 +103,7 @@ def _parse_dtdata(data):
     return result
 
 
-@App.json(model=CollectionUI, name='datatable.json')
+@App.json(model=CollectionUI, name='datatable.json', permission=crudperms.View)
 def datatable(context, request):
     collection = context.collection
     data = list(request.GET.items())
@@ -139,4 +150,71 @@ def datatable(context, request):
         'recordsTotal': total[0]['count'],
         'recordsFiltered': len(rows),
         'data': rows
+    }
+
+
+@App.view(model=ModelUI)
+def model_index(context, request):
+    return morepath.redirect(request.link(context, '+%s' % context.default_view))
+
+
+@App.html(model=ModelUI, name='view', template='master/simple-form.pt', permission=crudperms.View)
+def view(context, request):
+    formschema = jsonobject_to_colander(
+        context.model.schema,
+        include_fields=context.view_include_fields,
+        exclude_fields=context.view_exclude_fields)
+    data = context.model.data.as_dict()
+    return {
+        'page_title': 'View %s' % html.escape(str(context.model.__class__.__name__)),
+        'form_title': 'View',
+        'form': deform.Form(formschema(), buttons=('Submit',)),
+        'form_data': data,
+        'readonly': True
+    }
+
+
+@App.html(model=ModelUI, name='edit', template='master/simple-form.pt',
+          permission=crudperms.Edit)
+def edit(context, request):
+    formschema = jsonobject_to_colander(
+        context.model.schema, include_fields=context.edit_include_fields,
+        exclude_fields=context.edit_exclude_fields)
+    data = context.model.data.as_dict()
+    return {
+        'page_title': 'Edit %s' % html.escape(str(context.model.__class__.__name__)),
+        'form_title': 'Edit',
+        'form': deform.Form(formschema(), buttons=('Submit',)),
+        'form_data': data,
+    }
+
+
+@App.html(model=ModelUI, name='delete', template='master/crud/delete.pt',
+          permission=crudperms.Delete)
+def delete(context, request):
+
+    formschema = jsonobject_to_colander(
+        context.model.schema,
+        include_fields=context.view_include_fields,
+        exclude_fields=context.view_exclude_fields)
+    data = context.model.data.as_dict()
+    return {
+        'page_title': 'Delete Confirmation',
+        'form_title': 'Are you sure you want to delete this?',
+        'form': deform.Form(formschema()),
+        'form_data': data
+    }
+
+
+@App.html(model=CollectionUI, name='create', template='master/simple-form.pt',
+          permission=crudperms.Create)
+def create(context, request):
+    formschema = jsonobject_to_colander(
+        context.collection.schema, include_fields=context.create_include_fields,
+        exclude_fields=context.create_exclude_fields)
+    return {
+        'page_title': 'Create %s' % html.escape(
+            str(context.collection.__class__.__name__.replace('Collection', ''))),
+        'form_title': 'Create',
+        'form': deform.Form(formschema(), buttons=('Submit',)),
     }

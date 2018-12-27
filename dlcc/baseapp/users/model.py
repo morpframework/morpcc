@@ -1,8 +1,10 @@
-from ..root import ModelUI, CollectionUI
+from ..crud.model import ModelUI, CollectionUI
 
 
 class UserModelUI(ModelUI):
-    pass
+
+    view_exclude_fields = ['password', 'attrs', 'nonce']
+    edit_include_fields = ['email']
 
 
 class UserCollectionUI(CollectionUI):

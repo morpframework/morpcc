@@ -2,6 +2,7 @@ import morpfw
 import morepath
 from morepath.authentication import NO_IDENTITY
 from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError
+import urllib.parse
 from ..app import App
 from ..root import Root
 
@@ -18,7 +19,7 @@ def httpnotfound_error(context, request):
 @App.html(model=HTTPForbidden, template="master/error_403.pt")
 def forbidden_error(context, request):
     if request.identity is NO_IDENTITY:
-        return morepath.redirect('/login?came_from=%s' % request.url)
+        return morepath.redirect('/login?came_from=%s' % urllib.parse.quote(request.url))
 
     @request.after
     def adjust_status(response):
