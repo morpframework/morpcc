@@ -12,32 +12,40 @@ from .. import permission
 class PersonalInfoSchema(colander.MappingSchema):
     username = colander.SchemaNode(
         colander.String(),
+        oid='personalinfo-username',
         missing='',
         widget=deform.widget.TextInputWidget(template='readonly/textinput'))
     email = colander.SchemaNode(
-        colander.String(), validator=colander.Email(msg="Invalid e-mail address"))
+        colander.String(),
+        oid='personalinfo-email',
+        validator=colander.Email(msg="Invalid e-mail address"))
     state = colander.SchemaNode(
         colander.String(),
+        oid='personalinfo-state',
         missing='',
         widget=deform.widget.TextInputWidget(template='readonly/textinput'))
     created = colander.SchemaNode(
         colander.DateTime(),
+        oid='personalinfo-created',
         missing=None,
         widget=deform.widget.DateTimeInputWidget(template='readonly/datetimeinput'))
 
 
 class PasswordSchema(colander.MappingSchema):
     password_current = colander.SchemaNode(colander.String(),
+                                           oid='password-current',
                                            title="Current password",
                                            widget=deform.widget.PasswordWidget(),
                                            missing='')
 
     password = colander.SchemaNode(colander.String(),
+                                   oid='password-new',
                                    title="New password",
                                    widget=deform.widget.PasswordWidget(),
                                    missing='',
                                    validator=colander.Length(min=8))
     password_confirm = colander.SchemaNode(colander.String(),
+                                           oid='password-confirm',
                                            widget=deform.widget.PasswordWidget(),
                                            title="Confirm new password",
                                            missing='')
