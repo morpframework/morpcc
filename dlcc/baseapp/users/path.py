@@ -17,4 +17,5 @@ def get_user_model_ui(request, username):
     authapp = request.app.get_authnz_provider()
     newreq = request.copy(app=authapp)
     user = get_user(newreq, username)
-    return UserModelUI(newreq, user)
+    col = get_user_collection(newreq)
+    return UserModelUI(newreq, user, UserCollectionUI(newreq, col))

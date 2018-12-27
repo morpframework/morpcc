@@ -31,7 +31,6 @@ def process_login(context, request):
         response.headers.add('Access-Control-Expose-Headers', 'Authorization')
         identity = morepath.Identity(username)
         request.app.remember_identity(response, request, identity)
-    request.notify('success', 'Hello!', 'Welcome!!')
     came_from = request.GET.get('came_from', '')
     if came_from:
         came_from = urllib.parse.unquote(came_from)

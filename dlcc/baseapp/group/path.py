@@ -18,5 +18,6 @@ def get_group_model_ui(request, groupname):
     authapp = request.app.get_authnz_provider()
     authapp.root = request.app
     newreq = request.copy(app=authapp)
+    col = get_group_collection(newreq)
     group = get_group(newreq, groupname)
-    return GroupModelUI(newreq, group)
+    return GroupModelUI(newreq, group, GroupCollectionUI(newreq, col))

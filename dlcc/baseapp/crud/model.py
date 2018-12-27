@@ -6,13 +6,20 @@ class ModelUI(object):
     view_include_fields: list = []
     view_exclude_fields: list = []
     edit_include_fields: list = []
-    edit_exclude_fields: list = []
+    edit_exclude_fields: list = [
+        'uuid', 'creator', 'created', 'modified', 'state', 'deleted'
+    ]
 
     default_view = 'view'
 
-    def __init__(self, request, model):
+    @property
+    def identifier(self):
+        return self.model.identifier
+
+    def __init__(self, request, model, collection_ui):
         self.request = request
         self.model = model
+        self.collection_ui = collection_ui
 
 
 class CollectionUI(object):
@@ -20,7 +27,9 @@ class CollectionUI(object):
     modelui_class = ModelUI
 
     create_include_fields: list = []
-    create_exclude_fields: list = []
+    create_exclude_fields: list = [
+        'uuid', 'creator', 'created', 'modified', 'state', 'deleted'
+    ]
 
     default_view = 'listing'
 
@@ -37,23 +46,22 @@ class CollectionUI(object):
         {'title': 'Object', 'name': 'structure:object_string'},
         {'title': 'UUID', 'name': 'uuid'},
         {'title': 'Created', 'name': 'created'},
-        {'title': 'State', 'name': 'state'},
         {'title': 'Actions', 'name': 'structure:buttons'},
     ]
 
     def get_buttons(self, obj, request):
-        uiobj = self.modelui_class(request, obj)
+        uiobj = self.modelui_class(request, obj, self)
         buttons = [{
             'icon': 'eye',
             'url': request.link(uiobj, '+%s' % uiobj.default_view),
             'title': 'View'
         }, {
             'icon': 'pencil',
-            'url': request.link(self.modelui_class(request, obj), '+edit'),
+            'url': request.link(uiobj, '+edit'),
             'title': 'Edit'
         }, {
             'icon': 'trash',
-            'url': request.link(self.modelui_class(request, obj), '+delete'),
+            'url': request.link(uiobj, '+delete'),
             'title': 'Delete'
         }]
         return buttons

@@ -22,3 +22,10 @@ def delete(context, request):
         'form': deform.Form(formschema()),
         'form_data': data
     }
+
+
+@App.html(model=ModelUI, name='delete', template='master/crud/delete.pt',
+          permission=crudperms.Delete, request_method='POST')
+def process_delete(context, request):
+    context.model.delete()
+    return morepath.redirect(request.link(context.collection_ui))

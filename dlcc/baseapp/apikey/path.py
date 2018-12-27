@@ -19,4 +19,5 @@ def get_apikey_model_ui(request, apikeyname):
     authapp.root = request.app
     newreq = request.copy(app=authapp)
     apikey = get_apikey(newreq, apikeyname)
-    return APIKeyModelUI(newreq, apikey)
+    col = get_apikey_collection(newreq)
+    return APIKeyModelUI(newreq, apikey, APIKeyCollectionUI(newreq, col))
