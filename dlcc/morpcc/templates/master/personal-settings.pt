@@ -1,0 +1,34 @@
+<html metal:use-macro="load_template('master/page.pt').macros.master">
+    <body>
+        <h3>
+            <span metal:fill-slot="page-title">
+                ${page_title}
+            </span>
+        </h3>
+
+        <div metal:fill-slot="page-body">
+            <div class="row">
+                <div class="col-md-3 col-sm-4 col-xs-12">
+                    <metal:use use-macro="load_template('master/panel.pt').macros.panel">
+                        <h2 metal:fill-slot="panel_title">Photo</h2>
+                        <div metal:fill-slot="panel_content">
+                            <img class="img-responsive" tal:attributes="href profile_photo" tal:condition="profile_photo"/>
+                            <img class="img-responsive" src="https://via.placeholder.com/250" tal:condition="not:profile_photo"/>
+                        </div>
+                    </metal:use>
+                </div>
+                <div class="col-md-9 col-sm-8 col-xs-12">
+                    <div class="row" tal:repeat="form forms">
+                        <div class="col-md-12 col-sm-12 col-xs-12" tal:define="form_data form['form_data']|None;
+                                    form_title form['form_title'];
+                                    readonly form['readonly']|None;
+                                    form form['form'];">
+                            <metal:use use-macro="load_template('master/simple-form.pt').macros.form_panel">
+                            </metal:use>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
