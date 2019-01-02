@@ -7,7 +7,7 @@ application:
   title: DLCC
   app: dlcc.app:App
   fsblobstorage_path: '%(here)s/blobstorage'
-  authn_policy: dlcc.baseapp.app:AuthnPolicy
+  authn_policy: dlcc.morpcc.app:AuthnPolicy
   navigation:
   - section: General
     children:

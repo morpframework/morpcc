@@ -1,4 +1,4 @@
-from ..baseapp.crud.model import ModelUI, CollectionUI
+from ..morpcc.crud.model import ModelUI, CollectionUI
 
 
 class DataAssetModelUI(ModelUI):
