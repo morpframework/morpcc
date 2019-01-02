@@ -7,26 +7,27 @@ import morpfw.authn.pas.exc
 from ..app import App, SQLAuthApp
 from ..root import Root
 from .. import permission
+from ..util import jsonobject_to_colander
 
 
-class PersonalInfoSchema(colander.MappingSchema):
+class UserInfoSchema(colander.MappingSchema):
     username = colander.SchemaNode(
         colander.String(),
-        oid='personalinfo-username',
+        oid='userinfo-username',
         missing='',
         widget=deform.widget.TextInputWidget(template='readonly/textinput'))
     email = colander.SchemaNode(
         colander.String(),
-        oid='personalinfo-email',
+        oid='userinfo-email',
         validator=colander.Email(msg="Invalid e-mail address"))
     state = colander.SchemaNode(
         colander.String(),
-        oid='personalinfo-state',
+        oid='userinfo-state',
         missing='',
         widget=deform.widget.TextInputWidget(template='readonly/textinput'))
     created = colander.SchemaNode(
         colander.DateTime(),
-        oid='personalinfo-created',
+        oid='userinfo-created',
         missing=None,
         widget=deform.widget.DateTimeInputWidget(template='readonly/datetimeinput'))
 
@@ -55,9 +56,14 @@ class PasswordSchema(colander.MappingSchema):
             raise colander.Invalid(node['password'], "Password does not match")
 
 
-def personalinfo_form(request) -> deform.Form:
-    return deform.Form(PersonalInfoSchema(), buttons=('Submit',),
-                       formid='personalinfo-form')
+def userinfo_form(request) -> deform.Form:
+    return deform.Form(UserInfoSchema(), buttons=('Submit',),
+                       formid='userinfo-form')
+
+
+def attributes_form(context, request) -> deform.Form:
+    schema = context.xattrprovider().schema
+    return deform.Form(jsonobject_to_colander(schema)(), buttons=('Submit',), formid='personalinfo-form')
 
 
 def password_form(request) -> deform.Form:
@@ -65,18 +71,25 @@ def password_form(request) -> deform.Form:
                        formid='password-form')
 
 
-@App.html(model=Root, name='personal-settings', template="master/multi-form.pt",
+@App.html(model=Root, name='personal-settings', template="master/personal-settings.pt",
           permission=permission.EditOwnProfile)
 def profile(context, request: morepath.Request):
     userid = request.identity.userid
-    newreq = request.copy(app=request.app.get_authn_provider())
+    newreq = request.get_authn_request()
     usercol = get_user_collection(newreq)
     user = usercol.get_by_userid(userid)
+    has_photo = user.get_blob('profile-photo')
     return {
         'page_title': 'Profile',
+        'profile_photo': newreq.link(user, '+blobs?field=profile-photo') if has_photo else None,
         'forms': [{
             'form_title': 'Personal Information',
-            'form': personalinfo_form(request),
+            'form': attributes_form(user, request),
+            'readonly': False,
+            'form_data': user.data['xattrs']
+        }, {
+            'form_title': 'User Information',
+            'form': userinfo_form(request),
             'readonly': False,
             'form_data': user.data.as_dict()
         },
@@ -89,32 +102,34 @@ def profile(context, request: morepath.Request):
 
 
 @App.html(model=Root, name='personal-settings', request_method='POST',
-          template='master/multi-form.pt', permission=permission.EditOwnProfile)
+          template='master/personal-settings.pt', permission=permission.EditOwnProfile)
 def process_profile(context, request):
-    personalinfo_f = personalinfo_form(request)
+    userinfo_f = userinfo_form(request)
     password_f = password_form(request)
     controls = list(request.POST.items())
     controls_dict = dict(controls)
     active_form = controls_dict['__formid__']
 
     userid = request.identity.userid
-    newreq = request.copy(app=request.app.get_authn_provider())
+    newreq = request.get_authn_request()
     usercol = get_user_collection(newreq)
     user = usercol.get_by_userid(userid)
 
+    attributes_f = attributes_form(user, request)
+
     failed = False
-    if active_form == 'personalinfo-form':
+    if active_form == 'userinfo-form':
         try:
-            data = personalinfo_f.validate(controls)
+            data = userinfo_f.validate(controls)
         except deform.ValidationFailure as e:
             failed = True
-            personalinfo_f = e
-            userdata = personalinfo_f.field.schema.serialize(
+            userinfo_f = e
+            userdata = userinfo_f.field.schema.serialize(
                 user.data.as_dict())
             for k in userdata.keys():
-                if personalinfo_f.cstruct[k] is not colander.null:
-                    userdata[k] = personalinfo_f.cstruct[k]
-            personalinfo_f.field.cstruct = userdata
+                if userinfo_f.cstruct[k] is not colander.null:
+                    userdata[k] = userinfo_f.cstruct[k]
+            userinfo_f.field.cstruct = userdata
 
         if not failed:
             updatedata = {}
@@ -143,7 +158,7 @@ def process_profile(context, request):
             try:
                 user.change_password(
                     data['password_current'], data['password'])
-            except morpfw.auth.exc.InvalidPasswordError as e:
+            except morpfw.authn.pas.exc.InvalidPasswordError as e:
                 exc = colander.Invalid(password_f, 'Invalid password')
                 password_f.widget.handle_error(password_f, exc)
                 failed = True
@@ -152,6 +167,19 @@ def process_profile(context, request):
             request.notify('success', 'Password changed',
                            'Your password have been successfully changed')
             return morepath.redirect(request.url)
+    elif active_form == 'personalinfo-form':
+        try:
+            data = attributes_f.validate(controls)
+        except deform.ValidationFailure as e:
+            failed = True
+            attributes_f = e
+
+        if not failed:
+            xattrprovider = user.xattrprovider()
+            xattrprovider.update(data)
+            request.notify('success', 'Profile updated',
+                           'Your profile have been successfully updated')
+            return morepath.redirect(request.url)
 
     else:
         request.notify('error', 'Unknown form',
@@ -159,17 +187,25 @@ def process_profile(context, request):
 
         return morepath.redirect(request.url)
 
+    has_photo = user.get_blob('profile-photo')
     return {
         'page_title': 'Personal Settings',
-        'forms': [{
-            'form_title': 'Personal Information',
-            'form': personalinfo_f,
-            'readonly': False,
-            'form_data': user.data.as_dict() if active_form == 'password-form' else None
-        },
+        'profile_photo': newreq.link(user, '+blobs?field=profile-photo') if has_photo else None,
+        'forms': [
             {
-            'form_title': 'Password',
-            'form': password_f,
-            'readonly': False,
-        }]
+                'form_title': 'Personal Information',
+                'form': attributes_f,
+                'readonly': False,
+                'form_data': user['xattrs'] if active_form != 'personalinfo-form' else None
+            },
+            {
+                'form_title': 'User Information',
+                'form': userinfo_f,
+                'readonly': False,
+                'form_data': user.data.as_dict() if active_form != 'userinfo-form' else None
+            }, {
+                'form_title': 'Password',
+                'form': password_f,
+                'readonly': False,
+            }]
     }

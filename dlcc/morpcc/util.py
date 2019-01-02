@@ -64,7 +64,8 @@ def jsonobject_property_to_colander_schemanode(
 def jsonobject_to_colander(schema,
                            include_fields=None,
                            exclude_fields=None,
-                           colander_schema_type=colander.MappingSchema):
+                           colander_schema_type=colander.MappingSchema,
+                           oid_prefix='deformField'):
     # output colander schema from jsonobject schema
     attrs = {}
 
@@ -75,13 +76,13 @@ def jsonobject_to_colander(schema,
         for attr, prop in schema._properties_by_attr.items():
             if prop.name in include_fields and prop.name not in exclude_fields:
                 prop = jsonobject_property_to_colander_schemanode(
-                    prop)
+                    prop, oid_prefix=oid_prefix)
                 attrs[attr] = prop
     else:
         for attr, prop in schema._properties_by_attr.items():
             if prop.name not in exclude_fields:
                 prop = jsonobject_property_to_colander_schemanode(
-                    prop)
+                    prop, oid_prefix=oid_prefix)
                 attrs[attr] = prop
 
     Schema = type("Schema", (colander_schema_type, ), attrs)

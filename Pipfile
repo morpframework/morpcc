@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 dlcc = {editable = true, path = "."}
-morpfw = "==0.2.1a1.dev19"
+morpfw = "==0.2.1a1.dev23"
 pip = "==18.0"
 rulez = "==0.1.1"
 elasticsearch = "==5.5.3"
@@ -19,3 +19,6 @@ dlcc = {editable = true, path = ".", extras = ["test"]}
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

@@ -5,9 +5,7 @@ from morpfw.authn.pas.group.path import get_group, get_group_collection
 
 @App.path(model=GroupCollectionUI, path='/manage-groups')
 def get_group_collection_ui(request):
-    authapp = request.app.get_authn_provider()
-    authapp.root = request.app
-    newreq = request.copy(app=authapp)
+    newreq = request.get_authn_request()
     col = get_group_collection(newreq)
     return GroupCollectionUI(newreq, col)
 
@@ -15,9 +13,7 @@ def get_group_collection_ui(request):
 @App.path(model=GroupModelUI, path='/manage-groups/{groupname}',
           variables=lambda obj: {'groupname': obj.model.data['groupname']})
 def get_group_model_ui(request, groupname):
-    authapp = request.app.get_authn_provider()
-    authapp.root = request.app
-    newreq = request.copy(app=authapp)
+    newreq = request.get_authn_request()
     col = get_group_collection(newreq)
     group = get_group(newreq, groupname)
     return GroupModelUI(newreq, group, GroupCollectionUI(newreq, col))

@@ -5,9 +5,7 @@ from morpfw.authn.pas.apikey.path import get_apikey, get_apikey_collection
 
 @App.path(model=APIKeyCollectionUI, path='/manage-apikeys')
 def get_apikey_collection_ui(request):
-    authapp = request.app.get_authn_provider()
-    authapp.root = request.app
-    newreq = request.copy(app=authapp)
+    newreq = request.get_authn_request()
     col = get_apikey_collection(newreq)
     return APIKeyCollectionUI(newreq, col)
 
@@ -15,9 +13,7 @@ def get_apikey_collection_ui(request):
 @App.path(model=APIKeyModelUI, path='/manage-apikeys/{apikeyname}',
           variables=lambda obj: {'apikeyname': obj.model.data['apikeyname']})
 def get_apikey_model_ui(request, apikeyname):
-    authapp = request.app.get_authn_provider()
-    authapp.root = request.app
-    newreq = request.copy(app=authapp)
+    newreq = request.get_authn_request()
     apikey = get_apikey(newreq, apikeyname)
     col = get_apikey_collection(newreq)
     return APIKeyModelUI(newreq, apikey, APIKeyCollectionUI(newreq, col))

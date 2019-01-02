@@ -2,6 +2,7 @@ import os
 import morpfw
 from morpfw.app import DBSessionRequest
 from morpfw.authn.pas.policy import SQLStorageAuthnPolicy, SQLStorageAuthApp
+from morpfw.authz.pas import DefaultAuthzPolicy
 from more.itsdangerous import IdentityPolicy
 from more.chameleon import ChameleonApp
 import morepath
@@ -28,12 +29,12 @@ class WebAppRequest(DBSessionRequest):
         return result
 
 
-class App(ChameleonApp, morpfw.SQLApp):
+class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
 
     request_class = WebAppRequest
 
 
-class SQLAuthApp(SQLStorageAuthApp):
+class SQLAuthApp(SQLStorageAuthApp, DefaultAuthzPolicy):
     pass
 
 
