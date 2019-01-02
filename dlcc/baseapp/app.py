@@ -1,7 +1,8 @@
 import os
 import morpfw
 from morpfw.app import DBSessionRequest
-from morpfw.auth.app import App as AuthApp
+from morpfw.authn.pas.policy import SQLStorageAuthnPolicy, SQLStorageAuthApp
+from more.itsdangerous import IdentityPolicy
 from more.chameleon import ChameleonApp
 import morepath
 from morepath.publish import resolve_model
@@ -32,8 +33,20 @@ class App(ChameleonApp, morpfw.SQLApp):
     request_class = WebAppRequest
 
 
-class SQLAuthApp(AuthApp, morpfw.SQLApp):
+class SQLAuthApp(SQLStorageAuthApp):
     pass
+
+
+class AuthnPolicy(SQLStorageAuthnPolicy):
+
+    app_cls = SQLAuthApp
+
+    def get_identity_policy(self, settings):
+        if settings.application.development_mode:
+            secure = False
+        else:
+            secure = True
+        return IdentityPolicy(secure=secure)
 
 
 @App.mount(app=SQLAuthApp, path='/api/v1/auth/')

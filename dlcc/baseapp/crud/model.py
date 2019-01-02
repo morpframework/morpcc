@@ -7,7 +7,8 @@ class ModelUI(object):
     view_exclude_fields: list = []
     edit_include_fields: list = []
     edit_exclude_fields: list = [
-        'uuid', 'creator', 'created', 'modified', 'state', 'deleted'
+        'id', 'uuid', 'creator', 'created', 'modified', 'state', 'deleted',
+        'xattrs', 'blobs'
     ]
 
     default_view = 'view'
@@ -28,7 +29,8 @@ class CollectionUI(object):
 
     create_include_fields: list = []
     create_exclude_fields: list = [
-        'uuid', 'creator', 'created', 'modified', 'state', 'deleted'
+        'id', 'uuid', 'creator', 'created', 'modified', 'state', 'deleted',
+        'xattrs', 'blobs'
     ]
 
     default_view = 'listing'

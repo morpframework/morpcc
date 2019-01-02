@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "06a168ef57337a414b5982a0f1c173cae4c14f9fb3f1a6a53784bd0ad18865ab"
+            "sha256": "ad3152a06fcae042ecb9c10824aea4bd9f206f1e2cea7b25878aa0122946f0b6"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -262,10 +262,10 @@
         },
         "kombu": {
             "hashes": [
-                "sha256:52763f41077e25fe7e2f17b8319d8a7b7ab953a888c49d9e4e0464fceb716896",
-                "sha256:9bf7d37b93249b76a03afb7bbcf7149a358b6079ca2431e725414b1caa10922c"
+                "sha256:1ef049243aa05f29e988ab33444ec7f514375540eaa8e0b2e1f5255e81c5e56d",
+                "sha256:3c9dca2338c5d893f30c151f5d29bfb81196748ab426d33c362ab51f1e8dbf78"
             ],
-            "version": "==4.2.2"
+            "version": "==4.2.2.post1"
         },
         "more.basicauth": {
             "hashes": [
@@ -337,10 +337,17 @@
         },
         "morpfw": {
             "hashes": [
-                "sha256:7c8ee1a9521dc03864a26017f9f4157f959e735371e204c8539abb37eb232bac"
+                "sha256:238d563c215596926328720b0045ccc481291ff10f9f2cae8bb4eb18c7b00886"
             ],
             "index": "pypi",
-            "version": "==0.2.1a1.dev13"
+            "version": "==0.2.1a1.dev19"
+        },
+        "pamela": {
+            "hashes": [
+                "sha256:1e198446a6cdd87704aa0def7621d62e7c20b0e6068e2788b9a866a8355e5d6b",
+                "sha256:d6d03bd6c13f3df5b2955378b96e822dd97a07bd890dad5ceaed7c7025040b66"
+            ],
+            "version": "==0.3.0"
         },
         "passlib": {
             "hashes": [
@@ -738,10 +745,10 @@
         },
         "kombu": {
             "hashes": [
-                "sha256:52763f41077e25fe7e2f17b8319d8a7b7ab953a888c49d9e4e0464fceb716896",
-                "sha256:9bf7d37b93249b76a03afb7bbcf7149a358b6079ca2431e725414b1caa10922c"
+                "sha256:1ef049243aa05f29e988ab33444ec7f514375540eaa8e0b2e1f5255e81c5e56d",
+                "sha256:3c9dca2338c5d893f30c151f5d29bfb81196748ab426d33c362ab51f1e8dbf78"
             ],
-            "version": "==4.2.2"
+            "version": "==4.2.2.post1"
         },
         "lazy-object-proxy": {
             "hashes": [
@@ -847,10 +854,10 @@
         },
         "morpfw": {
             "hashes": [
-                "sha256:7c8ee1a9521dc03864a26017f9f4157f959e735371e204c8539abb37eb232bac"
+                "sha256:238d563c215596926328720b0045ccc481291ff10f9f2cae8bb4eb18c7b00886"
             ],
             "index": "pypi",
-            "version": "==0.2.1a1.dev13"
+            "version": "==0.2.1a1.dev19"
         },
         "mypy": {
             "hashes": [

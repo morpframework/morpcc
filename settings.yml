@@ -2,15 +2,12 @@ server:
   host: 127.0.0.1
   port: 5000
 
+
 application:
   title: DLCC
   app: dlcc.app:App
-  authnz_provider: dlcc.baseapp.app:SQLAuthApp
-  authn_storage: sqlstorage
-  authn_policy: morpfw.auth.policy.cookie:AuthnPolicy
-  mounted_apps:
-    - app: dlcc.baseapp.app:SQLAuthApp
-      authn_policy: morpfw.auth.policy.jwtapikey:AuthnPolicy
+  fsblobstorage_path: '%(here)s/blobstorage'
+  authn_policy: dlcc.baseapp.app:AuthnPolicy
   navigation:
   - section: General
     children:

@@ -2,8 +2,8 @@ import morepath
 import colander
 import deform
 import deform.widget
-from morpfw.auth.user.path import get_user
-import morpfw.auth.exc
+from morpfw.authn.pas.user.path import get_user_collection
+import morpfw.authn.pas.exc
 from ..app import App, SQLAuthApp
 from ..root import Root
 from .. import permission
@@ -69,8 +69,9 @@ def password_form(request) -> deform.Form:
           permission=permission.EditOwnProfile)
 def profile(context, request: morepath.Request):
     userid = request.identity.userid
-    newreq = request.copy(app=request.app.get_authnz_provider())
-    user = get_user(newreq, userid)
+    newreq = request.copy(app=request.app.get_authn_provider())
+    usercol = get_user_collection(newreq)
+    user = usercol.get_by_userid(userid)
     return {
         'page_title': 'Profile',
         'forms': [{
@@ -97,8 +98,9 @@ def process_profile(context, request):
     active_form = controls_dict['__formid__']
 
     userid = request.identity.userid
-    newreq = request.copy(app=request.app.get_authnz_provider())
-    user = get_user(newreq, userid)
+    newreq = request.copy(app=request.app.get_authn_provider())
+    usercol = get_user_collection(newreq)
+    user = usercol.get_by_userid(userid)
 
     failed = False
     if active_form == 'personalinfo-form':

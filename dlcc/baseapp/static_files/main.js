@@ -7,7 +7,9 @@ $(document).ready(function () {
       'title': title,
       'text': message,
       'type': category,
-      'styling': 'bootstrap3'
+      'styling': 'bootstrap3',
+      'hide': true,
+      'delay': 10000
     })
   })
 })

@@ -1,4 +1,4 @@
-from morpfw.auth.user.path import get_user_collection
+from morpfw.authn.pas.user.path import get_user_collection
 import morepath
 from ..app import App
 from ..app import SQLAuthApp
@@ -29,7 +29,8 @@ def process_login(context, request):
         """Remember the identity of the user logged in."""
         # We pass the extra info to the identity object.
         response.headers.add('Access-Control-Expose-Headers', 'Authorization')
-        identity = morepath.Identity(username)
+        u = collection.get(username)
+        identity = morepath.Identity(u.userid)
         request.app.remember_identity(response, request, identity)
     came_from = request.GET.get('came_from', '')
     if came_from:

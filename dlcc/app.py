@@ -1,5 +1,4 @@
 import morpfw
-from morpfw.auth.app import App as AuthApp
 from .baseapp.app import App as BaseApp
 
 
