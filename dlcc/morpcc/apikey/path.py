@@ -10,10 +10,10 @@ def get_apikey_collection_ui(request):
     return APIKeyCollectionUI(newreq, col)
 
 
-@App.path(model=APIKeyModelUI, path='/manage-apikeys/{apikeyname}',
-          variables=lambda obj: {'apikeyname': obj.model.data['apikeyname']})
-def get_apikey_model_ui(request, apikeyname):
+@App.path(model=APIKeyModelUI, path='/manage-apikeys/{identifier}',
+          variables=lambda obj: {'identifier': obj.model.data['uuid']})
+def get_apikey_model_ui(request, identifier):
     newreq = request.get_authn_request()
-    apikey = get_apikey(newreq, apikeyname)
+    apikey = get_apikey(newreq, identifier)
     col = get_apikey_collection(newreq)
     return APIKeyModelUI(newreq, apikey, APIKeyCollectionUI(newreq, col))

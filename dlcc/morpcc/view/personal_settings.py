@@ -3,6 +3,7 @@ import colander
 import deform
 import deform.widget
 from morpfw.authn.pas.user.path import get_user_collection
+from ..crud.tempstore import FSBlobFileUploadTempStore
 import morpfw.authn.pas.exc
 from ..app import App, SQLAuthApp
 from ..root import Root
@@ -69,6 +70,15 @@ def attributes_form(context, request) -> deform.Form:
 def password_form(request) -> deform.Form:
     return deform.Form(PasswordSchema(), buttons=('Change password',),
                        formid='password-form')
+
+
+def upload_form(request) -> deform.Form:
+    class FileUpload(colander.Schema):
+        upload = colander.SchemaNode(deform.FileData(),
+                                     widget=deform.widget.FileUploadWidget(
+                                     FSBlobFileUploadTempStore(request, '/tmp/tempstore')),
+                                     oid='file-upload')
+    return deform.Form(FileUpload(), buttons=('Upload', ), formid='upload-form')
 
 
 @App.html(model=Root, name='personal-settings', template="master/personal-settings.pt",
@@ -208,4 +218,46 @@ def process_profile(context, request):
                 'form': password_f,
                 'readonly': False,
             }]
+    }
+
+
+@App.html(model=Root, name='upload-profile-photo', permission=permission.EditOwnProfile,
+          template='master/simple-form.pt')
+def upload_profile_photo(context, request):
+    return {
+        'page_title': 'Upload image',
+        'form_title': 'Upload',
+        'form': upload_form(request)
+    }
+
+
+@App.html(model=Root, name='upload-profile-photo', permission=permission.EditOwnProfile,
+          template='master/simple-form.pt', request_method='POST')
+def process_upload_profile_photo(context, request):
+    form = upload_form(request)
+    controls = list(request.POST.items())
+
+    failed = False
+    data = {}
+    try:
+        data = form.validate(controls)
+    except deform.ValidationFailure as e:
+        failed = True
+        form = e
+
+    if not failed:
+        userid = request.identity.userid
+        newreq = request.get_authn_request()
+        usercol = get_user_collection(newreq)
+        user = usercol.get_by_userid(userid)
+        filedata = data['upload']
+        user.put_blob(
+            'profile-photo', filedata['fp'], filename=filedata['filename'],
+            mimetype=filedata['mimetype'])
+
+    return {
+        'page_title': 'Upload image',
+        'form_title': 'Upload',
+        'form': form,
+        'form_data': data if not failed else None
     }
