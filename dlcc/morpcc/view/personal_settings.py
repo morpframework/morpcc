@@ -254,6 +254,9 @@ def process_upload_profile_photo(context, request):
         user.put_blob(
             'profile-photo', filedata['fp'], filename=filedata['filename'],
             mimetype=filedata['mimetype'])
+        request.notify('success', 'Profile photo updated',
+                       'Successfully updated profile photo')
+        return morepath.redirect(request.relative_url('/personal-settings'))
 
     return {
         'page_title': 'Upload image',

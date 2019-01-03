@@ -2,12 +2,15 @@ from ..crud.model import ModelUI, CollectionUI
 
 
 class APIKeyModelUI(ModelUI):
-    pass
+
+    edit_include_fields = ['label']
 
 
 class APIKeyCollectionUI(CollectionUI):
 
     modelui_class = APIKeyModelUI
+
+    create_include_fields = ['label']
 
     columns = [
         {'title': 'Label', 'name': 'label'},

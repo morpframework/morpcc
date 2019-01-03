@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "56b24acca9c4e4706968edea0d0ea27a6fecaccefcb75e89915c1171a62d8330"
+            "sha256": "674c3d5d9b96cae1f0d768300d4be81371874fbdf20bd87de2cc399361f3af8a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -344,10 +344,10 @@
         },
         "morpfw": {
             "hashes": [
-                "sha256:054fce84b86bcf022392b4f595f7cfc6394c37a7a38076682e277dc18b883c61"
+                "sha256:c4c21439e8b1762e6b378aa62bceeb348feb5cc286d5635b3916f768464bdceb"
             ],
             "index": "pypi",
-            "version": "==0.2.1a1.dev29"
+            "version": "==0.2.1a1.dev30"
         },
         "pamela": {
             "hashes": [
@@ -970,10 +970,10 @@
         },
         "morpfw": {
             "hashes": [
-                "sha256:054fce84b86bcf022392b4f595f7cfc6394c37a7a38076682e277dc18b883c61"
+                "sha256:c4c21439e8b1762e6b378aa62bceeb348feb5cc286d5635b3916f768464bdceb"
             ],
             "index": "pypi",
-            "version": "==0.2.1a1.dev29"
+            "version": "==0.2.1a1.dev30"
         },
         "mypy": {
             "hashes": [
