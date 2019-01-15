@@ -22,8 +22,8 @@ application:
     - title: Collections
       icon: database
       children: 
-        - title: Data Assets
-          href: /dataasset/+listing
+        - title: Pages
+          href: /page/+listing
   - section: Administrative
     children:
     - title: Settings

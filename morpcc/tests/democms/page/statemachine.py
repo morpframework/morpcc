@@ -1,9 +1,9 @@
 import morpfw
-from .model import DataAssetModel
+from .model import PageModel
 from ..app import App
 
 
-class DataAssetStateMachine(morpfw.StateMachine):
+class PageStateMachine(morpfw.StateMachine):
     states = ['new', 'approved', 'rejected']
 
     transitions = [
@@ -12,6 +12,6 @@ class DataAssetStateMachine(morpfw.StateMachine):
     ]
 
 
-@App.statemachine(model=DataAssetModel)
+@App.statemachine(model=PageModel)
 def get_dataasset_statemachine(obj):
-    return DataAssetStateMachine(obj)
+    return PageStateMachine(obj)

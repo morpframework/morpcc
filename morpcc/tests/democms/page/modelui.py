@@ -1,9 +1,9 @@
 from morpcc.crud.model import ModelUI, CollectionUI
 
 
-class DataAssetModelUI(ModelUI):
+class PageModelUI(ModelUI):
     pass
 
 
-class DataAssetCollectionUI(CollectionUI):
-    modelui_class = DataAssetModelUI
+class PageCollectionUI(CollectionUI):
+    modelui_class = PageModelUI

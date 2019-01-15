@@ -1,10 +1,10 @@
 import morpfw
-from .schema import DataAssetSchema
+from .schema import PageSchema
 
 
-class DataAssetModel(morpfw.Model):
-    schema = DataAssetSchema
+class PageModel(morpfw.Model):
+    schema = PageSchema
 
 
-class DataAssetCollection(morpfw.Collection):
-    schema = DataAssetSchema
+class PageCollection(morpfw.Collection):
+    schema = PageSchema
