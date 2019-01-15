@@ -51,7 +51,7 @@ def get_template_directory():
 def set_deform_override():
     deform_templates = resource_filename('deform', 'templates')
     form_templates = resource_filename(
-        'dlcc.morpcc', os.path.join('templates', 'deform'))
+        'morpcc', os.path.join('templates', 'deform'))
     search_path = (form_templates, deform_templates)
     Form.set_zpt_renderer(search_path)
 

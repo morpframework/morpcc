@@ -1,13 +1,16 @@
 server:
-  host: 127.0.0.1
-  port: 5000
+  listen_host: 127.0.0.1
+  listen_port: 5000
 
+morpfw:
+  scan:
+    - morpcc.tests.democms
 
 application:
-  title: DLCC
-  app: dlcc.app:App
+  title: Demo CMS
+  app: morpcc.tests.democms.app:App
   fsblobstorage_path: '%(here)s/blobstorage'
-  authn_policy: dlcc.morpcc.app:AuthnPolicy
+  authn_policy: morpcc.app:AuthnPolicy
   navigation:
   - section: General
     children:

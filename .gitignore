@@ -13,3 +13,5 @@ dev/
 .DS_Store
 *~
 *.swp
+.mypy_cache/
+blobstorage/

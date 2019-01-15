@@ -1,5 +1,5 @@
 import morpfw
-from ..morpcc.root import Root
+from morpcc.root import Root
 
 
 class AppRoot(Root):

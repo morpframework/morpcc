@@ -1,6 +1,6 @@
 from ..app import App
 from .model import AppRoot
-from ..morpcc import permission
+from morpcc import permission
 from webob import static
 import os
 

@@ -3,16 +3,16 @@ import sys, os
 
 version = '0.1.0'
 
-setup(name='dlcc',
+setup(name='morpcc',
       version=version,
-      description="Data Lake Control Center",
+      description="Morp Control Center",
       long_description="""\
-A data lake management tool built on top of MorpFW""",
+A meta CMS built on top of MorpFW""",
       classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
-      keywords='datalake dataengineering bigdata datacatalog',
+      keywords='framework cms',
       author='Izhar Firdaus',
       author_email='kagesenshi.87@gmail.com',
-      url='http://github.com/koslab/dlcc',
+      url='http://github.com/morpframework/morpcc',
       license='AGPLv3',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
@@ -25,7 +25,6 @@ A data lake management tool built on top of MorpFW""",
           "deform",
           "beaker"
       ],
-      entry_points="""
-      # -*- Entry points: -*-
-      """,
-      )
+      entry_points={
+          "morepath": "scan = morpcc"
+      })

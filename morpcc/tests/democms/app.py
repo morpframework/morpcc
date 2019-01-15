@@ -1,5 +1,5 @@
 import morpfw
-from .morpcc.app import App as BaseApp
+from morpcc.app import App as BaseApp
 
 
 class App(BaseApp):
