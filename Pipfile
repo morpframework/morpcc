@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 morpcc = {editable = true, path = "."}
-morpfw = "==0.2.1a1.dev31"
+morpfw = "==0.2.1a1.dev32"
 pip = "==18.0"
 rulez = "==0.1.1"
 elasticsearch = "==5.5.3"

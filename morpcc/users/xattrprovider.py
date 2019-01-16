@@ -1,16 +1,18 @@
 import morpfw
-import jsonobject
 from morpfw.authn.pas.user.model import UserModel
 from morpfw.crud.xattrprovider import FieldXattrProvider
 from ..app import App, SQLAuthApp
+from dataclasses import dataclass
+import typing
 
 
-class UserXattrSchema(jsonobject.JsonObject):
+@dataclass
+class UserXattrSchema(object):
 
-    firstname = jsonobject.StringProperty()
-    lastname = jsonobject.StringProperty()
-    displayname = jsonobject.StringProperty()
-    address = jsonobject.StringProperty()
+    firstname: typing.Optional[str] = None
+    lastname: typing.Optional[str] = None
+    displayname: typing.Optional[str] = None
+    address: typing.Optional[str] = None
 
 
 class UserXattrProvider(FieldXattrProvider):

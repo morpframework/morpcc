@@ -1,10 +1,12 @@
 import morpfw
-import jsonobject
+from dataclasses import dataclass
+import typing
 
 
+@dataclass
 class PageSchema(morpfw.Schema):
 
-    title = jsonobject.StringProperty()
-    description = jsonobject.StringProperty()
-    location = jsonobject.StringProperty()
-    body = jsonobject.StringProperty()
+    title: typing.Optional[str] = None
+    description: typing.Optional[str] = None
+    location: typing.Optional[str] = None
+    body: typing.Optional[str] = None

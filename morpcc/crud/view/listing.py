@@ -7,7 +7,7 @@ from ..model import CollectionUI, ModelUI
 from ...app import App
 from boolean.boolean import ParseError
 from ...permission import ViewHome
-from ...util import jsonobject_to_colander
+from ...util import dataclass_to_colander
 import colander
 import deform
 from morpfw.crud import permission as crudperms

@@ -1,87 +1,87 @@
-import jsonobject
 import colander
+from morpfw.crud.util import dataclass_get_type, dataclass_check_type
+import dataclasses
+from datetime import datetime, date
+from morpfw.interfaces import ISchema
 
 
-def jsonobject_property_to_colander_schemanode(
-        prop: jsonobject.JsonProperty, oid_prefix='deformField') -> colander.SchemaNode:
-    if isinstance(prop, jsonobject.DateProperty):
+def dataclass_field_to_colander_schemanode(
+        prop: dataclasses.Field, oid_prefix='deformField') -> colander.SchemaNode:
+
+    t = dataclass_get_type(prop)
+    if t['type'] == date:
         return colander.SchemaNode(typ=colander.Date(),
                                    name=prop.name,
                                    oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if prop.required else colander.drop)
-    if isinstance(prop, jsonobject.DateTimeProperty):
+                                   missing=colander.required if t['required'] else colander.drop)
+    if t['type'] == datetime:
         return colander.SchemaNode(typ=colander.DateTime(),
                                    name=prop.name,
                                    oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if prop.required else colander.drop)
-    if isinstance(prop, jsonobject.StringProperty):
+                                   missing=colander.required if t['required'] else colander.drop)
+    if t['type'] == str:
         return colander.SchemaNode(typ=colander.String(),
                                    name=prop.name,
                                    oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if prop.required else colander.drop)
-    if isinstance(prop, jsonobject.IntegerProperty):
+                                   missing=colander.required if t['required'] else colander.drop)
+    if t['type'] == int:
         return colander.SchemaNode(typ=colander.Integer(),
                                    name=prop.name,
                                    oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if prop.required else colander.drop)
-    if isinstance(prop, jsonobject.FloatProperty):
+                                   missing=colander.required if t['required'] else colander.drop)
+    if t['type'] == float:
         return colander.SchemaNode(typ=colander.Float(),
                                    name=prop.name,
                                    oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if prop.required else colander.drop)
-    if isinstance(prop, jsonobject.BooleanProperty):
+                                   missing=colander.required if t['required'] else colander.drop)
+    if t['type'] == bool:
         return colander.SchemaNode(typ=colander.Boolean(),
                                    name=prop.name,
                                    oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if prop.required else colander.drop)
+                                   missing=colander.required if t['required'] else colander.drop)
 
-    if isinstance(prop, jsonobject.DictProperty):
-        if prop.item_wrapper:
-            subtype = jsonobject_to_colander(
-                prop.item_wrapper.item_type, colander_schema_type=colander.MappingSchema)
+    if dataclass_check_type(prop, ISchema):
+        subtype = dataclass_to_colander(
+            t['type'], colander_schema_type=colander.MappingSchema)
 
-            return subtype()
+        return subtype()
+    if t['type'] == dict:
         return colander.SchemaNode(typ=colander.Mapping(),
                                    name=prop.name,
                                    oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if prop.required else colander.drop)
-    if isinstance(prop, jsonobject.ListProperty):
-        if prop.item_wrapper:
-            if isinstance(prop.item_wrapper, jsonobject.ObjectProperty):
-                if issubclass(prop.item_wrapper.item_type, jsonobject.JsonObject):
-                    subtype = jsonobject_to_colander(
-                        prop.item_wrapper.item_type, colander_schema_type=colander.MappingSchema)
-                    return subtype()
+                                   missing=colander.required if t['required'] else colander.drop)
+
+    if t['type'] == list:
         return colander.SchemaNode(
             typ=colander.List(),
             name=prop.name,
             oid='%s-%s' % (oid_prefix, prop.name),
-            missing=colander.required if prop.required else colander.drop)
+            missing=colander.required if t['required'] else colander.drop)
 
     raise KeyError(prop)
 
 
-def jsonobject_to_colander(schema,
-                           include_fields=None,
-                           exclude_fields=None,
-                           colander_schema_type=colander.MappingSchema,
-                           oid_prefix='deformField'):
-    # output colander schema from jsonobject schema
+def dataclass_to_colander(schema,
+                          include_fields=None,
+                          exclude_fields=None,
+                          colander_schema_type=colander.MappingSchema,
+                          oid_prefix='deformField'):
+    # output colander schema from dataclass schema
     attrs = {}
 
     include_fields = include_fields or []
     exclude_fields = exclude_fields or []
 
     if include_fields:
-        for attr, prop in schema._properties_by_attr.items():
+        for attr, prop in schema.__dataclass_fields__.items():
             if prop.name in include_fields and prop.name not in exclude_fields:
-                prop = jsonobject_property_to_colander_schemanode(
+                prop = dataclass_field_to_colander_schemanode(
                     prop, oid_prefix=oid_prefix)
                 attrs[attr] = prop
     else:
-        for attr, prop in schema._properties_by_attr.items():
+        for attr, prop in schema.__dataclass_fields__.items():
             if prop.name not in exclude_fields:
-                prop = jsonobject_property_to_colander_schemanode(
+                prop = dataclass_field_to_colander_schemanode(
                     prop, oid_prefix=oid_prefix)
                 attrs[attr] = prop
 

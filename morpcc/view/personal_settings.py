@@ -8,7 +8,7 @@ import morpfw.authn.pas.exc
 from ..app import App, SQLAuthApp
 from ..root import Root
 from .. import permission
-from ..util import jsonobject_to_colander
+from ..util import dataclass_to_colander
 
 
 class UserInfoSchema(colander.MappingSchema):
@@ -64,7 +64,7 @@ def userinfo_form(request) -> deform.Form:
 
 def attributes_form(context, request) -> deform.Form:
     schema = context.xattrprovider().schema
-    return deform.Form(jsonobject_to_colander(schema)(), buttons=('Submit',), formid='personalinfo-form')
+    return deform.Form(dataclass_to_colander(schema)(), buttons=('Submit',), formid='personalinfo-form')
 
 
 def password_form(request) -> deform.Form:

@@ -4,13 +4,13 @@ import deform
 from morpfw.crud import permission as crudperms
 from ..model import CollectionUI, ModelUI
 from ...app import App
-from ...util import jsonobject_to_colander
+from ...util import dataclass_to_colander
 
 
 @App.html(model=ModelUI, name='edit', template='master/crud/form.pt',
           permission=crudperms.Edit)
 def edit(context, request):
-    formschema = jsonobject_to_colander(
+    formschema = dataclass_to_colander(
         context.model.schema, include_fields=context.edit_include_fields,
         exclude_fields=context.edit_exclude_fields)
     data = context.model.data.as_dict()
@@ -25,7 +25,7 @@ def edit(context, request):
 @App.html(model=ModelUI, name='edit', template='master/crud/form.pt',
           permission=crudperms.Edit, request_method='POST')
 def process_edit(context, request):
-    formschema = jsonobject_to_colander(
+    formschema = dataclass_to_colander(
         context.model.schema, include_fields=context.edit_include_fields,
         exclude_fields=context.edit_exclude_fields)
     data = context.model.data.as_dict()
