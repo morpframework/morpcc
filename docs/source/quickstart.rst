@@ -3,12 +3,12 @@ Quick Start Tutorial
 =====================
 
 
-Installing
+iInstalling
 ===========
 
 The recommended installation method is to use pipenv, or you can also use pip::
 
-  pip install morpcc==0.1.0a1
+  pip install morpcc==0.1.0a2
 
 MorpCC includes a demo CMS for testing purposes, you can start it up through::
 
