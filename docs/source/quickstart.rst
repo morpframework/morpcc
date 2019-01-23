@@ -3,7 +3,7 @@ Quick Start Tutorial
 =====================
 
 
-iInstalling
+Installing
 ===========
 
 The recommended installation method is to use pipenv, or you can also use pip::
