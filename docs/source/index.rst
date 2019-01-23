@@ -18,9 +18,6 @@ It is designed to provide common components needed for the the development
 of IMSes while allowing flexibility for developers to customize and override
 the components.
 
-MorpCC is 
-
-
 Features
 =========
 
