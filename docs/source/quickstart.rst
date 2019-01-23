@@ -6,15 +6,17 @@ Quick Start Tutorial
 Installing
 ===========
 
-The recommended installation method is to use pipenv, or you can also use pip::
+The recommended installation method is to use 
+`pipenv <http://pipenv.rtfd.org>`_, or you can also use pip or virtualenv::
 
-  pip install morpcc==0.1.0a2
+  mkdir myproject
+  pipenv install morpcc==0.1.0a2
 
 MorpCC includes a demo CMS for testing purposes, you can start it up through::
 
   wget https://raw.githubusercontent.com/morpframework/morpcc/master/morpcc/tests/democms/settings.yml 
-  morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
-  morpfw start -s settings.yml
+  pipenv run morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
+  pipenv run morpfw start -s settings.yml
 
 That will start the demo CMS at http://localhost:5432/
 
@@ -23,13 +25,13 @@ Creating new project
 
 To create new project, you can initialize using cookiecutter-morpcc::
 
-  pip install cookiecutter
-  cookiecutter https://github.com/morpframework/cookiecutter-morpcc
+  pipenv install cookiecutter
+  pipenv run cookiecutter https://github.com/morpframework/cookiecutter-morpcc
 
 And start your project using::
 
-  morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
-  morpfw start -s settings.yml
+  pipenv run morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
+  pipenv run morpfw start -s settings.yml
 
 
 Creating new content type
