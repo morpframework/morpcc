@@ -39,8 +39,20 @@ Creating new content type
 To create new content type, first, enter your project module where ``app.py`` 
 resides, then::
 
-  cookiecutter https://github.com/morpframework/cookiecutter-morpcc-type
+  pipenv run cookiecutter https://github.com/morpframework/cookiecutter-morpcc-type
 
 This will generate a basic content type to work with. Load the url you provide 
 for the ui mount path to see the collection. (eg: if you specified ``/content``, 
 load http://localhost:5432/content/ )
+
+
+Understanding core framework functionalities
+=============================================
+
+MorpCC is built on top of Morepath, so we suggest you head to `Morepath
+<http://morepath.rtfd.org>`_ for guide on how to register your own views, etc.
+
+The templating language used is TAL, and we extensively use METAL for template
+inheritance. Head to `Zope Page Template Reference <https://zope.readthedocs.io/en/latest/zope2book/AppendixC.html>`_
+to understand more about TAL and METAL.
+
