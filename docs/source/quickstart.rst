@@ -2,44 +2,68 @@
 Quick Start Tutorial
 =====================
 
-Installing
-===========
+Installation
+==============
+
+Basic installation
+-------------------
 
 The recommended installation method is to use 
-`pipenv <http://pipenv.rtfd.org>`_, or you can also use pip or virtualenv::
+`pipenv <http://pipenv.rtfd.org>`_, or you can also use pip or virtualenv.
 
-  mkdir myproject
-  pipenv install morpcc==0.1.0a2
+If you dont have pipenv installed yet, do:
 
-MorpCC includes a demo CMS for testing purposes, you can start it up through::
+.. code-block:: bash
 
-  wget https://raw.githubusercontent.com/morpframework/morpcc/master/morpcc/tests/democms/settings.yml 
-  pipenv run morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
-  pipenv run morpfw start -s settings.yml
+   sudo pip install pipenv>=2018.11.26
+
+lets install morpcc into a pipenv:
+
+.. code-block:: bash
+
+   mkdir morpcc
+   cd morpcc
+   pipenv install morpcc==0.1.0a2
+
+MorpCC includes a demo CMS for testing purposes, you can start it up through:
+
+.. code-block:: bash
+  
+   wget https://raw.githubusercontent.com/morpframework/morpcc/master/morpcc/tests/democms/settings.yml 
+   pipenv run morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
+   pipenv run morpfw start -s settings.yml
 
 That will start the demo CMS at http://localhost:5432/
 
-Creating new project
-==========================
+Installation as a new project
+------------------------------
 
-To create new project, you can initialize using cookiecutter-morpcc::
+To create new project, you can initialize using cookiecutter-morpcc:
 
-  pipenv install cookiecutter
-  pipenv run cookiecutter https://github.com/morpframework/cookiecutter-morpcc
+.. code-block:: bash
 
-And start your project using::
+   sudo pip install cookiecutter
+   cookiecutter https://github.com/morpframework/cookiecutter-morpcc
 
-  pipenv run morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
-  pipenv run morpfw start -s settings.yml
+And start your project using:
+
+.. code-block:: bash
+
+   cd $PROJECTNAME/ # replace with your project directory name
+   pipenv install .
+   pipenv run morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
+   pipenv run morpfw start -s settings.yml
 
 
 Creating new content type
 ==========================
 
 To create new content type, first, enter your project module where ``app.py`` 
-resides, then::
+resides, then:
 
-  pipenv run cookiecutter https://github.com/morpframework/cookiecutter-morpcc-type
+.. code-block:: bash
+
+   pipenv run cookiecutter https://github.com/morpframework/cookiecutter-morpcc-type
 
 This will generate a basic content type to work with. Load the url you provide 
 for the ui mount path to see the collection. (eg: if you specified ``/content``, 
