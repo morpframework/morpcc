@@ -73,8 +73,9 @@ load http://localhost:5432/content/ )
 Understanding core framework functionalities
 =============================================
 
-MorpCC is built on top of Morepath, so we suggest you head to `Morepath
-<http://morepath.rtfd.org>`_ for guide on how to register your own views, etc.
+MorpCC is built on top of Morepath, so we suggest you head to `Morepath 
+Documentation <http://morepath.rtfd.org>`_ for guide on how to register your
+own views, etc.
 
 The templating language used is TAL, and we extensively use METAL for template
 inheritance. Head to `Zope Page Template Reference <https://zope.readthedocs.io/en/latest/zope2book/AppendixC.html>`_
