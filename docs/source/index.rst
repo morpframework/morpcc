@@ -8,9 +8,6 @@
 Welcome to MorpCC's documentation!
 ===============================================
 
-Introduction
-=============
-
 Morp Control Center (MorpCC) is a meta information management system (meta-IMS)
 built on top of `Morp Framework (morpfw) <http://morpframework.rtfd.org>`_ &
 `Morepath <http://morepath.rtfd.org>`_.
