@@ -1,49 +1,57 @@
-=============
+===============
 Introduction
-=============
+===============
 
-Morp Control Center (morpcc) is a meta information management system (IMS)
-built on top of `Morp Framework (morpfw) <http://morpframework.rtfd.org>`_ &
-`Morepath <http://morepath.rtfd.org>`_. 
-It is designed to provide common components needed for the the development
-of IMSes while allowing flexibility for developers to customize and override
-the components. Key components provided includes:
+MorpCC aims to solve several common challenges when doing enterprise web
+application development, which tend to require capabilities such as:
 
-* Responsive default UI based on `Gentelella 
-  <https://github.com/puikinsh/gentelella>`_ project
+* Enterprise directory service (LDAP/AD) integration
 
-* Pluggable auth system
+* User, group and permission management
 
-  * User, group & API key management system (SQLAlchemy based)
+* Task scheduling for background jobs
 
-  * REMOTE_USER based authentication
+* Customizable business rules logic
 
-* Content type framework and CRUD UI
+* Customizable / overrideable components and views to cater to sub/similar
+  use-cases.
 
-* Pluggable CRUD storage backend
+* Data might be stored in remote systems or APIs, not necessarily a database.
 
-  * SQLAlchemy (default)
- 
-  * ElasticSearch
+* Scalability to handle large data processing workload
 
-  * Dictionary based, in-memory
+* Corporate theming
 
-* Listing / search interface with JQuery DataTables server-side API
+* Mobile-ready / mobile integration
 
-* Pluggable blob storage backend
+* State tracking and state management
 
-  * Filesystem store (default)
+* Fast turnaround time from business requirements to prototype application
 
-* REST API through morpfw content type API engine with JWT based token
+* Activity tracking & analytics
 
-* Statemachine engine using PyTransitions through morpfw
+* Messages & notifications
 
-* Overrideable components and templates through
-  `morepath <http://morepath.rtfd.org>`_ & `dectate <http://dectate.rtfd.org>`_
-  app inheritance
+MorpCC, and its underlying framework, `MorpFW <http://morpframework.rtfd.org>`_
+attempts to assist the challenges above through leveraging the component
+engine provided by `Morepath <http://morepath.rtfd.org>`_ and 
+`Dectate <http://dectate.rtfd.org>`_ to provide:
 
-Design
-=======
+* Default admin+user UI which can be overridden easily, enabling agility in
+  development by allowing developers to focus more on the data domain model
+  first, rather than the repetive application bootstrapping tasks. 
+
+* CRUD with pluggable storage engine, allowing flexibility in writing your
+  own storage implementation
+
+* State engine support, simplifying task of developing stage management of your
+  data objects
+
+* Pluggable user, group, permission and API key management.
+
+* Standardized REST API interface for external integration.
+
+* (TBD) Powerful theming capability through `diazo <http://docs.diazo.org>`_.
 
 morpcc and morpfw design is highly influenced by `Plone <http://plone.org>`_
 project. Unlike frameworks such as Django, Pyramid, and Flasks routing which
@@ -62,4 +70,46 @@ This design gives the framework certain benefits:
 * Views follows model and its sub-models. Whatever path the model is mounted,
   the views for the model will follow.
 
-* -More benefits here-
+
+Underlying Frameworks & Libraries
+==================================
+
+MorpCC was built using the following frameworks & libraries to power it. So if
+you need more detailed documentation on specific components that are not
+covered here, please head to their documentation
+
+* `Morepath <http://morepath.rtfd.org>`_ - Python web framework with superpowers
+
+* `MorpFW <http://morpframework.rtfd.org>`_ - A REST API web framework built on
+  top of Morepath.
+
+* `Reg <http://reg.rtfd.org>`_ - Dispatching library similar to `Zope Component
+  Architecture <https://zopecomponent.readthedocs.io>`_
+
+* `Dectate <http://dectate.rtfd.org>`_ - Decorator based configuration system
+
+* `SQLAlchemy <http://sqlalchemy.org>`_ - SQL abtraction library & ORM, used
+  as the default storage engine.
+
+* `Chameleon <http://chameleon.rtfd.org>`_ - Templating engine that implements
+  `Zope Template Attribute Language (TAL) <https://zope.readthedocs.io/en/latest/zope2book/AppendixC.html>`_.
+
+* `Rulez <https://github.com/morpframework/rulez>`_ - JSON based rules engine
+
+* `PyTransitions <https://github.com/pytransitions/transitions>`_ - State machine
+  engine for Python.
+
+* `Celery <http://www.celeryproject.org/>`_ - Distributed task queue and job
+  scheduling library for Python.
+
+* `Gentelella <https://github.com/puikinsh/gentelella>`_ - Bootstrap 3 based
+  admin template.
+
+
+Entity Model
+=============
+
+
+.. image:: _static/entity-model.png
+
+
