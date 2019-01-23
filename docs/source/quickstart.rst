@@ -2,7 +2,6 @@
 Quick Start Tutorial
 =====================
 
-
 Installing
 ===========
 
