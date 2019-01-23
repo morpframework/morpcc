@@ -92,7 +92,7 @@ covered here, please head to their documentation
   as the default storage engine.
 
 * `Chameleon <http://chameleon.rtfd.org>`_ - Templating engine that implements
-  `Zope Template Attribute Language (TAL) <https://zope.readthedocs.io/en/latest/zope2book/AppendixC.html>`_.
+  `Zope Template Attribute Language (TAL) <https://chameleon.readthedocs.io/en/latest/reference.html>`_.
 
 * `Rulez <https://github.com/morpframework/rulez>`_ - JSON based rules engine
 

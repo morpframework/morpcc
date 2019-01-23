@@ -78,6 +78,7 @@ Documentation <http://morepath.rtfd.org>`_ for guide on how to register your
 own views, etc.
 
 The templating language used is TAL, and we extensively use METAL for template
-inheritance. Head to `Zope Page Template Reference <https://zope.readthedocs.io/en/latest/zope2book/AppendixC.html>`_
+inheritance. Head to `Chameleon TAL/METAL Language Reference <https://chameleon.readthedocs.io/en/latest/reference.html>`_
+and `Zope Page Template Reference <https://zope.readthedocs.io/en/latest/zope2book/AppendixC.html>`_
 to understand more about TAL and METAL.
 
