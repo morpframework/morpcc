@@ -2,13 +2,10 @@
 Quick Start Tutorial
 =====================
 
-Installation
-==============
+Bootstrapping new project
+===========================
 
-Basic installation
--------------------
-
-The recommended installation method is to use 
+The recommended installation method is to use
 `pipenv <http://pipenv.rtfd.org>`_, or you can also use pip or virtualenv.
 
 If you dont have pipenv installed yet, do:
@@ -17,28 +14,8 @@ If you dont have pipenv installed yet, do:
 
    sudo pip install pipenv>=2018.11.26
 
-lets install morpcc into a pipenv:
-
-.. code-block:: bash
-
-   mkdir morpcc
-   cd morpcc
-   pipenv install morpcc==0.1.0a2
-
-MorpCC includes a demo CMS for testing purposes, you can start it up through:
-
-.. code-block:: bash
-  
-   wget https://raw.githubusercontent.com/morpframework/morpcc/master/morpcc/tests/democms/settings.yml 
-   pipenv run morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
-   pipenv run morpfw start -s settings.yml
-
-That will start the demo CMS at http://localhost:5432/
-
-Installation as a new project
-------------------------------
-
-To create new project, you can initialize using cookiecutter-morpcc:
+Lets create a new project. You can initialize new project 
+using cookiecutter-morpcc:
 
 .. code-block:: bash
 
@@ -54,11 +31,26 @@ And start your project using:
    pipenv run morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
    pipenv run morpfw start -s settings.yml
 
+This will start your project at http://localhost:5432/
+
+MorpCC includes a demo CMS for testing purposes, you can start it up through:
+
+.. code-block:: bash
+
+   wget https://raw.githubusercontent.com/morpframework/morpcc/master/morpcc/tests/democms/settings.yml -O democms.yml
+   pipenv run morpfw register-admin -s democms.yml -u admin -e admin@localhost.local
+   pipenv run morpfw start -s democms.yml
+
 
 Creating new content type
 ==========================
 
-To create new content type, first, enter your project module where ``app.py`` 
+MorpCC CRUD management revolves around the concept of content type. A content
+type is a definition of a data model and its related components. Content type
+is usually used to refer to real-world object concepts such as as Page,
+Document, Image, Event, Person, etc.
+
+To create new content type, first, enter your project module where ``app.py``
 resides, then:
 
 .. code-block:: bash
