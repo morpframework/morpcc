@@ -5,7 +5,7 @@
 
 
 ===============================================
-Welcome to MorpCC's documentation!
+MorpCC: Meta-IMS For Rapid Prototyping
 ===============================================
 
 Morp Control Center (MorpCC) is a meta information management system (meta-IMS)
@@ -18,7 +18,7 @@ the components.
 Features
 =========
 
-* Responsive default UI based on `Gentelella 
+* Responsive default UI based on `Gentelella
   <https://github.com/puikinsh/gentelella>`_ project
 
 * Pluggable auth system
@@ -64,8 +64,8 @@ Documentation
 Getting Help
 =============
 
-Our community is still in infantcy, and we hangout mostly on Telegram. Come 
-join us at `MorpFW Telegram Channel <https://t.me/morpfw>`_ if you have any 
+Our community is still in infancy, and we hangout mostly on Telegram. Come
+join us at `MorpFW Telegram Channel <https://t.me/morpfw>`_ if you have any
 questions.
 
 Indices and tables
