@@ -26,5 +26,4 @@ A meta CMS built on top of MorpFW""",
           "beaker"
       ],
       entry_points={
-          "morepath": "scan = morpcc"
       })

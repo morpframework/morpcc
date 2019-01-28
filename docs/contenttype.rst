@@ -18,8 +18,13 @@ Schema
 Content type schema in MorpCC is defined through new python 3.7 `dataclass
 library <https://docs.python.org/3/library/dataclasses.html>`_.
 
-Schema in MorpCC/MorpFW is primarily used for data validation of
-JSON/dictionary data that is used to create a new instance of content type.
+Schema in MorpCC/MorpFW is used for:
+
+* data validation of JSON data on create/update REST API
+* data validation on dictionary that is used to create a new instance of
+  content type.
+* generating JSON schema for publishing in REST API
+* generating forms for MorpCC UI
 
 When defining a schema, it is good that you inherit from ``morpfw.Schema``
 as it defines the core metadata required for correct function of the framework.
@@ -38,4 +43,42 @@ as it defines the core metadata required for correct function of the framework.
 
 Due to the nature of `dataclass inheritance <https://docs.python.org/3/library/dataclasses.html#inheritance>`_,
 your field definition must include default values, and if it does not have any,
-you should define the field with ``typing.Optional`` data type.
+you should define the field with ``typing.Optional`` data type with a default
+value of ``None``
+
+Model
+======
+
+Model is the object that is published on a MorpCC path. MorpCC base model class
+provides the necessary API for model manipulation such as update, delete, save
+and other model manipulation capabilities of MorpCC/MorpFW.
+
+.. autoclass:: morpfw.interfaces.IModel
+
+Collection
+===========
+
+Collection is the container for Model objects. Collection manages the single
+type of Model and and provide collection level Model object management API
+such as create, search and aggregate.
+
+.. .. autoclass:: morpfw.interfaces.ICollection
+
+
+Storage
+========
+
+Model and collection gets their data from a storage provider. It abstracts the
+interface to storage backends, allowing custom storage backends to be
+implemented.
+
+.. autoclass:: morpfw.interfaces.IStorage
+
+
+BlobStorage
+============
+
+Storage provider may have a BLOB storage backend implemented which will handle
+the management of BLOBs
+
+.. autoclass:: morpfw.interfaces.IBlobStorage
