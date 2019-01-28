@@ -31,7 +31,7 @@ And start your project using:
    pipenv run morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
    pipenv run morpfw start -s settings.yml
 
-This will start your project at http://localhost:5432/
+This will start your project at http://localhost:5000/
 
 MorpCC includes a demo CMS for testing purposes, you can start it up through:
 
@@ -59,7 +59,7 @@ resides, then:
 
 This will generate a basic content type to work with. Load the url you provide 
 for the ui mount path to see the collection. (eg: if you specified ``/content``, 
-load http://localhost:5432/content/ )
+load http://localhost:5000/content/ )
 
 
 Understanding core framework functionalities
