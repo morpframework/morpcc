@@ -65,9 +65,13 @@ load http://localhost:5000/content/ )
 Understanding core framework functionalities
 =============================================
 
-MorpCC is built on top of Morepath, so we suggest you head to `Morepath 
+MorpCC is built on top of Morepath, so we suggest you head to `Morepath
 Documentation <http://morepath.rtfd.org>`_ for guide on how to register your
 own views, etc.
+
+CRUD engine, resource type system and REST API engine for MorpCC is provided by
+MorpFW. Head to `MorpFW documentation <http://morpframework.rtfd.org>`_ to
+understand more on the type system used in MorpCC.
 
 The templating language used is TAL, and we extensively use METAL for template
 inheritance. Head to `Chameleon TAL/METAL Language Reference <https://chameleon.readthedocs.io/en/latest/reference.html>`_

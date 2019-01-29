@@ -59,7 +59,6 @@ Documentation
 
    introduction
    quickstart
-   contenttype
 
 
 Getting Help
