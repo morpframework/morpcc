@@ -27,7 +27,7 @@ And start your project using:
 .. code-block:: bash
 
    cd $PROJECTNAME/ # replace with your project directory name
-   pipenv install .
+   pipenv install -e .
    pipenv run morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
    pipenv run morpfw start -s settings.yml
 
@@ -42,15 +42,15 @@ MorpCC includes a demo CMS for testing purposes, you can start it up through:
    pipenv run morpfw start -s democms.yml
 
 
-Creating new content type
+Creating new resource type
 ==========================
 
-MorpCC CRUD management revolves around the concept of content type. A content
-type is a definition of a data model and its related components. Content type
+MorpCC CRUD management revolves around the concept of resource type. A resource
+type is a definition of a data model and its related components. Resource type
 is usually used to refer to real-world object concepts such as as Page,
 Document, Image, Event, Person, etc.
 
-To create new content type, first, enter your project module where ``app.py``
+To create new resource type, first, enter your project module where ``app.py``
 resides, then:
 
 .. code-block:: bash

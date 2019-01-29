@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-morpcc = {editable = true, path = "."}
+morpcc = {path = ".",editable = true}
 morpfw = "==0.2.1a1.dev32"
 pip = "==18.0"
 rulez = "==0.1.1"
@@ -15,7 +15,7 @@ pylint = "*"
 pydocstyle = "*"
 mypy = "*"
 "autopep8" = "*"
-morpcc = {editable = true, path = ".", extras = ["test"]}
+morpcc = {path = ".",extras = ["test"],editable = true}
 
 [requires]
 python_version = "3.7"
