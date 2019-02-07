@@ -31,8 +31,8 @@ And start your project using:
 
    cd $PROJECTNAME/ # replace with your project directory name
    pipenv install -e .
-   pipenv run morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
-   pipenv run morpfw start -s settings.yml
+   pipenv run morpfw -s settings.yml register-admin -u admin -e admin@localhost.local
+   pipenv run morpfw -s settings.yml start
 
 This will start your project at http://localhost:5000/
 
@@ -41,8 +41,8 @@ MorpCC includes a demo CMS for testing purposes, you can start it up through:
 .. code-block:: bash
 
    wget https://raw.githubusercontent.com/morpframework/morpcc/master/morpcc/tests/democms/settings.yml -O democms.yml
-   pipenv run morpfw register-admin -s democms.yml -u admin -e admin@localhost.local
-   pipenv run morpfw start -s democms.yml
+   pipenv run morpfw -s settings.yml register-admin -u admin -e admin@localhost.local
+   pipenv run morpfw -s democms.yml start
 
 
 Creating new resource type
