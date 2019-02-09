@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.1.0a2'
+version = '0.1.0a3'
 
 setup(name='morpcc',
       version=version,
@@ -19,7 +19,7 @@ A meta CMS built on top of MorpFW""",
       zip_safe=False,
       install_requires=[
           # -*- Extra requirements: -*-
-          "morpfw>=0.2.1rc2",
+          "morpfw==0.2.1rc2",
           "more.chameleon",
           "more.static",
           "deform",

@@ -17,7 +17,7 @@ If you dont have pipenv installed yet, do:
 
    sudo pip install pipenv>=2018.11.26
 
-Lets create a new project. You can initialize new project 
+Lets create a new project. You can initialize new project
 using cookiecutter-morpcc:
 
 .. code-block:: bash
@@ -31,8 +31,8 @@ And start your project using:
 
    cd $PROJECTNAME/ # replace with your project directory name
    pipenv install -e .
-   pipenv run morpfw register-admin -s settings.yml -u admin -e admin@localhost.local
-   pipenv run morpfw start -s settings.yml
+   pipenv run morpfw -s settings.yml register-admin -u admin -e admin@localhost.local
+   pipenv run morpfw -s settings.yml start
 
 This will start your project at http://localhost:5000/
 
