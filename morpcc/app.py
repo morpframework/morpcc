@@ -49,7 +49,9 @@ class AuthnPolicy(SQLStorageAuthnPolicy):
             secure = True
         return IdentityPolicy(
             jwt_settings=settings.security.jwt,
-            itsdangerous_settings={'secure': secure})
+            itsdangerous_settings={'secure': secure},
+            api_root='/api',
+            development_mode=settings.application.development_mode)
 
 
 @App.mount(app=SQLAuthApp, path='/api/v1/auth/')
