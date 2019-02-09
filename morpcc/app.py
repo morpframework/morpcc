@@ -3,7 +3,7 @@ import morpfw
 from morpfw.app import DBSessionRequest
 from morpfw.authn.pas.policy import SQLStorageAuthnPolicy, SQLStorageAuthApp
 from morpfw.authz.pas import DefaultAuthzPolicy
-from more.itsdangerous import IdentityPolicy
+from .authn import IdentityPolicy
 from more.chameleon import ChameleonApp
 import morepath
 from morepath.publish import resolve_model
@@ -47,7 +47,9 @@ class AuthnPolicy(SQLStorageAuthnPolicy):
             secure = False
         else:
             secure = True
-        return IdentityPolicy(secure=secure)
+        return IdentityPolicy(
+            jwt_settings=settings.security.jwt,
+            itsdangerous_settings={'secure': secure})
 
 
 @App.mount(app=SQLAuthApp, path='/api/v1/auth/')

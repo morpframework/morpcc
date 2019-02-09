@@ -24,7 +24,7 @@ def view(context, request):
         include_fields=context.view_include_fields,
         exclude_fields=context.view_exclude_fields)
     data = context.model.data.as_dict()
-    sm = context.model.state_machine()
+    sm = context.model.statemachine()
     if sm:
         triggers = [i for i in sm._machine.get_triggers(
             sm.state) if not i.startswith('to_')]

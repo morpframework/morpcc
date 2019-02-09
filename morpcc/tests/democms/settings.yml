@@ -1,6 +1,6 @@
 server:
   listen_host: 127.0.0.1
-  listen_port: 5432
+  listen_port: 5000
 
 morpfw:
   scan:
