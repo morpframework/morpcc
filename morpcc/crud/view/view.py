@@ -43,7 +43,7 @@ def view(context, request):
 @App.view(model=ModelUI, name='statemachine', permission=crudperms.Edit, request_method='POST')
 def statemachine(context, request):
     transition = request.POST.get('transition', None)
-    sm = context.model.state_machine()
+    sm = context.model.statemachine()
     if transition:
         attr = getattr(sm, transition, None)
         if attr:
