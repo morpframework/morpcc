@@ -6,8 +6,15 @@ import os
 
 class StaticRoot(object):
 
+    module = 'morpcc'
+    directory = 'static_files'
+
     def __init__(self, path):
         self.path = path
+
+    def resource_path(self):
+        d = resource_filename(self.module, self.directory)
+        return os.path.join(d, self.path)
 
 
 @App.path(model=StaticRoot, path='/static', absorb=True)
@@ -17,22 +24,15 @@ def get_staticroot(absorb):
 
 @App.view(model=StaticRoot)
 def serve_static(context, request):
-    path = os.path.join(os.path.dirname(__file__), 'static_files')
-    return request.get_response(static.FileApp(os.path.join(path, context.path)))
+    return request.get_response(static.FileApp(context.resource_path()))
 
 
-class DeformStaticRoot(object):
+class DeformStaticRoot(StaticRoot):
 
-    def __init__(self, path):
-        self.path = path
+    module = 'deform'
+    directory = 'static'
 
 
 @App.path(model=DeformStaticRoot, path='/deform_static', absorb=True)
 def get_deformstaticroot(absorb):
     return DeformStaticRoot(absorb)
-
-
-@App.view(model=DeformStaticRoot)
-def serve_deformstatic(context, request):
-    path = resource_filename('deform', 'static')
-    return request.get_response(static.FileApp(os.path.join(path, context.path)))
