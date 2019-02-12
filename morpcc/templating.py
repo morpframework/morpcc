@@ -8,13 +8,7 @@ from importlib import import_module
 from deform import Form
 from .app import App
 from .root import Root
-
-
-def permits(request, context, permission):
-    perm_mod, perm_cls = permission.split(':')
-    mod = import_module(perm_mod)
-    klass = getattr(mod, perm_cls)
-    return request.app._permits(request.identity, context, klass)
+from .util import permits
 
 
 @App.template_render(extension='.pt')

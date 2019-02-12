@@ -10,6 +10,8 @@ from morepath.publish import resolve_model
 from morpfw.main import create_app, create_sqlapp
 from beaker.middleware import SessionMiddleware
 import functools
+import dectate
+from . import directive
 
 
 class WebAppRequest(DBSessionRequest):
@@ -32,6 +34,9 @@ class WebAppRequest(DBSessionRequest):
 class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
 
     request_class = WebAppRequest
+
+    portlet = dectate.directive(directive.PortletFactoryAction)
+    typeinfo = dectate.directive(directive.TypeInfoFactoryAction)
 
 
 class SQLAuthApp(SQLStorageAuthApp, DefaultAuthzPolicy):

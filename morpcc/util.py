@@ -3,6 +3,15 @@ from morpfw.crud.util import dataclass_get_type, dataclass_check_type
 import dataclasses
 from datetime import datetime, date
 from morpfw.interfaces import ISchema
+from pkg_resources import resource_filename
+from importlib import import_module
+
+
+def permits(request, context, permission):
+    perm_mod, perm_cls = permission.split(':')
+    mod = import_module(perm_mod)
+    klass = getattr(mod, perm_cls)
+    return request.app._permits(request.identity, context, klass)
 
 
 def dataclass_field_to_colander_schemanode(
