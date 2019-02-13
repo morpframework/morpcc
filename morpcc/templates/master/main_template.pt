@@ -12,60 +12,63 @@
     <title>Gentelella Alela! | </title>
 
     <!-- Bootstrap -->
-    <link href="/static/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/__static__/morpcc/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
-    <link href="/static/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/__static__/morpcc/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- NProgress -->
-    <link href="/static/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <link href="/__static__/morpcc/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
     <!-- iCheck -->
-    <link href="/static/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <link href="/__static__/morpcc/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
 
     <!-- bootstrap-progressbar -->
-    <link href="/static/gentelella/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css"
+    <link href="/__static__/morpcc/gentelella/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css"
       rel="stylesheet">
     <!-- JQVMap -->
-    <link href="/static/gentelella/vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet" />
+    <link href="/__static__/morpcc/gentelella/vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet" />
     <!-- bootstrap-daterangepicker -->
-    <link href="/static/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <link href="/__static__/morpcc/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 
     <!-- bootstrap-datetimepicker -->
-    <link href="/static/gentelella/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css"
+    <link href="/__static__/morpcc/gentelella/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css"
       rel="stylesheet">
 
     <!-- Custom Theme Style -->
-    <link href="/static/gentelella/build/css/custom.min.css" rel="stylesheet">
+    <link href="/__static__/morpcc/gentelella/build/css/custom.min.css" rel="stylesheet">
 
     <!-- PNotify -->
-    <link href="/static/gentelella/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
-    <link href="/static/gentelella/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
-    <link href="/static/gentelella/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
+    <link href="/__static__/morpcc/gentelella/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+    <link href="/__static__/morpcc/gentelella/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+    <link href="/__static__/morpcc/gentelella/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
 
 
     <!-- Datatables -->
-    <link href="/static/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
-    <link href="/static/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
-    <link href="/static/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
+    <link href="/__static__/morpcc/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css"
       rel="stylesheet">
-    <link href="/static/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
+    <link href="/__static__/morpcc/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css"
       rel="stylesheet">
-    <link href="/static/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <link href="/__static__/morpcc/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
+      rel="stylesheet">
+    <link href="/__static__/morpcc/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
+      rel="stylesheet">
+    <link href="/__static__/morpcc/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css"
+      rel="stylesheet">
 
     <!-- deform -->
-    <link href="/deform_static/select2/select2.css" rel="stylesheet">
-    <link href="/deform_static/tinymce/skins/lightgray/skin.min.css" rel="stylesheet">
-    <!--    <link href="/deform_static/tinymce/skins/lightgray/content.min.css" rel="stylesheet">
-    <link href="/deform_static/tinymce/skins/lightgray/content.inline.min.css" rel="stylesheet">-->
-    <link href="/deform_static/tinymce/skins/lightgray/skin.ie7.min.css" rel="stylesheet">
+    <link href="/__static__/deform/select2/select2.css" rel="stylesheet">
+    <link href="/__static__/deform/tinymce/skins/lightgray/skin.min.css" rel="stylesheet">
+    <!--    <link href="/__static__/deform/tinymce/skins/lightgray/content.min.css" rel="stylesheet">
+    <link href="/__static__/deform/tinymce/skins/lightgray/content.inline.min.css" rel="stylesheet">-->
+    <link href="/__static__/deform/tinymce/skins/lightgray/skin.ie7.min.css" rel="stylesheet">
 
-    <link href="/static/main.css" rel="stylesheet">
+    <link href="/__static__/morpcc/main.css" rel="stylesheet">
 
 
     <metal:slot define-slot="style_slot">
     </metal:slot>
 
-    <script src="/static/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/jquery/dist/jquery.min.js"></script>
 
-    <script src="/deform_static/scripts/deform.js"></script>
+    <script src="/__static__/deform/scripts/deform.js"></script>
 
     <metal:slot define-slot="header_script_slot">
     </metal:slot>
@@ -124,7 +127,7 @@
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                     aria-expanded="false">
-                    <img src="/static/gentelella/production/images/img.jpg" alt="">John Doe
+                    <img src="/__static__/morpcc/gentelella/production/images/img.jpg" alt="">John Doe
                     <span class=" fa fa-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -157,7 +160,7 @@
                     <li>
                       <a>
                         <span class="image">
-                          <img src="/static/gentelella/production/images/img.jpg" alt="Profile Image" />
+                          <img src="/__static__/morpcc/gentelella/production/images/img.jpg" alt="Profile Image" />
                         </span>
                         <span>
                           <span>John Smith</span>
@@ -165,14 +168,14 @@
                         </span>
                         <span class="message">
                           Film festivals used to be do-or-die moments for movie makers. They were
-                          where/static/gentelella.
+                          where/__static__/morpcc/gentelella.
                         </span>
                       </a>
                     </li>
                     <li>
                       <a>
                         <span class="image">
-                          <img src="/static/gentelella/production/images/img.jpg" alt="Profile Image" />
+                          <img src="/__static__/morpcc/gentelella/production/images/img.jpg" alt="Profile Image" />
                         </span>
                         <span>
                           <span>John Smith</span>
@@ -180,14 +183,14 @@
                         </span>
                         <span class="message">
                           Film festivals used to be do-or-die moments for movie makers. They were
-                          where/static/gentelella.
+                          where/__static__/morpcc/gentelella.
                         </span>
                       </a>
                     </li>
                     <li>
                       <a>
                         <span class="image">
-                          <img src="/static/gentelella/production/images/img.jpg" alt="Profile Image" />
+                          <img src="/__static__/morpcc/gentelella/production/images/img.jpg" alt="Profile Image" />
                         </span>
                         <span>
                           <span>John Smith</span>
@@ -195,14 +198,14 @@
                         </span>
                         <span class="message">
                           Film festivals used to be do-or-die moments for movie makers. They were
-                          where/static/gentelella.
+                          where/__static__/morpcc/gentelella.
                         </span>
                       </a>
                     </li>
                     <li>
                       <a>
                         <span class="image">
-                          <img src="/static/gentelella/production/images/img.jpg" alt="Profile Image" />
+                          <img src="/__static__/morpcc/gentelella/production/images/img.jpg" alt="Profile Image" />
                         </span>
                         <span>
                           <span>John Smith</span>
@@ -210,7 +213,7 @@
                         </span>
                         <span class="message">
                           Film festivals used to be do-or-die moments for movie makers. They were
-                          where/static/gentelella.
+                          where/__static__/morpcc/gentelella.
                         </span>
                       </a>
                     </li>
@@ -254,77 +257,81 @@
                          data-message message['message'];
                          data-title message['title']"></span>
     </div> <!-- Bootstrap -->
-    <script src="/static/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- FastClick -->
-    <script src="/static/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/fastclick/lib/fastclick.js"></script>
     <!-- NProgress -->
-    <script src="/static/gentelella/vendors/nprogress/nprogress.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/nprogress/nprogress.js"></script>
     <!-- Chart.js -->
-    <script src="/static/gentelella/vendors/Chart.js/dist/Chart.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/Chart.js/dist/Chart.min.js"></script>
     <!-- gauge.js -->
-    <script src="/static/gentelella/vendors/gauge.js/dist/gauge.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/gauge.js/dist/gauge.min.js"></script>
     <!-- bootstrap-progressbar -->
-    <script src="/static/gentelella/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
     <!-- iCheck -->
-    <script src="/static/gentelella/vendors/iCheck/icheck.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/iCheck/icheck.min.js"></script>
     <!-- Skycons -->
-    <script src="/static/gentelella/vendors/skycons/skycons.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/skycons/skycons.js"></script>
     <!-- Flot -->
-    <script src="/static/gentelella/vendors/Flot/jquery.flot.js"></script>
-    <script src="/static/gentelella/vendors/Flot/jquery.flot.pie.js"></script>
-    <script src="/static/gentelella/vendors/Flot/jquery.flot.time.js"></script>
-    <script src="/static/gentelella/vendors/Flot/jquery.flot.stack.js"></script>
-    <script src="/static/gentelella/vendors/Flot/jquery.flot.resize.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/Flot/jquery.flot.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/Flot/jquery.flot.pie.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/Flot/jquery.flot.time.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/Flot/jquery.flot.stack.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/Flot/jquery.flot.resize.js"></script>
     <!-- Flot plugins -->
-    <script src="/static/gentelella/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
-    <script src="/static/gentelella/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
-    <script src="/static/gentelella/vendors/flot.curvedlines/curvedLines.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/flot.curvedlines/curvedLines.js"></script>
     <!-- DateJS -->
-    <script src="/static/gentelella/vendors/DateJS/build/date.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/DateJS/build/date.js"></script>
     <!-- JQVMap -->
-    <script src="/static/gentelella/vendors/jqvmap/dist/jquery.vmap.js"></script>
-    <script src="/static/gentelella/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
-    <script src="/static/gentelella/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/jqvmap/dist/jquery.vmap.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
     <!-- bootstrap-daterangepicker -->
-    <script src="/static/gentelella/vendors/moment/min/moment.min.js"></script>
-    <script src="/static/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/moment/min/moment.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
 
     <!-- bootstrap-datetimepicker -->
-    <script src="/static/gentelella/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script
+      src="/__static__/morpcc/gentelella/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 
     <!-- PNotify -->
-    <script src="/static/gentelella/vendors/pnotify/dist/pnotify.js"></script>
-    <script src="/static/gentelella/vendors/pnotify/dist/pnotify.buttons.js"></script>
-    <script src="/static/gentelella/vendors/pnotify/dist/pnotify.nonblock.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/pnotify/dist/pnotify.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/pnotify/dist/pnotify.buttons.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/pnotify/dist/pnotify.nonblock.js"></script>
 
     <!-- DataTables -->
-    <script src="/static/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="/static/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-    <script src="/static/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="/static/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-    <script src="/static/gentelella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
-    <script src="/static/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
-    <script src="/static/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-    <script src="/static/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-    <script src="/static/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-    <script src="/static/gentelella/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="/static/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-    <script src="/static/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
-    <script src="/static/gentelella/vendors/jszip/dist/jszip.min.js"></script>
-    <script src="/static/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
-    <script src="/static/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script
+      src="/__static__/morpcc/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script
+      src="/__static__/morpcc/gentelella/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script
+      src="/__static__/morpcc/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/jszip/dist/jszip.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
 
 
     <!-- deform -->
-    <script src="/deform_static/select2/select2.js"></script>
-    <script src="/deform_static/tinymce/tinymce.min.js"></script>
+    <script src="/__static__/deform/select2/select2.js"></script>
+    <script src="/__static__/deform/tinymce/tinymce.min.js"></script>
 
 
     <!-- Custom Theme Scripts -->
-    <script src="/static/gentelella/build/js/custom.js"></script>
+    <script src="/__static__/morpcc/gentelella/build/js/custom.js"></script>
 
     <!-- Morpfw script -->
-    <script src="/static/main.js"></script>
+    <script src="/__static__/morpcc/main.js"></script>
 
     <metal:slot define-slot="footer_script_slot">
     </metal:slot>
