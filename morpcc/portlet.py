@@ -11,17 +11,17 @@ def navigation_portlet(context, request):
             'href': request.link(typeinfo['collection_ui_factory'](request))
         })
     types_nav.sort(key=lambda x: x['title'])
+    general_children = [
+        {'title': 'Home', 'icon': 'home', 'href': request.relative_url('/')},
+    ]
+
+    if types_nav:
+        general_children.append({'title': 'Collections', 'icon': 'database',
+                                 'children': types_nav})
     return {
         'navtree': [{
             'section': 'General',
-            'children': [
-                {'title': 'Home', 'icon': 'home',
-                    'children': [
-                        {'title': 'Home', 'href': '/'}
-                    ]},
-                {'title': 'Collections', 'icon': 'database',
-                    'children': types_nav}
-            ]
+            'children': general_children
         }, {
             'section': 'Administrative',
             'children': [
