@@ -6,14 +6,15 @@ class TypeRegistry(object):
         self.typeinfo_factories = {}
 
     def register_typeinfo_factory(self, name, info_factory):
-        info_factory['name'] = name
         self.typeinfo_factories[name] = info_factory
 
     def get_typeinfo(self, name, request):
-        return self.typeinfo_factories[name](request)
+        result = self.typeinfo_factories[name](request)
+        result['name'] = name
+        return result
 
     def get_typeinfos(self, request):
         res = {}
-        for k, f in self.typeinfo_factories.items():
-            res[k] = f(request)
+        for k in self.typeinfo_factories.keys():
+            res[k] = self.get_typeinfo(k, request)
         return res
