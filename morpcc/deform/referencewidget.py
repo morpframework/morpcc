@@ -35,3 +35,7 @@ class ReferenceWidget(SelectWidget):
             name=self.resource_type, request=request)
         m = typeinfo['model_ui_factory'](request, identifier)
         return m
+
+    def get_resource_term(self, request, identifier):
+        m = self.get_resource(request, identifier)
+        return m.model[self.term_field]
