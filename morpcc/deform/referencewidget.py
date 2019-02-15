@@ -19,7 +19,6 @@ class ReferenceWidget(SelectWidget):
 
     def deserialize(self, *args, **kwargs):
         result = super().deserialize(*args, **kwargs)
-        print(result)
         return result
 
     def get_resource_search_url(self, context, request):
