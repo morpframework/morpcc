@@ -130,6 +130,12 @@ def datatable(context, request):
             limit=data['length'], offset=data['start'], order_by=order_by)
     total = collection.aggregate(
         group={'count': {'function': 'count', 'field': 'uuid'}})
+    try:
+        total_filtered = collection.aggregate(
+            query=search,
+            group={'count': {'function': 'count', 'field': 'uuid'}})
+    except NotImplementedError:
+        total_filtered = total
     rows = []
     for o in objs:
         row = []
@@ -138,11 +144,11 @@ def datatable(context, request):
             if c['name'].startswith('structure:'):
                 row.append(context.get_structure_column(o, request, c['name']))
             else:
-                row.append(html.escape(jsonobj[c['name']]))
+                row.append(html.escape(str(jsonobj[c['name']] or '')))
         rows.append(row)
     return {
         'draw': data['draw'],
         'recordsTotal': total[0]['count'],
-        'recordsFiltered': len(rows),
+        'recordsFiltered': total_filtered[0]['count'],
         'data': rows
     }
