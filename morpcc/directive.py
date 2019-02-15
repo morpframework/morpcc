@@ -1,7 +1,6 @@
 import dectate
 from morepath.directive import SettingAction
 from .portletregistry import PortletRegistry
-from .typeregistry import TypeRegistry
 
 PORTLET_FACTORY_IDS: dict = {}
 
@@ -41,22 +40,3 @@ class PortletFactoryAction(dectate.Action):
             over=self.over,
             under=self.under
         )
-
-
-class TypeInfoFactoryAction(dectate.Action):
-
-    config = {
-        'type_registry': TypeRegistry
-    }
-
-    depends = [SettingAction]
-
-    def __init__(self, name):
-        self.name = name
-
-    def identifier(self, type_registry: TypeRegistry):
-        return self.name
-
-    def perform(self, obj, type_registry: TypeRegistry):
-        type_registry.register_typeinfo_factory(
-            info_factory=obj, name=self.name)
