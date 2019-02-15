@@ -16,7 +16,7 @@
     <div tal:define="input_prepend field.widget.input_prepend | None;
                    input_append field.widget.input_append  | None" tal:omit-tag="not (input_prepend or input_append)" class="input-group">
       <span class="input-group-addon" tal:condition="input_prepend">${input_prepend}</span>
-      <span tal:replace="structure field.serialize(cstruct, readonly=True).strip()" />
+      <span tal:replace="structure field.serialize(cstruct, readonly=True, request=request, context=context).strip()" />
       <span class="input-group-addon" tal:condition="input_append">${input_append}</span>
     </div>
 

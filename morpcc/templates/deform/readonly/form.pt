@@ -19,7 +19,7 @@
       ${description}
     </p>
 
-    <div tal:repeat="child field" tal:replace="structure child.render_template(item_template)"/>
+    <div tal:repeat="child field" tal:replace="structure child.render_template(item_template, request=request, context=context)"/>
 
   </fieldset>
 

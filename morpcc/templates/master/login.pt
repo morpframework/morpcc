@@ -12,21 +12,21 @@
 
 
   <!-- Bootstrap -->
-  <link href="/static/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/__static__/morpcc/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome -->
-  <link href="/static/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/__static__/morpcc/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <!-- NProgress -->
-  <link href="/static/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
+  <link href="/__static__/morpcc/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
   <!-- Animate.css -->
-  <link href="/static/gentelella/vendors/animate.css/animate.min.css" rel="stylesheet">
+  <link href="/__static__/morpcc/gentelella/vendors/animate.css/animate.min.css" rel="stylesheet">
 
   <!-- PNotify -->
-  <link href="/static/gentelella/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
-  <link href="/static/gentelella/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
-  <link href="/static/gentelella/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
+  <link href="/__static__/morpcc/gentelella/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+  <link href="/__static__/morpcc/gentelella/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+  <link href="/__static__/morpcc/gentelella/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
 
   <!-- Custom Theme Style -->
-  <link href="/static/gentelella/build/css/custom.min.css" rel="stylesheet">
+  <link href="/__static__/morpcc/gentelella/build/css/custom.min.css" rel="stylesheet">
 </head>
 
 <body class="login">
@@ -115,14 +115,14 @@
     data-title message['title']"></span>
   </div>
 
-  <script src="/static/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+  <script src="/__static__/morpcc/gentelella/vendors/jquery/dist/jquery.min.js"></script>
   <!-- PNotify -->
-  <script src="/static/gentelella/vendors/pnotify/dist/pnotify.js"></script>
-  <script src="/static/gentelella/vendors/pnotify/dist/pnotify.buttons.js"></script>
-  <script src="/static/gentelella/vendors/pnotify/dist/pnotify.nonblock.js"></script>
+  <script src="/__static__/morpcc/gentelella/vendors/pnotify/dist/pnotify.js"></script>
+  <script src="/__static__/morpcc/gentelella/vendors/pnotify/dist/pnotify.buttons.js"></script>
+  <script src="/__static__/morpcc/gentelella/vendors/pnotify/dist/pnotify.nonblock.js"></script>
 
 
-  <script src="/static/main.js"></script>
+  <script src="/__static__/morpcc/main.js"></script>
 </body>
 
 </html>

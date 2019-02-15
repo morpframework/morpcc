@@ -16,17 +16,17 @@
                             <metal:macro define-macro="form">
                                 <tal:cond condition="form_data">
                                     <tal:cond condition="readonly">
-                                        <div tal:replace="structure:form.render(form_data, readonly=True)">
+                                        <div tal:replace="structure:form.render(form_data, readonly=True, request=request, context=context)">
                                         </div>
                                     </tal:cond>
                                     <tal:cond condition="not:readonly">
-                                        <div tal:replace="structure:form.render(form_data)">
+                                        <div tal:replace="structure:form.render(form_data, request=request, context=context)">
 
                                         </div>
                                     </tal:cond>
                                 </tal:cond>
                                 <tal:cond condition="not:form_data">
-                                    <div tal:replace="structure:form.render()">
+                                    <div tal:replace="structure:form.render(request=request, context=context)">
                                     </div>
                                 </tal:cond>
                             </metal:macro>

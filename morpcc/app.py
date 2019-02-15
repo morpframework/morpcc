@@ -36,7 +36,6 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     request_class = WebAppRequest
 
     portlet = dectate.directive(directive.PortletFactoryAction)
-    typeinfo = dectate.directive(directive.TypeInfoFactoryAction)
 
 
 class SQLAuthApp(SQLStorageAuthApp, DefaultAuthzPolicy):

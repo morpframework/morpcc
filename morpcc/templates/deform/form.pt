@@ -34,7 +34,7 @@
       ${description}
     </p>
 
-    <div tal:repeat="child field" tal:replace="structure child.render_template(item_template)"/>
+    <div tal:repeat="child field" tal:replace="structure child.render_template(item_template, request=request, context=context)"/>
 
     <div class="ln_solid"></div>
     <div class="form-group deform-form-buttons">

@@ -29,7 +29,6 @@ def process_edit(context, request):
         context.model.schema, include_fields=context.edit_include_fields,
         exclude_fields=context.edit_exclude_fields)
     data = context.model.data.as_dict()
-
     controls = list(request.POST.items())
     form = deform.Form(formschema(), buttons=('Submit', ))
 
@@ -39,9 +38,11 @@ def process_edit(context, request):
     except deform.ValidationFailure as e:
         form = e
         failed = True
-
     if not failed:
-        context.model.update(data)
+        # FIXME: model update should allow datetime object
+        prov = request.app.get_dataprovider(context.model.schema, data,
+                context.model.storage)
+        context.model.update(prov.as_json())
         return morepath.redirect(request.link(context))
 
     return {

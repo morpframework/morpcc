@@ -1,0 +1,7 @@
+<div i18n:domain="">
+   <p class="form-control-static" 
+      tal:define="resource field.widget.get_resource(request, cstruct)">
+      <a tal:attributes="href request.link(resource)" 
+         tal:content="resource"></a>
+  </p>
+</div>

@@ -14,40 +14,42 @@ def permits(request, context, permission):
     return request.app._permits(request.identity, context, klass)
 
 
+def colander_params(prop, oid_prefix, **kwargs):
+    t = dataclass_get_type(prop)
+    params = {
+        'name': prop.name,
+        'oid': '%s-%s' % (oid_prefix, prop.name),
+        'missing': colander.required if t['required'] else colander.drop
+    }
+    deform_field_config = prop.metadata.get('deform', {})
+    if 'widget' in deform_field_config.keys():
+        params['widget'] = deform_field_config['widget']
+    params.update(kwargs)
+    return params
+
+
 def dataclass_field_to_colander_schemanode(
         prop: dataclasses.Field, oid_prefix='deformField') -> colander.SchemaNode:
 
     t = dataclass_get_type(prop)
     if t['type'] == date:
-        return colander.SchemaNode(typ=colander.Date(),
-                                   name=prop.name,
-                                   oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if t['required'] else colander.drop)
+        params = colander_params(prop, oid_prefix, typ=colander.Date())
+        return colander.SchemaNode(**params)
     if t['type'] == datetime:
-        return colander.SchemaNode(typ=colander.DateTime(),
-                                   name=prop.name,
-                                   oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if t['required'] else colander.drop)
+        params = colander_params(prop, oid_prefix, typ=colander.DateTime())
+        return colander.SchemaNode(**params)
     if t['type'] == str:
-        return colander.SchemaNode(typ=colander.String(),
-                                   name=prop.name,
-                                   oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if t['required'] else colander.drop)
+        params = colander_params(prop, oid_prefix, typ=colander.String())
+        return colander.SchemaNode(**params)
     if t['type'] == int:
-        return colander.SchemaNode(typ=colander.Integer(),
-                                   name=prop.name,
-                                   oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if t['required'] else colander.drop)
+        params = colander_params(prop, oid_prefix, typ=colander.Integer())
+        return colander.SchemaNode(**params)
     if t['type'] == float:
-        return colander.SchemaNode(typ=colander.Float(),
-                                   name=prop.name,
-                                   oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if t['required'] else colander.drop)
+        params = colander_params(prop, oid_prefix, typ=colander.Float())
+        return colander.SchemaNode(**params)
     if t['type'] == bool:
-        return colander.SchemaNode(typ=colander.Boolean(),
-                                   name=prop.name,
-                                   oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if t['required'] else colander.drop)
+        params = colander_params(prop, oid_prefix, typ=colander.Boolean())
+        return colander.SchemaNode(**params)
 
     if dataclass_check_type(prop, ISchema):
         subtype = dataclass_to_colander(
@@ -55,17 +57,11 @@ def dataclass_field_to_colander_schemanode(
 
         return subtype()
     if t['type'] == dict:
-        return colander.SchemaNode(typ=colander.Mapping(),
-                                   name=prop.name,
-                                   oid='%s-%s' % (oid_prefix, prop.name),
-                                   missing=colander.required if t['required'] else colander.drop)
-
+        params = colander_params(prop, oid_prefix, typ=colander.Mapping())
+        return colander.SchemaNode(**params)
     if t['type'] == list:
-        return colander.SchemaNode(
-            typ=colander.List(),
-            name=prop.name,
-            oid='%s-%s' % (oid_prefix, prop.name),
-            missing=colander.required if t['required'] else colander.drop)
+        params = colander_params(prop, oid_prefix, typ=colander.List())
+        return colander.SchemaNode(**params)
 
     raise KeyError(prop)
 
