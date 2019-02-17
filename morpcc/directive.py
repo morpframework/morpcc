@@ -1,4 +1,6 @@
 import dectate
+import reg
+import morepath
 from morepath.directive import SettingAction
 from .portletregistry import PortletRegistry
 
@@ -40,3 +42,20 @@ class PortletFactoryAction(dectate.Action):
             over=self.over,
             under=self.under
         )
+
+
+class StructureColumnAction(dectate.Action):
+
+    app_class_arg = True
+
+    def __init__(self, model, name):
+        self.model = model
+        self.name = name
+
+    def identifier(self, app_class):
+        return str((app_class, self.model, self.name))
+
+    def perform(self, obj, app_class):
+        app_class.get_structure_column.register(
+            reg.methodify(obj),
+            model=self.model, request=morepath.Request, name=self.name)

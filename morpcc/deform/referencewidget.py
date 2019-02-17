@@ -27,14 +27,20 @@ class ReferenceWidget(SelectWidget):
 
     def get_resource_url(self, request, identifier):
         m = self.get_resource(request, identifier)
+        if not m:
+            return None
         return request.link(m)
 
     def get_resource(self, request, identifier):
         typeinfo = request.app.config.type_registry.get_typeinfo(
             name=self.resource_type, request=request)
+        if not (identifier or '').strip():
+            return None
         m = typeinfo['model_ui_factory'](request, identifier)
         return m
 
     def get_resource_term(self, request, identifier):
         m = self.get_resource(request, identifier)
+        if not m:
+            return None
         return m.model[self.term_field]

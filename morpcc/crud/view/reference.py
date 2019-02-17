@@ -25,13 +25,11 @@ def _term_search(context, request):
     typeinfo = request.app.config.type_registry.get_typeinfo(
         name=resource_type, request=request)
     col = typeinfo['collection_factory'](request)
-    print(col)
     objs = col.search(query={
         'field': term_field,
         'operator': '~',
         'value': term
     })
-    print(objs)
     result = {
         'results': []
     }

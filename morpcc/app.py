@@ -11,6 +11,7 @@ from morpfw.main import create_app, create_sqlapp
 from beaker.middleware import SessionMiddleware
 import functools
 import dectate
+import reg
 from . import directive
 
 
@@ -36,6 +37,14 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     request_class = WebAppRequest
 
     portlet = dectate.directive(directive.PortletFactoryAction)
+    structure_column = dectate.directive(directive.StructureColumnAction)
+
+    @reg.dispatch_method(reg.match_instance('model'),
+                         reg.match_instance('request'),
+                         reg.match_key('name'))
+    def get_structure_column(self, model, request, name):
+        raise NotImplementedError(
+            'Get structure columns for %s structure:%s' % (model, name))
 
 
 class SQLAuthApp(SQLStorageAuthApp, DefaultAuthzPolicy):
