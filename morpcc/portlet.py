@@ -6,9 +6,12 @@ def navigation_portlet(context, request):
     types = request.app.config.type_registry.get_typeinfos(request)
     types_nav = []
     for typeinfo in types.values():
+        if typeinfo.get('internal', False):
+            continue
+        collectionui = typeinfo['collection_ui_factory'](request)
         types_nav.append({
             'title': typeinfo['title'],
-            'href': request.link(typeinfo['collection_ui_factory'](request))
+            'href': request.link(collectionui, '+%s' % collectionui.default_view)
         })
     types_nav.sort(key=lambda x: x['title'])
     general_children = [

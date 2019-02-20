@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <html metal:use-macro="load_template('master/page.pt').macros.master">
 
   <body>

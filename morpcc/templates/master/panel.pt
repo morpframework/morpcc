@@ -3,7 +3,9 @@
         <div metal:define-macro="panel">
             <div class="x_panel">
                 <div class="x_title">
-                    <h2 metal:define-slot="panel-title">Panel Title</h2>
+                    <h2>
+                        <metal:slot define-slot="panel-title">Panel Title</metal:slot>
+                    </h2>
                     <ul class="nav navbar-right panel_toolbox">
                         <metal:slot define-slot="panel-toolbox">
                         </metal:slot>

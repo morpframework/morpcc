@@ -1,6 +1,7 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <metal:master define-macro="master">
-  <!DOCTYPE html>
-  <html lang="en">
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -259,11 +260,15 @@
     </div> <!-- Bootstrap -->
     <script src="/__static__/morpcc/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- FastClick -->
-    <script src="/__static__/morpcc/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+    <!--<script src="/__static__/morpcc/gentelella/vendors/fastclick/lib/fastclick.js"></script>-->
     <!-- NProgress -->
-    <script src="/__static__/morpcc/gentelella/vendors/nprogress/nprogress.js"></script>
+    <!--<script src="/__static__/morpcc/gentelella/vendors/nprogress/nprogress.js"></script>-->
     <!-- Chart.js -->
-    <script src="/__static__/morpcc/gentelella/vendors/Chart.js/dist/Chart.min.js"></script>
+    <!--<script src="/__static__/morpcc/gentelella/vendors/moment/min/moment.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/Chart.js/dist/Chart.min.js"></script>-->
+    <script src="/__static__/morpcc/chartjs/moment.js"></script>
+    <script src="/__static__/morpcc/chartjs/Chart.js"></script>
+    <script src="/__static__/morpcc/chartjs/Chart.Financial.js"></script>
     <!-- gauge.js -->
     <script src="/__static__/morpcc/gentelella/vendors/gauge.js/dist/gauge.min.js"></script>
     <!-- bootstrap-progressbar -->
@@ -289,7 +294,7 @@
     <script src="/__static__/morpcc/gentelella/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
     <script src="/__static__/morpcc/gentelella/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
     <!-- bootstrap-daterangepicker -->
-    <script src="/__static__/morpcc/gentelella/vendors/moment/min/moment.min.js"></script>
+
     <script src="/__static__/morpcc/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
 
     <!-- bootstrap-datetimepicker -->
@@ -337,7 +342,6 @@
     </metal:slot>
 
   </body>
-
-  </html>
-
 </metal:master>
+
+</html>

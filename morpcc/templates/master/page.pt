@@ -1,6 +1,7 @@
-<metal:master define-macro="master">
-    <!DOCTYPE html>
-    <html>
+<!DOCTYPE html>
+<html>
+    <metal:master define-macro="master">
+
         <body metal:use-macro="main_template.macros.master">
             <div metal:fill-slot="main">
                 <div class="page-title">
@@ -20,5 +21,5 @@
                 </metal:slot>
             </div>
         </body>
-    </html>
-</metal:master>
+    </metal:master>
+</html>
