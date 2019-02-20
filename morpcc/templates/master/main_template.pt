@@ -292,6 +292,7 @@
     <!-- JQVMap -->
     <script src="/__static__/morpcc/gentelella/vendors/jqvmap/dist/jquery.vmap.js"></script>
     <script src="/__static__/morpcc/gentelella/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+    <script src="/__static__/morpcc/maps/jquery.vmap.malaysia.js"></script>
     <script src="/__static__/morpcc/gentelella/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
     <!-- bootstrap-daterangepicker -->
 
