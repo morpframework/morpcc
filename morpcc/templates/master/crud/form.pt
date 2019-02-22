@@ -21,13 +21,18 @@
                                             <i class="fa fa-eye"></i>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a tal:attributes="href request.link(context, '+edit')" tal:condition="permits('morpfw.crud.permission:Edit')">
+                                    <li tal:condition="permits('morpfw.crud.permission:Edit')">
+                                        <a tal:attributes="href request.link(context, '+edit')">
                                             <i class="fa fa-edit"></i>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a tal:attributes="href request.link(context, '+delete')" tal:condition="permits('morpfw.crud.permission:Delete')">
+                                    <li tal:condition="permits('morpfw.crud.permission:Edit') and context.model.blob_fields">
+                                        <a tal:attributes="href request.link(context, '+upload')">
+                                            <i class="fa fa-upload"></i>
+                                        </a>
+                                    </li>
+                                    <li tal:condition="permits('morpfw.crud.permission:Delete')">
+                                        <a tal:attributes="href request.link(context, '+delete')">
                                             <i class="fa fa-trash"></i>
                                         </a>
                                     </li>
