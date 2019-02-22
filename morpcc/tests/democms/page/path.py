@@ -2,10 +2,13 @@ from ..app import App
 from .model import PageModel, PageCollection
 from .modelui import PageModelUI, PageCollectionUI
 from .storage import PageStorage
+from morpfw import FSBlobStorage
 
 
 def get_collection(request):
-    storage = PageStorage(request)
+    blob_path = request.app.settings.application.fsblobstorage_path
+    storage = PageStorage(
+        request, blobstorage=FSBlobStorage(request, path=blob_path))
     return PageCollection(request, storage)
 
 

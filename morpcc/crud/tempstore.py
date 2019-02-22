@@ -16,16 +16,27 @@ class UIDFSBlobStorage(FSBlobStorage):
 
 class FSBlobFileUploadTempStore(FileUploadTempStore):
 
-    def __init__(self, request, path):
+    def __init__(self, field, context, request, path):
+        self.field = field
         self.blobstorage = UIDFSBlobStorage(request, path)
         self.request = request
+        self.context = context
+        self._memstore = {}
 
     def __setitem__(self, name, value):
+        if value['fp'] is None:
+            self._memstore[name] = value
+            return
+
         blob = self.blobstorage.put(
             value['fp'], filename=value['filename'], mimetype=value['mimetype'],
             uuid=name)
 
     def __getitem__(self, name):
+        if name in self._memstore:
+            self._memstore[name]['preview_url'] = 'https://via.placeholder.com/150'
+            return self._memstore[name]
+
         uuid = name
         blob = self.blobstorage.get(uuid)
         if blob is None:
@@ -52,4 +63,6 @@ class FSBlobFileUploadTempStore(FileUploadTempStore):
         return True
 
     def preview_url(self, name):
-        return None
+        return 'https://via.placeholder.com/150'
+
+#        return self.request.link(self.context, '+blob-preview?field=%s' % self.field)

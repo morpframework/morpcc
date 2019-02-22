@@ -331,6 +331,7 @@
     <!-- deform -->
     <script src="/__static__/deform/select2/select2.js"></script>
     <script src="/__static__/deform/tinymce/tinymce.min.js"></script>
+    <script src="/__static__/deform/scripts/file_upload.js"></script>
 
 
     <!-- Custom Theme Scripts -->
