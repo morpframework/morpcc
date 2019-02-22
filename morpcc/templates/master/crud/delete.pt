@@ -20,11 +20,11 @@
 
 
                             <tal:cond condition="form_data">
-                                <div tal:replace="structure:form.render(form_data, readonly=True)">
+                                <div tal:replace="structure:form.render(form_data, readonly=True, request=request, context=context)">
                                 </div>
                             </tal:cond>
                             <tal:cond condition="not:form_data">
-                                <div tal:replace="structure:form.render(readonly=True)">
+                                <div tal:replace="structure:form.render(readonly=True, request=request, context=context)">
                                 </div>
                             </tal:cond>
                             <div class="ln_solid"></div>
