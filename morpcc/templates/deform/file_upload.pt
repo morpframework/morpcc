@@ -6,12 +6,15 @@
   <div>
 
     <div>
-      <input type="file" name="upload" id="${oid}" tal:attributes="style style;
+      <input type="file" name="${oid}" id="${oid}" tal:attributes="style style;
                          accept accept|field.widget.accept;
                          data-filename cstruct.get('filename');
                          attributes|field.widget.attributes|{};"/>
 
       <div tal:condition="cstruct.get('uid')">
+        <a href="${cstruct.get('download_url')}">
+          <i class="fa fa-download"></i> Download 
+        </a> |
         <b>Mimetype:</b>
         <span tal:content="cstruct.get('mimetype')"></span>
       </div>

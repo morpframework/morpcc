@@ -42,6 +42,7 @@ def upload(context, request):
             'filename': blob.filename,
             'size': blob.size,
             'mimetype': blob.mimetype,
+            'download_url': request.link(context.model, '+blobs?field=%s' % f),
             'preview_url': request.link(context, '+blob-preview?field=%s' % f)
         }
 
