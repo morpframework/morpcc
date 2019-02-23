@@ -30,7 +30,7 @@ def upload_form(context: ModelUI, request: morepath.Request) -> deform.Form:
 
 
 @App.html(model=ModelUI, name='upload', permission=crudperm.Edit,
-          template='master/simple-form.pt')
+          template='master/crud/form.pt')
 def upload(context, request):
     data = {}
     for f in context.model.blob_fields:

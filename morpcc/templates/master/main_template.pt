@@ -91,6 +91,7 @@
 
 
             <div tal:define="portletprovider app.config.portlet_registry.get_provider('left-portlets')"
+              tal:condition="portletprovider"
               tal:content="structure:portletprovider.render(context, request, load_template)">
             </div>
 
@@ -237,7 +238,15 @@
         <!-- page content -->
         <div class="right_col" role="main">
           <!-- top tiles -->
+          <div tal:define="portletprovider app.config.portlet_registry.get_provider('abovecontent-portlets')"
+            tal:condition="portletprovider"
+            tal:content="structure:portletprovider.render(context, request, load_template)">
+          </div>
           <div metal:define-slot="main">
+          </div>
+          <div tal:define="portletprovider app.config.portlet_registry.get_provider('belowcontent-portlets')"
+            tal:condition="portletprovider"
+            tal:content="structure:portletprovider.render(context, request, load_template)">
           </div>
         </div>
         <!-- /page content -->
@@ -252,6 +261,7 @@
         <!-- /footer content -->
       </div>
     </div>
+
 
     <div id="notifications" style="display:none">
       <span tal:repeat="message request.messages()" tal:attributes="data-category message['category'];

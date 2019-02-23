@@ -4,7 +4,10 @@ import html
 class ModelUI(object):
 
     view_include_fields: list = []
-    view_exclude_fields: list = []
+    view_exclude_fields: list = [
+        'id', 'uuid', 'creator', 'created', 'modified', 'state', 'deleted',
+        'xattrs', 'blobs'
+    ]
     edit_include_fields: list = []
     edit_exclude_fields: list = [
         'id', 'uuid', 'creator', 'created', 'modified', 'state', 'deleted',
@@ -21,6 +24,13 @@ class ModelUI(object):
         self.request = request
         self.model = model
         self.collection_ui = collection_ui
+
+    def transitions(self):
+        sm = self.model.statemachine()
+        if sm:
+            return list([i for i in sm._machine.get_triggers(
+                sm.state) if not i.startswith('to_')])
+        return []
 
 
 class CollectionUI(object):

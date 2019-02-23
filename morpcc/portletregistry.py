@@ -20,6 +20,8 @@ class PortletRegistry(object):
         }
 
     def get_provider(self, provider):
+        if provider not in self._portlet_infos:
+            return None
         infos = self._portlet_infos[provider]
         portlets = [self._portlet_options[provider][info.key]
                     for info in toposorted(infos)]

@@ -17,8 +17,6 @@
                             </metal:macro>
                         </ul>
                         <div metal:fill-slot="panel-content">
-
-
                             <tal:cond condition="form_data">
                                 <div tal:replace="structure:form.render(form_data, readonly=True, request=request, context=context)">
                                 </div>

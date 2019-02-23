@@ -17,12 +17,18 @@ def model_index(context, request):
     return morepath.redirect(request.link(context, '+%s' % context.default_view))
 
 
-@App.html(model=ModelUI, name='view', template='master/crud/form.pt', permission=crudperms.View)
+@App.html(model=ModelUI, name='view', template='master/crud/view.pt', permission=crudperms.View)
 def view(context, request):
     formschema = dataclass_to_colander(
         context.model.schema,
         include_fields=context.view_include_fields,
         exclude_fields=context.view_exclude_fields)
+
+    xattrprovider = context.model.xattrprovider()
+    if xattrprovider:
+        xattrformschema = dataclass_to_colander(xattrprovider.schema)
+    else:
+        xattrformschema = None
     data = context.model.data.as_dict()
     sm = context.model.statemachine()
     if sm:
@@ -33,8 +39,10 @@ def view(context, request):
     return {
         'page_title': 'View %s' % html.escape(str(context.model.__class__.__name__)),
         'form_title': 'View',
-        'form': deform.Form(formschema(), buttons=('Submit',)),
+        'form': deform.Form(formschema()),
         'form_data': data,
+        'xattrform': deform.Form(xattrformschema()) if xattrprovider else None,
+        'xattrform_data': xattrprovider.as_dict() if xattrprovider else None,
         'readonly': True,
         'transitions': triggers
     }
