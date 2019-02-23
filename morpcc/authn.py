@@ -1,6 +1,24 @@
 import morepath
 from morpfw.authn.pas.policy import JWTWithAPIKeyIdentityPolicy
-from more.itsdangerous import IdentityPolicy as ItsDangerousIdentityPolicy
+from more.itsdangerous import IdentityPolicy as BaseItsDangerousIdentityPolicy
+from uuid import uuid4
+
+
+class ItsDangerousIdentityPolicy(BaseItsDangerousIdentityPolicy):
+
+    def __init__(self, *args, **kwargs):
+        if 'secret' in kwargs:
+            self._secret = kwargs['secret']
+            del kwargs['secret']
+        else:
+            self._secret = None
+        super().__init__(*args, **kwargs)
+
+    @morepath.reify
+    def secret(self):
+        if self._secret:
+            return self._secret
+        return uuid4().hex
 
 
 class IdentityPolicy(morepath.IdentityPolicy):

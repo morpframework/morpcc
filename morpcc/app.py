@@ -13,6 +13,7 @@ import functools
 import dectate
 import reg
 from . import directive
+from uuid import uuid4
 
 
 class WebAppRequest(DBSessionRequest):
@@ -60,9 +61,22 @@ class AuthnPolicy(SQLStorageAuthnPolicy):
             secure = False
         else:
             secure = True
+
+        master_secret = getattr(
+            settings.security, 'master_secret', uuid4().hex)
+
+        jwt_settings = settings.security.jwt.copy()
+        if not 'master_secret' in jwt_settings:
+            jwt_settings['master_secret'] = master_secret
+
+        itsdangerous_settings = {
+            'secure': secure,
+            'secret': master_secret
+        }
+
         return IdentityPolicy(
-            jwt_settings=settings.security.jwt,
-            itsdangerous_settings={'secure': secure},
+            jwt_settings=jwt_settings,
+            itsdangerous_settings=itsdangerous_settings,
             api_root='/api',
             development_mode=settings.application.development_mode)
 
@@ -76,4 +90,12 @@ def get_auth_app():
 def create_web_app(app, settings, scan=True, **kwargs):
     application = create_sqlapp(
         app=app, settings=settings, scan=scan, **kwargs)
+    if (settings['beaker_session'].get('session.type', None) is None and
+            settings['beaker_session'].get('session.url', None) is None):
+        print('set default session to ext:database')
+        settings['beaker_session']['session.type'] = 'ext:database'
+        settings['beaker_session']['session.url'] = (
+            settings['application']['dburi'])
+        print(settings['beaker_session'])
+
     return SessionMiddleware(application, settings['beaker_session'])

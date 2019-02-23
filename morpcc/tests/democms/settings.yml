@@ -11,33 +11,10 @@ application:
   app: morpcc.tests.democms.app:App
   fsblobstorage_path: '%(here)s/blobstorage'
   authn_policy: morpcc.app:AuthnPolicy
-  navigation:
-  - section: General
-    children:
-    - title: Home
-      icon: home
-      children:
-        - title: Home
-          href: /
-    - title: Collections
-      icon: database
-      children: 
-        - title: Pages
-          href: /page/+listing
-  - section: Administrative
-    children:
-    - title: Settings
-      icon: cog
-      children:
-        - title: Users
-          href: /manage-users/+listing
-        - title: Groups
-          href: /manage-groups/+listing
-        - title: API Keys
-          href: /manage-apikeys/+listing
-        - title: Personal
-          href: /personal-settings
 
-
+security:
+  master_secret: secret
+  jwt:
+    master_secret: secret
 beaker_session:
-  session.cookie_expires: True
+  session.cookie_expires: False
