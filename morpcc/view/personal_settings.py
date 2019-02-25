@@ -3,8 +3,10 @@ import colander
 import deform
 import deform.widget
 from morpfw.authn.pas.user.path import get_user_collection
+from ..users.model import CurrentUserModelUI
 from ..crud.tempstore import FSBlobFileUploadTempStore
 import morpfw.authn.pas.exc
+from morpfw.crud import permission as crudperm
 from ..app import App, SQLAuthApp
 from ..root import Root
 from .. import permission
@@ -85,8 +87,8 @@ def upload_form(context, request) -> deform.Form:
     return deform.Form(FileUpload(), buttons=('Upload', ), formid='upload-form')
 
 
-@App.html(model=Root, name='personal-settings', template="master/personal-settings.pt",
-          permission=permission.EditOwnProfile)
+@App.html(model=CurrentUserModelUI, name='edit', template="master/personal-settings.pt",
+          permission=crudperm.Edit)
 def profile(context, request: morepath.Request):
     userid = request.identity.userid
     newreq = request.get_authn_request()
@@ -115,8 +117,8 @@ def profile(context, request: morepath.Request):
     }
 
 
-@App.html(model=Root, name='personal-settings', request_method='POST',
-          template='master/personal-settings.pt', permission=permission.EditOwnProfile)
+@App.html(model=CurrentUserModelUI, name='edit', request_method='POST',
+          template='master/personal-settings.pt', permission=crudperm.Edit)
 def process_profile(context, request):
     userinfo_f = userinfo_form(request)
     password_f = password_form(request)
@@ -225,7 +227,7 @@ def process_profile(context, request):
     }
 
 
-@App.html(model=Root, name='upload-profile-photo', permission=permission.EditOwnProfile,
+@App.html(model=Root, name='upload-profile-photo', permission=crudperm.Edit,
           template='master/simple-form.pt')
 def upload_profile_photo(context, request):
     return {
@@ -235,7 +237,7 @@ def upload_profile_photo(context, request):
     }
 
 
-@App.html(model=Root, name='upload-profile-photo', permission=permission.EditOwnProfile,
+@App.html(model=Root, name='upload-profile-photo', permission=crudperm.Edit,
           template='master/simple-form.pt', request_method='POST')
 def process_upload_profile_photo(context, request):
     form = upload_form(context, request)

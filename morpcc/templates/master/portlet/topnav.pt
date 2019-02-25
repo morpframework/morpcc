@@ -9,7 +9,7 @@
                 <a tal:attributes="href request.relative_url('/profile')"> Profile</a>
             </li>
             <li>
-                <a tal:attributes="href request.relative_url('/personal-settings')">
+                <a tal:attributes="href request.relative_url('/site-settings')">
                     <span>Settings</span>
                 </a>
             </li>

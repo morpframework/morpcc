@@ -22,6 +22,8 @@ def get_user_model_ui(request, username):
 @App.path(model=CurrentUserModelUI, path='/profile')
 def get_current_user_model_ui(request):
     userid = request.identity.userid
+    if userid is None:
+        return None
     newreq = request.get_authn_request()
     col = get_user_collection(newreq)
     user = col.get_by_userid(userid)

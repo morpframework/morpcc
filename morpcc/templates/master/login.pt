@@ -8,7 +8,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Gentelella Alela! | </title>
+  <title>${settings.application.title}</title>
 
 
   <!-- Bootstrap -->
@@ -62,7 +62,7 @@
 
               <div>
                 <h1>
-                  <i class="fa fa-paw"></i> Gentelella Alela!</h1>
+                  <i class="fa fa-wrench"></i> ${settings.application.title}</h1>
                 <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
               </div>
             </div>
