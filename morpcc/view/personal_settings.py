@@ -90,14 +90,11 @@ def upload_form(context, request) -> deform.Form:
 @App.html(model=CurrentUserModelUI, name='edit', template="master/personal-settings.pt",
           permission=crudperm.Edit)
 def profile(context, request: morepath.Request):
-    userid = request.identity.userid
-    newreq = request.get_authn_request()
-    usercol = get_user_collection(newreq)
-    user = usercol.get_by_userid(userid)
+    user = context.model
     has_photo = user.get_blob('profile-photo')
     return {
         'page_title': 'Profile',
-        'profile_photo': newreq.link(user, '+blobs?field=profile-photo') if has_photo else None,
+        'profile_photo': request.link(context, '+download?field=profile-photo') if has_photo else None,
         'forms': [{
             'form_title': 'Personal Information',
             'form': attributes_form(user, request),
@@ -126,10 +123,7 @@ def process_profile(context, request):
     controls_dict = dict(controls)
     active_form = controls_dict['__formid__']
 
-    userid = request.identity.userid
-    newreq = request.get_authn_request()
-    usercol = get_user_collection(newreq)
-    user = usercol.get_by_userid(userid)
+    user = context.model
 
     attributes_f = attributes_form(user, request)
 
@@ -206,7 +200,7 @@ def process_profile(context, request):
     has_photo = user.get_blob('profile-photo')
     return {
         'page_title': 'Personal Settings',
-        'profile_photo': newreq.link(user, '+blobs?field=profile-photo') if has_photo else None,
+        'profile_photo': request.link(context, '+download?field=profile-photo') if has_photo else None,
         'forms': [
             {
                 'form_title': 'Personal Information',

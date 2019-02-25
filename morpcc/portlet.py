@@ -1,4 +1,5 @@
 from .app import App
+from .users.path import get_current_user_model_ui
 from morpfw.authn.pas.user.path import get_user_collection
 
 
@@ -61,25 +62,21 @@ def navigation_portlet(context, request):
 
 @App.portlet(name='morpcc.profile', template='master/portlet/profile.pt')
 def profile_portlet(context, request):
-    userid = request.identity.userid
-    newreq = request.get_authn_request()
-    usercol = get_user_collection(newreq)
-    user = usercol.get_by_userid(userid)
-    xattr = user.xattrprovider()
+    user = get_current_user_model_ui(request)
+    userid = user.model.userid
+    xattr = user.model.xattrprovider()
     return {
         'displayname': xattr.get('displayname', userid),
-        'profilephoto_url': newreq.link(user, '+blobs?field=profile-photo')
+        'profilephoto_url': request.link(user, '+download?field=profile-photo')
     }
 
 
 @App.portlet(name='morpcc.topnav', template='master/portlet/topnav.pt')
 def topnav_portlet(context, request):
-    userid = request.identity.userid
-    newreq = request.get_authn_request()
-    usercol = get_user_collection(newreq)
-    user = usercol.get_by_userid(userid)
-    xattr = user.xattrprovider()
+    user = get_current_user_model_ui(request)
+    userid = user.model.userid
+    xattr = user.model.xattrprovider()
     return {
         'displayname': xattr.get('displayname', userid),
-        'profilephoto_url': newreq.link(user, '+blobs?field=profile-photo')
+        'profilephoto_url': request.link(user, '+download?field=profile-photo')
     }

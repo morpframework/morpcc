@@ -5,6 +5,7 @@ import deform.widget
 from morpfw.crud.model import Model
 from morpfw.authn.pas.user.path import get_user_collection
 from morpfw.crud import permission as crudperm
+from morpfw.crud.view import get_blob
 from ..tempstore import FSBlobFileUploadTempStore
 import morpfw.authn.pas.exc
 from ...app import App, SQLAuthApp
@@ -42,8 +43,8 @@ def upload(context, request):
             'filename': blob.filename,
             'size': blob.size,
             'mimetype': blob.mimetype,
-            'download_url': request.link(context, '+blobs?field=%s' % f),
-            'preview_url': request.link(context, '+blob-preview?field=%s' % f)
+            'download_url': request.link(context, '+download?field=%s' % f),
+            'preview_url': request.link(context, '+blobpreview?field=%s' % f)
         }
 
     return {
@@ -86,3 +87,8 @@ def process_upload(context, request):
         'form': form,
         'form_data': data if not failed else None
     }
+
+
+@App.view(model=ModelUI, name='download', permission=crudperm.View)
+def download(context, request):
+    return get_blob(context.model, request)
