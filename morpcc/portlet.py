@@ -1,9 +1,15 @@
 from .app import App
+from morpfw.authn.pas.user.path import get_user_collection
 
 
 @App.portletprovider(name='morpcc.left-portlets')
 def left_portlets(context, request):
     return ['morpcc.profile', 'morpcc.main_navigation']
+
+
+@App.portletprovider(name='morpcc.top-navigation')
+def topnav_portlets(context, request):
+    return ['morpcc.topnav']
 
 
 @App.portlet(name='morpcc.main_navigation', template='master/portlet/navigation.pt')
@@ -55,4 +61,25 @@ def navigation_portlet(context, request):
 
 @App.portlet(name='morpcc.profile', template='master/portlet/profile.pt')
 def profile_portlet(context, request):
-    return {}
+    userid = request.identity.userid
+    newreq = request.get_authn_request()
+    usercol = get_user_collection(newreq)
+    user = usercol.get_by_userid(userid)
+    xattr = user.xattrprovider()
+    return {
+        'displayname': xattr['displayname'],
+        'profilephoto_url': newreq.link(user, '+blobs?field=profile-photo')
+    }
+
+
+@App.portlet(name='morpcc.topnav', template='master/portlet/topnav.pt')
+def topnav_portlet(context, request):
+    userid = request.identity.userid
+    newreq = request.get_authn_request()
+    usercol = get_user_collection(newreq)
+    user = usercol.get_by_userid(userid)
+    xattr = user.xattrprovider()
+    return {
+        'displayname': xattr['displayname'],
+        'profilephoto_url': newreq.link(user, '+blobs?field=profile-photo')
+    }

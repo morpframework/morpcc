@@ -27,7 +27,6 @@ class FSBlobFileUploadTempStore(FileUploadTempStore):
         if value['fp'] is None:
             self._memstore[name] = value
             return
-
         blob = self.blobstorage.put(
             value['fp'], filename=value['filename'], mimetype=value['mimetype'],
             uuid=name)

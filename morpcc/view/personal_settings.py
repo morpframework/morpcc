@@ -72,11 +72,15 @@ def password_form(request) -> deform.Form:
                        formid='password-form')
 
 
-def upload_form(request) -> deform.Form:
+def upload_form(context, request) -> deform.Form:
+    tempstore = FSBlobFileUploadTempStore(
+        'profile-photo', context, request, '/tmp/tempstore')
+
     class FileUpload(colander.Schema):
         upload = colander.SchemaNode(deform.FileData(),
+                                     missing=colander.drop,
                                      widget=deform.widget.FileUploadWidget(
-                                     FSBlobFileUploadTempStore(request, '/tmp/tempstore')),
+                                         tempstore),
                                      oid='file-upload')
     return deform.Form(FileUpload(), buttons=('Upload', ), formid='upload-form')
 
@@ -227,14 +231,14 @@ def upload_profile_photo(context, request):
     return {
         'page_title': 'Upload image',
         'form_title': 'Upload',
-        'form': upload_form(request)
+        'form': upload_form(context, request)
     }
 
 
 @App.html(model=Root, name='upload-profile-photo', permission=permission.EditOwnProfile,
           template='master/simple-form.pt', request_method='POST')
 def process_upload_profile_photo(context, request):
-    form = upload_form(request)
+    form = upload_form(context, request)
     controls = list(request.POST.items())
 
     failed = False

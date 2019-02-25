@@ -42,7 +42,7 @@ def upload(context, request):
             'filename': blob.filename,
             'size': blob.size,
             'mimetype': blob.mimetype,
-            'download_url': request.link(context.model, '+blobs?field=%s' % f),
+            'download_url': request.link(context, '+blobs?field=%s' % f),
             'preview_url': request.link(context, '+blob-preview?field=%s' % f)
         }
 
@@ -67,7 +67,8 @@ def process_upload(context, request):
     except deform.ValidationFailure as e:
         failed = True
         form = e
-
+    print('formcontrol %s' % str(controls))
+    print('formdata %s' % str(data))
     if not failed:
         for f in context.model.blob_fields:
             if f not in data:

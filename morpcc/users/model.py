@@ -12,7 +12,7 @@ def get_user_blobstorage(model, request):
 
 class UserModelUI(ModelUI):
 
-    view_exclude_fields = ['password', 'attrs', 'nonce']
+    view_exclude_fields = ModelUI.view_exclude_fields + ['password', 'nonce']
     edit_include_fields = ['email']
 
 
@@ -29,3 +29,7 @@ class UserCollectionUI(CollectionUI):
         {'title': 'State', 'name': 'state'},
         {'title': 'Actions', 'name': 'structure:buttons'},
     ]
+
+
+class CurrentUserModelUI(UserModelUI):
+    pass

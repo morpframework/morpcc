@@ -48,6 +48,9 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
         raise NotImplementedError(
             'Get structure columns for %s structure:%s' % (model, name))
 
+    def get_portletprovider(self, name):
+        return self.config.portletprovider_registry.get_provider(name)
+
 
 class SQLAuthApp(SQLStorageAuthApp, DefaultAuthzPolicy):
     pass
