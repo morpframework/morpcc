@@ -90,7 +90,7 @@
             <div class="clearfix"></div>
 
 
-            <div tal:define="portletprovider app.config.portlet_registry.get_provider('left-portlets')"
+            <div tal:define="portletprovider app.config.portletprovider_registry.get_provider('morpcc.left-portlets')"
               tal:condition="portletprovider"
               tal:content="structure:portletprovider.render(context, request, load_template)">
             </div>
@@ -238,13 +238,15 @@
         <!-- page content -->
         <div class="right_col" role="main">
           <!-- top tiles -->
-          <div tal:define="portletprovider app.config.portlet_registry.get_provider('abovecontent-portlets')"
+          <div
+            tal:define="portletprovider app.config.portletprovider_registry.get_provider('morpcc.abovecontent-portlets')"
             tal:condition="portletprovider"
             tal:content="structure:portletprovider.render(context, request, load_template)">
           </div>
           <div metal:define-slot="main">
           </div>
-          <div tal:define="portletprovider app.config.portlet_registry.get_provider('belowcontent-portlets')"
+          <div
+            tal:define="portletprovider app.config.portletprovider_registry.get_provider('morpcc.belowcontent-portlets')"
             tal:condition="portletprovider"
             tal:content="structure:portletprovider.render(context, request, load_template)">
           </div>

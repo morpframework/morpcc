@@ -1,7 +1,12 @@
 from .app import App
 
 
-@App.portlet('left-portlets', name='morpcc.main_navigation', template='master/portlet/navigation.pt')
+@App.portletprovider(name='morpcc.left-portlets')
+def left_portlets(context, request):
+    return ['morpcc.profile', 'morpcc.main_navigation']
+
+
+@App.portlet(name='morpcc.main_navigation', template='master/portlet/navigation.pt')
 def navigation_portlet(context, request):
     types = request.app.config.type_registry.get_typeinfos(request)
     types_nav = []
@@ -48,6 +53,6 @@ def navigation_portlet(context, request):
     }
 
 
-@App.portlet('left-portlets', name='morpcc.profile', template='master/portlet/profile.pt', over=navigation_portlet)
+@App.portlet(name='morpcc.profile', template='master/portlet/profile.pt')
 def profile_portlet(context, request):
     return {}

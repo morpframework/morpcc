@@ -38,6 +38,7 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     request_class = WebAppRequest
 
     portlet = dectate.directive(directive.PortletFactoryAction)
+    portletprovider = dectate.directive(directive.PortletProviderFactoryAction)
     structure_column = dectate.directive(directive.StructureColumnAction)
 
     @reg.dispatch_method(reg.match_instance('model'),
@@ -92,10 +93,8 @@ def create_web_app(app, settings, scan=True, **kwargs):
         app=app, settings=settings, scan=scan, **kwargs)
     if (settings['beaker_session'].get('session.type', None) is None and
             settings['beaker_session'].get('session.url', None) is None):
-        print('set default session to ext:database')
         settings['beaker_session']['session.type'] = 'ext:database'
         settings['beaker_session']['session.url'] = (
             settings['application']['dburi'])
-        print(settings['beaker_session'])
 
     return SessionMiddleware(application, settings['beaker_session'])

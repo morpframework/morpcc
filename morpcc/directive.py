@@ -2,7 +2,7 @@ import dectate
 import reg
 import morepath
 from morepath.directive import SettingAction
-from .portletregistry import PortletRegistry
+from .portletregistry import PortletRegistry, PortletProviderRegistry
 
 PORTLET_FACTORY_IDS: dict = {}
 
@@ -15,32 +15,43 @@ class PortletFactoryAction(dectate.Action):
 
     depends = [SettingAction]
 
-    filter_convert = {
-        'under': dectate.convert_dotted_name,
-        'over': dectate.convert_dotted_name
-    }
-
-    def __init__(self, provider, template=None, under=None, over=None, name=None):
-        PORTLET_FACTORY_IDS.setdefault(provider, 0)
-        if name is None:
-            name = u'portlet_factory_%s_%s' % (
-                provider, PORTLET_FACTORY_IDS[provider])
-            PORTLET_FACTORY_IDS[provider] += 1
-        self.provider = provider
+    def __init__(self, name, template=None, permission=None):
         self.template = template
-        self.under = under
-        self.over = over
         self.name = name
+        self.permission = permission
 
     def identifier(self, portlet_registry: PortletRegistry):
         return self.name
 
     def perform(self, obj, portlet_registry: PortletRegistry):
-        portlet_registry.register_portlet_factory(
-            obj, provider=self.provider,
+        portlet_registry.register(
+            obj,
+            name=self.name,
             template=self.template,
-            over=self.over,
-            under=self.under
+            permission=self.permission
+        )
+
+
+class PortletProviderFactoryAction(dectate.Action):
+
+    config = {
+        'portletprovider_registry': PortletProviderRegistry
+    }
+
+    depends = [SettingAction]
+
+    def __init__(self, name, permission=None):
+        self.name = name
+        self.permission = permission
+
+    def identifier(self, portletprovider_registry: PortletProviderRegistry):
+        return self.name
+
+    def perform(self, obj, portletprovider_registry: PortletProviderRegistry):
+        portletprovider_registry.register(
+            obj,
+            name=self.name,
+            permission=self.permission
         )
 
 
