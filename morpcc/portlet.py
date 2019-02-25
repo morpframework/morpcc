@@ -67,7 +67,7 @@ def profile_portlet(context, request):
     user = usercol.get_by_userid(userid)
     xattr = user.xattrprovider()
     return {
-        'displayname': xattr['displayname'],
+        'displayname': xattr.get('displayname', userid),
         'profilephoto_url': newreq.link(user, '+blobs?field=profile-photo')
     }
 
@@ -80,6 +80,6 @@ def topnav_portlet(context, request):
     user = usercol.get_by_userid(userid)
     xattr = user.xattrprovider()
     return {
-        'displayname': xattr['displayname'],
+        'displayname': xattr.get('displayname', userid),
         'profilephoto_url': newreq.link(user, '+blobs?field=profile-photo')
     }

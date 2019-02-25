@@ -1,27 +1,30 @@
 <html>
-    <body>
-        <div metal:define-macro="panel">
-            <div class="x_panel">
-                <div class="x_title">
-                    <h2>
-                        <metal:slot define-slot="panel-title">Panel Title</metal:slot>
-                    </h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                        <metal:slot define-slot="panel-toolbox">
-                        </metal:slot>
-                        <li>
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                    <div metal:define-slot="panel-content">
-                    </div>
+
+<body>
+    <div metal:define-macro="panel">
+        <div class="x_panel">
+            <div class="x_title" tal:define="exclude_panel_header exclude_panel_header|nothing"
+                tal:condition="not:exclude_panel_header">
+                <h2>
+                    <metal:slot define-slot="panel-title">Panel Title</metal:slot>
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <metal:slot define-slot="panel-toolbox">
+                    </metal:slot>
+                    <li>
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div metal:define-slot="panel-content">
                 </div>
             </div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>
