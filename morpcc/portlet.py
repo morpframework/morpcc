@@ -51,9 +51,6 @@ def navigation_portlet(context, request):
                  }, {
                      'title': 'API Keys',
                      'href': request.relative_url('/manage-apikeys/+listing')
-                 }, {
-                     'title': 'Personal',
-                     'href': request.relative_url('/personal-settings')
                  }]}
             ]
         }]
