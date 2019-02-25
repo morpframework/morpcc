@@ -11,5 +11,18 @@ $(document).ready(function () {
       'hide': true,
       'delay': 10000
     })
-  })
-})
+  });
+
+  $('#windowFullScreen').click(function () {
+    var elem = document.body;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { /* Firefox */
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE/Edge */
+      elem.msRequestFullscreen();
+    }
+  });
+});

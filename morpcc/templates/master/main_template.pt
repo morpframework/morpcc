@@ -97,17 +97,19 @@
 
             <!-- /menu footer buttons -->
             <div class="sidebar-footer hidden-small">
-              <a data-toggle="tooltip" data-placement="top" title="Settings">
+              <a href="${request.relative_url('/+site-search')}" data-toggle="tooltip" data-placement="top"
+                title="Search">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+              </a>
+              <a href="${request.relative_url('/+site-settings')}" data-toggle="tooltip" data-placement="top"
+                title="Settings">
                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
               </a>
-              <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="Lock">
-                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+              <a href="${request.relative_url('/profile')}" data-toggle="tooltip" data-placement="top" title="Profile">
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
               </a>
               <a data-toggle="tooltip" data-placement="top" title="Logout"
-                tal:attributes="href request.relative_url('/logout')">
+                tal:attributes="href request.relative_url('/+logout')">
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
               </a>
             </div>
