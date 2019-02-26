@@ -7,3 +7,10 @@ class PageModelUI(ModelUI):
 
 class PageCollectionUI(CollectionUI):
     modelui_class = PageModelUI
+
+    columns = [
+        {'title': 'Title', 'name': 'title'},
+        {'title': 'Created On', 'name': 'created'},
+        {'title': 'Last Modified', 'name': 'modified'},
+        {'title': 'Actions', 'name': 'structure:buttons'}
+    ]
