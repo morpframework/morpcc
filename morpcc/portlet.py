@@ -37,22 +37,6 @@ def navigation_portlet(context, request):
         'navtree': [{
             'section': 'General',
             'children': general_children
-        }, {
-            'section': 'Administrative',
-            'children': [
-                {'title': 'Settings',
-                 'icon': 'cog',
-                 'children': [{
-                     'title': 'User',
-                     'href': request.relative_url('/manage-users/+listing'),
-                 }, {
-                     'title': 'Group',
-                     'href': request.relative_url('/manage-groups/+listing'),
-                 }, {
-                     'title': 'API Keys',
-                     'href': request.relative_url('/manage-apikeys/+listing')
-                 }]}
-            ]
         }]
     }
 

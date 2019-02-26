@@ -5,3 +5,8 @@
 .alert small.error-msg-detail {
     color: white;
 }
+
+.widget_card .card-icon {
+    font-size:50px;
+    text-align: center
+}
