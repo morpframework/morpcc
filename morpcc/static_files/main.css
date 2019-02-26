@@ -10,3 +10,8 @@
     font-size:50px;
     text-align: center
 }
+
+
+ul.msg_list li.read {
+    background-color: white;
+}

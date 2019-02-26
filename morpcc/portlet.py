@@ -1,6 +1,8 @@
 from .app import App
 from .users.path import get_current_user_model_ui
+from .notification.path import get_collection_ui as get_notification_collection_ui
 from morpfw.authn.pas.user.path import get_user_collection
+import rulez
 
 
 @App.portletprovider(name='morpcc.left-portlets')
@@ -67,7 +69,18 @@ def topnav_portlet(context, request):
     else:
         photo_url = request.relative_url(
             '/__static__/morpcc/img/person-icon.jpg')
+
+    notif_col = get_notification_collection_ui(request)
+    notifs = notif_col.search(
+        query=rulez.field['user'] == request.identity.userid, limit=10,
+        order_by=('created', 'desc'))
+    unread_notifs = notif_col.collection.aggregate(
+        query=rulez.and_(rulez.field['read'] == None,
+                         rulez.field['user'] == request.identity.userid),
+        group={'count': {'function': 'count', 'field': 'uuid'}})
     return {
         'displayname': xattr.get('displayname', username),
         'profilephoto_url': photo_url,
+        'notifications': notifs,
+        'notification_count': unread_notifs[0]['count'],
     }

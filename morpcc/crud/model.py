@@ -70,3 +70,13 @@ class CollectionUI(object):
         coldata = request.app.get_structure_column(
             model=obj, request=request, name=column_type)
         return coldata
+
+    def search(self, query=None, offset=0, limit=None, order_by=None, secure=False):
+        objs = self.collection.search(query, offset, limit, order_by, secure)
+        return list([self.modelui_class(self.request, o, self) for o in objs])
+
+    def get(self, identifier):
+        obj = self.collection.get(identifier)
+        if obj:
+            return self.modelui_class(self.request, obj, self)
+        return None

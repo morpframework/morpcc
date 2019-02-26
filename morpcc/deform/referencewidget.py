@@ -2,6 +2,9 @@ from deform.widget import Widget, SelectWidget
 from deform.compat import string_types
 from colander import null
 from colander import Invalid
+from morpfw.authn.pas.user.path import get_user_collection
+from ..users.model import UserModelUI
+from ..users.path import get_user_collection_ui
 
 
 class ReferenceWidget(SelectWidget):
@@ -44,3 +47,19 @@ class ReferenceWidget(SelectWidget):
         if not m:
             return None
         return m.model[self.term_field]
+
+
+class UserReferenceWidget(ReferenceWidget):
+
+    def __init__(self, resource_type='morpfw.pas.user', term_field='username', value_field='uuid', **kwargs):
+        super().__init__(resource_type, term_field, value_field, **kwargs)
+
+    def get_resource(self, request, identifier):
+        if not identifier:
+            return None
+        newreq = request.get_authn_request()
+        users = get_user_collection(newreq)
+        user = users.get_by_uuid(identifier)
+        if user:
+            return UserModelUI(request, user, get_user_collection_ui(request))
+        return None

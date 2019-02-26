@@ -22,73 +22,27 @@
 
     <li role="presentation" class="dropdown">
         <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-            <i class="fa fa-envelope-o"></i>
-            <span class="badge bg-green">6</span>
+            <i class="fa fa-bell-o"></i>
+            <span class="badge bg-red" tal:condition="notification_count">${notification_count}</span>
         </a>
         <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-            <li>
-                <a>
-                    <span class="image">
-                        <img src="/__static__/morpcc/gentelella/production/images/img.jpg" alt="Profile Image" />
-                    </span>
-                    <span>
-                        <span>John Smith</span>
-                        <span class="time">3 mins ago</span>
-                    </span>
-                    <span class="message">
-                        Film festivals used to be do-or-die moments for movie makers. They were
-                        where/__static__/morpcc/gentelella.
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a>
-                    <span class="image">
-                        <img src="/__static__/morpcc/gentelella/production/images/img.jpg" alt="Profile Image" />
-                    </span>
-                    <span>
-                        <span>John Smith</span>
-                        <span class="time">3 mins ago</span>
-                    </span>
-                    <span class="message">
-                        Film festivals used to be do-or-die moments for movie makers. They were
-                        where/__static__/morpcc/gentelella.
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a>
-                    <span class="image">
-                        <img src="/__static__/morpcc/gentelella/production/images/img.jpg" alt="Profile Image" />
-                    </span>
-                    <span>
-                        <span>John Smith</span>
-                        <span class="time">3 mins ago</span>
-                    </span>
-                    <span class="message">
-                        Film festivals used to be do-or-die moments for movie makers. They were
-                        where/__static__/morpcc/gentelella.
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a>
-                    <span class="image">
-                        <img src="/__static__/morpcc/gentelella/production/images/img.jpg" alt="Profile Image" />
-                    </span>
-                    <span>
-                        <span>John Smith</span>
-                        <span class="time">3 mins ago</span>
-                    </span>
-                    <span class="message">
-                        Film festivals used to be do-or-die moments for movie makers. They were
-                        where/__static__/morpcc/gentelella.
-                    </span>
-                </a>
-            </li>
+            <tal:loop repeat="notif notifications">
+                <li tal:attributes="class 'read' if notif.model['read'] else ''">
+                    <a href="${request.link(notif)}">
+                        <span class="image">
+                            <i class="fa fa-bell"></i>
+                        </span>
+                        <span>
+                            <span>&nbsp;</span>
+                            <span class="time">${notif.model['created']}</span>
+                        </span>
+                        <span class="message"> ${notif.model['message']}</span>
+                    </a>
+                </li>
+            </tal:loop>
             <li>
                 <div class="text-center">
-                    <a>
+                    <a href="${request.relative_url('/notification')}">
                         <strong>See All Alerts</strong>
                         <i class="fa fa-angle-right"></i>
                     </a>

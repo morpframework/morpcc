@@ -15,6 +15,8 @@ def get_user_collection_ui(request):
 def get_user_model_ui(request, username):
     newreq = request.get_authn_request()
     user = get_user(newreq, username)
+    if user is None:
+        return None
     col = get_user_collection(newreq)
     return UserModelUI(newreq, user, UserCollectionUI(newreq, col))
 
@@ -27,4 +29,6 @@ def get_current_user_model_ui(request):
     newreq = request.get_authn_request()
     col = get_user_collection(newreq)
     user = col.get_by_userid(userid)
+    if user is None:
+        return None
     return CurrentUserModelUI(newreq, user, UserCollectionUI(newreq, col))
