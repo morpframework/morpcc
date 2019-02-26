@@ -66,7 +66,7 @@ def profile_portlet(context, request):
         photo_url = request.link(user, '+download?field=profile-photo')
     else:
         photo_url = request.relative_url(
-            '__static__/morpcc/img/person-icon.jpg')
+            '/__static__/morpcc/img/person-icon.jpg')
     return {
         'displayname': xattr.get('displayname', username),
         'profilephoto_url': photo_url
@@ -82,7 +82,7 @@ def topnav_portlet(context, request):
         photo_url = request.link(user, '+download?field=profile-photo')
     else:
         photo_url = request.relative_url(
-            '__static__/morpcc/img/person-icon.jpg')
+            '/__static__/morpcc/img/person-icon.jpg')
     return {
         'displayname': xattr.get('displayname', username),
         'profilephoto_url': photo_url,
