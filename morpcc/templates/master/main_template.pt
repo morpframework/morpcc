@@ -163,7 +163,6 @@
       </div>
     </div>
 
-
     <div id="notifications" style="display:none">
       <span tal:repeat="message request.messages()" tal:attributes="data-category message['category'];
                          data-message message['message'];
