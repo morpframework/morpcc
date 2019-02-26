@@ -60,20 +60,30 @@ def navigation_portlet(context, request):
 @App.portlet(name='morpcc.profile', template='master/portlet/profile.pt')
 def profile_portlet(context, request):
     user = get_current_user_model_ui(request)
-    userid = user.model.userid
+    username = user.model['username']
     xattr = user.model.xattrprovider()
+    if user.model.get_blob('profile-photo'):
+        photo_url = request.link(user, '+download?field=profile-photo')
+    else:
+        photo_url = request.relative_url(
+            '__static__/morpcc/img/person-icon.jpg')
     return {
-        'displayname': xattr.get('displayname', userid),
-        'profilephoto_url': request.link(user, '+download?field=profile-photo')
+        'displayname': xattr.get('displayname', username),
+        'profilephoto_url': photo_url
     }
 
 
 @App.portlet(name='morpcc.topnav', template='master/portlet/topnav.pt')
 def topnav_portlet(context, request):
     user = get_current_user_model_ui(request)
-    userid = user.model.userid
+    username = user.model['username']
     xattr = user.model.xattrprovider()
+    if user.model.get_blob('profile-photo'):
+        photo_url = request.link(user, '+download?field=profile-photo')
+    else:
+        photo_url = request.relative_url(
+            '__static__/morpcc/img/person-icon.jpg')
     return {
-        'displayname': xattr.get('displayname', userid),
-        'profilephoto_url': request.link(user, '+download?field=profile-photo')
+        'displayname': xattr.get('displayname', username),
+        'profilephoto_url': photo_url,
     }
