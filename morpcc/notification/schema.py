@@ -9,7 +9,7 @@ from morpcc.deform.referencewidget import UserReferenceWidget
 class NotificationSchema(morpfw.Schema):
 
     message: typing.Optional[str] = None
-    user: typing.Optional[str] = field(
+    userid: typing.Optional[str] = field(
         default=None,
         metadata={
             'deform': {

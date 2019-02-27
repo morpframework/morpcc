@@ -35,6 +35,15 @@
             </div>
             <div class="col-md-4 col-sm-12 col-xs-12">
                 <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+                    <h2 metal:fill-slot="panel-title">Metadata</h2>
+                    <div metal:fill-slot="panel-content">
+                        <div
+                            tal:replace="structure:metadataform.render(form_data, readonly=True, request=request, context=context)">
+                        </div>
+                    </div>
+                </div>
+                <div metal:use-macro="load_template('master/panel.pt').macros.panel"
+                    tal:condition="context.model.blob_fields">
                     <h2 metal:fill-slot="panel-title">Blobs</h2>
                     <div metal:fill-slot="panel-content">
                         <form class="form-horizontal">

@@ -10,7 +10,7 @@ class Notification(morpfw.sql.Base):
     __tablename__ = 'morpcc_notification'
 
     message = sa.Column(sa.Text())
-    user = sa.Column(morpfw.sql.GUID)
+    userid = sa.Column(morpfw.sql.GUID)
     read = sa.Column(sa.DateTime)
 
 

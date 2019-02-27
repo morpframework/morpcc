@@ -1,4 +1,5 @@
 import morepath
+import morpfw
 import html
 import deform
 from morpfw.crud import permission as crudperms
@@ -31,6 +32,9 @@ def view(context, request):
         xattrformschema = None
     data = context.model.data.as_dict()
     sm = context.model.statemachine()
+
+    metadataschema = dataclass_to_colander(
+        morpfw.Schema, exclude_fields=['blobs', 'xattrs'])
     if sm:
         triggers = [i for i in sm._machine.get_triggers(
             sm.state) if not i.startswith('to_')]
@@ -39,6 +43,7 @@ def view(context, request):
     return {
         'page_title': 'View %s' % html.escape(str(context.model.__class__.__name__)),
         'form_title': 'View',
+        'metadataform': deform.Form(metadataschema()),
         'form': deform.Form(formschema()),
         'form_data': data,
         'xattrform': deform.Form(xattrformschema()) if xattrprovider else None,
