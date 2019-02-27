@@ -72,11 +72,11 @@ def topnav_portlet(context, request):
 
     notif_col = get_notification_collection_ui(request)
     notifs = notif_col.search(
-        query=rulez.field['user'] == request.identity.userid, limit=10,
+        query=rulez.field['userid'] == request.identity.userid, limit=10,
         order_by=('created', 'desc'))
     unread_notifs = notif_col.collection.aggregate(
         query=rulez.and_(rulez.field['read'] == None,
-                         rulez.field['user'] == request.identity.userid),
+                         rulez.field['userid'] == request.identity.userid),
         group={'count': {'function': 'count', 'field': 'uuid'}})
     return {
         'displayname': xattr.get('displayname', username),
