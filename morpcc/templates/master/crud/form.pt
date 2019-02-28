@@ -39,7 +39,7 @@
                                                 Edit Extended Attributes</a>
                                         </li>
                                         <li tal:condition="context.model.xattrprovider()">
-                                            <a tal:attributes="href request.link(context, '+xattredit')">
+                                            <a tal:attributes="href request.link(context, '+upload')">
                                                 Edit File Attachments</a>
                                         </li>
                                     </ul>
