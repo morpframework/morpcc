@@ -70,3 +70,20 @@ class StructureColumnAction(dectate.Action):
         app_class.get_structure_column.register(
             reg.methodify(obj),
             model=self.model, request=morepath.Request, name=self.name)
+
+
+class SchemaExtenderAction(dectate.Action):
+
+    app_class_arg = True
+
+    def __init__(self, schema):
+        self.schema = schema
+
+    def identifier(self, app_class):
+        return str((app_class, self.schema))
+
+    def perform(self, obj, app_class):
+        app_class.get_schemaextender.register(
+            reg.methodify(obj),
+            schema=self.schema
+        )
