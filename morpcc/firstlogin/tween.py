@@ -6,6 +6,8 @@ import morepath
 @App.tween_factory()
 def make_tween(app, handler):
     def redirect_to_firstlogin(request: morepath.Request):
+        if request.path.startswith('/__static__/'):
+            return handler(request)
         userid = request.identity.userid
         if userid:
             col = get_user_collection(request)
