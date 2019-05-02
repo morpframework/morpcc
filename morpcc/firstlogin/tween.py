@@ -8,6 +8,8 @@ def make_tween(app, handler):
     def redirect_to_firstlogin(request: morepath.Request):
         if request.path.startswith('/__static__/'):
             return handler(request)
+        if request.path == '/logout':
+            return handler(request)
         userid = request.identity.userid
         if userid:
             col = get_user_collection(request)
