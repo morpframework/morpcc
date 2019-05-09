@@ -27,7 +27,8 @@ def httpnotfound_error(context, request: morepath.Request):
 @App.view(model=HTTPForbidden)
 def forbidden_error(context, request):
     if request.identity is NO_IDENTITY and not request.path.startswith('/api/'):
-        return morepath.redirect('/login?came_from=%s' % urllib.parse.quote(request.url))
+        return morepath.redirect(
+            request.relative_url('/login?came_from=%s' % urllib.parse.quote(request.url)))
 
     @request.after
     def adjust_status(response):
