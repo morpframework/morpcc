@@ -26,6 +26,10 @@ def httpnotfound_error(context, request: morepath.Request):
 
 @App.view(model=HTTPForbidden)
 def forbidden_error(context, request):
+    @request.after
+    def nocache(response):
+        response.headers.add('Cache-Control', 'no-store')
+
     if request.identity is NO_IDENTITY and not request.path.startswith('/api/'):
         return morepath.redirect(
             request.relative_url('/login?came_from=%s' % urllib.parse.quote(request.url)))
