@@ -117,6 +117,13 @@ def process_register(context, request):
 
         del data['password_validate']
         user = collection.create(data)
-        request.notify('success', 'Registration successful',
-                       'You may log-in using your account now')
-        return morepath.redirect(request.relative_url('/login'))
+
+        @request.after
+        def remember(response):
+            """Remember the identity of the user logged in."""
+            # We pass the extra info to the identity object.
+            response.headers.add(
+                'Access-Control-Expose-Headers', 'Authorization')
+            identity = morepath.Identity(user.userid)
+            request.app.remember_identity(response, request, identity)
+        return morepath.redirect(request.relative_url('/'))
