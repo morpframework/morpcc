@@ -9,6 +9,7 @@ import morepath
 
 ETAG = hashlib.md5(datetime.now().strftime(
     r'%Y%d%d%H').encode('ascii')).hexdigest()
+LAST_MOD = datetime.utcnow().strftime(r'%a, %d %b %Y %H:%M:%S GMT')
 
 
 class StaticRoot(object):
@@ -45,6 +46,7 @@ def serve_static(context, request):
 
     def add_headers(response):
         response.headers.add('Cache-Control', 'public, max-age=%s' % max_age)
+        response.headers.add('Last-Modified', LAST_MOD)
         response.headers.add('Expires', (
             datetime.utcnow() +
             timedelta(seconds=max_age)).strftime(r'%a, %d %b %Y %H:%M:%S GMT'))
