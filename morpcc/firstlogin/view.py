@@ -5,6 +5,6 @@ from morpfw.authn.pas.user.path import get_user_collection
 import morepath
 
 
-@App.html(model=Root, name='firstlogin', permission=ViewHome, template='master/firstlogin.pt')
+@App.view(model=Root, name='firstlogin', permission=ViewHome)
 def firstlogin(context, request):
     return
