@@ -39,12 +39,12 @@ def serve_static(context, request):
 
     settings = request.app.settings.__dict__
     max_age = int(settings.get(
-        'caching', {}).get('max-age', 30))
+        'caching', {}).get('max-age', (60*60)))
 
     etag = request.headers.get('If-None-Match', '')
 
     def add_headers(response):
-        response.headers.add('Cache-Control', 'max-age=%s' % max_age)
+        response.headers.add('Cache-Control', 'public, max-age=%s' % max_age)
         response.headers.add('Expires', (
             datetime.utcnow() +
             timedelta(seconds=max_age)).strftime(r'%a, %d %b %Y %H:%M:%S GMT'))

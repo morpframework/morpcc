@@ -17,3 +17,14 @@ ul.msg_list li.read {
 }
 
 
+.icon-red, .icon-red:hover {
+    color: #ce0202;
+}
+
+.icon-yellow, .icon-yellow:hover {
+    color: #ffc400
+}
+
+.icon-green, .icon-green:hover {
+    color: #52e000;
+}
