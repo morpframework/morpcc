@@ -4,7 +4,7 @@ from ..permission import ViewHome
 from morpfw.authn.pas.user.path import get_user_collection
 import morepath
 
-
-@App.view(model=Root, name='firstlogin', permission=ViewHome)
-def firstlogin(context, request):
-    return
+#
+# @App.html(model=Root, name='firstlogin', permission=ViewHome, template='master/firstlogin.pt')
+# def firstlogin(context, request):
+#	return

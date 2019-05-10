@@ -15,6 +15,8 @@ def make_tween(app, handler):
             col = get_user_collection(request)
             userobj = col.get_by_userid(userid)
             if userobj['state'] == 'new' and not request.path.startswith('/firstlogin'):
-                return morepath.redirect(request.relative_url('/firstlogin'))
+                resp = morepath.redirect(request.relative_url('/firstlogin'))
+                resp.headers['Cache-Control'] = 'no-store'
+                return resp
         return handler(request)
     return redirect_to_firstlogin
