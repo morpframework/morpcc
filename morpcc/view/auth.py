@@ -103,7 +103,7 @@ def process_register(context, request):
                            'Please check your password')
             return morepath.redirect(request.relative_url('/login#signup'))
 
-        username = data['username']
+        username = data['username'].lower()
         email = data['email']
         if collection.get(username):
             request.notify('error', 'Username already taken',
