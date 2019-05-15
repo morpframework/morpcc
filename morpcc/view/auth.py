@@ -35,7 +35,7 @@ def process_login(context, request):
         failed = True
 
     if not failed:
-        username = data['username']
+        username = data['username'].lower()
         password = data['password']
         newreq = request.get_authn_request()
         collection = get_user_collection(newreq)
