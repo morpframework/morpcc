@@ -116,6 +116,7 @@ def process_register(context, request):
             return morepath.redirect(request.relative_url('/login#signup'))
 
         del data['password_validate']
+        data['username'] = data['username'].lower()
         user = collection.create(data)
 
         @request.after
