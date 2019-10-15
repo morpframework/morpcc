@@ -1,11 +1,11 @@
 import os
 from morpfw.authn.pas.user.model import UserModel
 from morpfw.crud.blobstorage.fsblobstorage import FSBlobStorage
-from ..app import App, SQLAuthApp
+from ..app import App
 from ..crud.model import ModelUI, CollectionUI
 
 
-@SQLAuthApp.blobstorage(model=UserModel)
+@App.blobstorage(model=UserModel)
 def get_user_blobstorage(model, request):
     return FSBlobStorage(request, request.app.settings.application.fsblobstorage_path % {'here': os.getcwd()})
 

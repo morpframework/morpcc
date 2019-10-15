@@ -15,10 +15,12 @@ import reg
 from . import directive
 from uuid import uuid4
 
+
 class MorpBeakerMiddleware(BeakerMiddleware):
 
     def initdb(self):
         self.app.initdb()
+
 
 class WebAppRequest(DBSessionRequest):
 
@@ -60,13 +62,7 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
         return None
 
 
-class SQLAuthApp(SQLStorageAuthApp, DefaultAuthzPolicy):
-    pass
-
-
 class AuthnPolicy(SQLStorageAuthnPolicy):
-
-    app_cls = SQLAuthApp
 
     def get_identity_policy(self, settings):
         if settings.application.development_mode:
@@ -93,9 +89,7 @@ class AuthnPolicy(SQLStorageAuthnPolicy):
             development_mode=settings.application.development_mode)
 
 
-@App.mount(app=SQLAuthApp, path='/api/v1/auth/')
-def get_auth_app():
-    return SQLAuthApp()
+App.hook_auth_models(prefix='/api/v1/auth')
 
 
 @create_app.register(app=App)

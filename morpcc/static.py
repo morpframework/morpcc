@@ -20,7 +20,7 @@ class MorpCCStaticRoot(StaticRoot):
 
 @App.path(model=MorpCCStaticRoot, path='/__static__/morpcc', absorb=True)
 def get_staticroot(absorb):
-    return StaticRoot(absorb)
+    return MorpCCStaticRoot(absorb)
 
 
 class DeformStaticRoot(StaticRoot):

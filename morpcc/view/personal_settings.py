@@ -7,7 +7,7 @@ from ..users.model import CurrentUserModelUI
 from ..crud.tempstore import FSBlobFileUploadTempStore
 import morpfw.authn.pas.exc
 from morpfw.crud import permission as crudperm
-from ..app import App, SQLAuthApp
+from ..app import App
 from ..root import Root
 from .. import permission
 from ..util import dataclass_to_colander

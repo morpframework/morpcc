@@ -1,7 +1,6 @@
 from morpfw.authn.pas.user.path import get_user_collection
 import morepath
 from ..app import App
-from ..app import SQLAuthApp
 from ..root import Root
 import html
 import urllib.parse
@@ -37,8 +36,7 @@ def process_login(context, request):
     if not failed:
         username = data['username'].lower()
         password = data['password']
-        newreq = request.get_authn_request()
-        collection = get_user_collection(newreq)
+        collection = get_user_collection(request)
 
         if not collection.authenticate(username, password):
             request.notify('error', 'Invalid Login',
@@ -96,8 +94,7 @@ def process_register(context, request):
         failed = True
 
     if not failed:
-        newreq = request.get_authn_request()
-        collection = get_user_collection(newreq)
+        collection = get_user_collection(request)
         if data['password'] != data['password_validate']:
             request.notify('error', 'Password does not match',
                            'Please check your password')

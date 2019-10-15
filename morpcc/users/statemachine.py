@@ -1,4 +1,4 @@
-from ..app import App, SQLAuthApp
+from ..app import App
 from morpfw.authn.pas.user.model import UserModel
 from dataclasses import dataclass
 import morpfw
@@ -18,6 +18,6 @@ class UserStateMachine(morpfw.StateMachine):
         return False
 
 
-@SQLAuthApp.statemachine(model=UserModel)
+@App.statemachine(model=UserModel)
 def userstatemachine(context):
     return UserStateMachine(context)

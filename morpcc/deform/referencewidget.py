@@ -57,8 +57,7 @@ class UserReferenceWidget(ReferenceWidget):
     def get_resource(self, request, identifier):
         if not identifier:
             return None
-        newreq = request.get_authn_request()
-        users = get_user_collection(newreq)
+        users = get_user_collection(request)
         user = users.get_by_uuid(identifier)
         if user:
             return UserModelUI(request, user, get_user_collection_ui(request))

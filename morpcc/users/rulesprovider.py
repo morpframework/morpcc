@@ -1,6 +1,6 @@
 from morpfw.authn.pas.user.rulesprovider import UserRulesProvider as BaseUserRulesProvider
 from morpfw.authn.pas.user.model import UserModel
-from ..app import App, SQLAuthApp
+from ..app import App
 
 
 class UserRulesProvider(BaseUserRulesProvider):
@@ -12,6 +12,6 @@ class UserRulesProvider(BaseUserRulesProvider):
         return context.storage.validate(context.userid, password)
 
 
-@SQLAuthApp.rulesprovider(model=UserModel)
+@App.rulesprovider(model=UserModel)
 def get_user_rulesprovider(context):
     return UserRulesProvider(context)
