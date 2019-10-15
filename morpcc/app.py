@@ -8,13 +8,17 @@ from more.chameleon import ChameleonApp
 import morepath
 from morepath.publish import resolve_model
 from morpfw.main import create_app, create_sqlapp
-from beaker.middleware import SessionMiddleware
+from beaker.middleware import SessionMiddleware as BeakerMiddleware
 import functools
 import dectate
 import reg
 from . import directive
 from uuid import uuid4
 
+class MorpBeakerMiddleware(BeakerMiddleware):
+
+    def initdb(self):
+        self.app.initdb()
 
 class WebAppRequest(DBSessionRequest):
 
@@ -104,4 +108,4 @@ def create_web_app(app, settings, scan=True, **kwargs):
         settings['beaker_session']['session.url'] = (
             settings['application']['dburi'])
 
-    return SessionMiddleware(application, settings['beaker_session'])
+    return MorpBeakerMiddleware(application, settings['beaker_session'])

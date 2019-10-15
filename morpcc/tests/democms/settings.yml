@@ -11,6 +11,7 @@ application:
   app: morpcc.tests.democms.app:App
   fsblobstorage_path: '%(here)s/blobstorage'
   authn_policy: morpcc.app:AuthnPolicy
+  dburi: 'postgresql://postgres@localhost:45678/morpcc_tests'
 
 security:
   master_secret: secret

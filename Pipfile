@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 morpcc = {path = ".",editable = true}
-morpfw = "==0.2.1rc4"
+morpfw = "==0.3.0"
 pip = "==18.0"
 rulez = "==0.1.2"
 elasticsearch = "==5.5.3"
@@ -15,7 +15,7 @@ pylint = "*"
 pydocstyle = "*"
 mypy = "*"
 "autopep8" = "*"
-morpcc = {path = ".",extras = ["test"],editable = true}
+morpcc = {editable = true,extras = ["test"],path = "."}
 
 [requires]
 python_version = "3.7"

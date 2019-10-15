@@ -26,7 +26,7 @@
         {
             "label": "Test Project",
             "type": "shell",
-            "command": "pipenv run pytest --cov-report html --cov=dlcc --annotate-output=annotations.json --html=report.html --self-contained-html -s dlcc",
+            "command": "pipenv run pytest --cov-report html --cov=morpcc --annotate-output=annotations.json --html=report.html --self-contained-html -s morpcc",
             "group": "test",
             "options": {
                 "env": {
