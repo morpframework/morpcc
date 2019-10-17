@@ -49,7 +49,7 @@
             </div>
             <div>
               <button id="login-button" class="btn btn-default btn-primary submit">Log in</button>
-              <a href="#signup" class="to_register btn btn-default">Sign Up</a>
+              <a href="/register" class="to_register btn btn-default">Sign Up</a>
 
             </div>
 
@@ -59,45 +59,6 @@
               <p class="change_link">
                 <a href="/reset-password">Lost your password?</a>
               </p>
-
-              <div class="clearfix"></div>
-              <br />
-
-              <div>
-                <h1>
-                  <i class="fa fa-wrench"></i> ${settings.application.title}</h1>
-                <p>Morp Control Center</p>
-              </div>
-            </div>
-          </form>
-        </section>
-      </div>
-
-      <div id="register" class="animate form registration_form">
-        <section class="login_content">
-          <form method="POST" action="${request.relative_url('/register')}">
-            <h1>Create Account</h1>
-            <div>
-              <input name="username" type="text" class="form-control" placeholder="Username" required />
-            </div>
-            <div>
-              <input name="email" type="email" class="form-control" placeholder="Email" required />
-            </div>
-            <div>
-              <input name="password" type="password" class="form-control" placeholder="Password" required />
-            </div>
-            <div>
-              <input name="password_validate" type="password" class="form-control" placeholder="Confirm Password"
-                required />
-            </div>
-            <div>
-              <button id="signup-button" class="btn btn-primary submit">Sign Up</button>
-              <a href="#signin" class="to_register btn btn-default">Log In</a>
-            </div>
-
-            <div class="clearfix"></div>
-
-            <div class="separator">
 
               <div class="clearfix"></div>
               <br />

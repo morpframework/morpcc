@@ -13,15 +13,25 @@ import deform
 class LoginForm(object):
 
     username: str = field(metadata={'required': True})
-    password: str = field(metadata={'required': True})
+    password: str = field(metadata={'required': True,
+                                    'deform': {
+                                        'widget': deform.widget.PasswordWidget()
+                                    }})
 
 
-@App.html(model=Root, name='login', template='master/login.pt')
+@App.html(model=Root, name='login', template='master/anon-form.pt')
 def login(context, request):
-    pass
+    formschema = dataclass_to_colander(LoginForm)
+    return {
+        'form_title': 'Login',
+        'form': deform.Form(formschema(),
+                            buttons=('Login',
+                                     deform.Button('register', title='Register', type='link',
+                                                   value=request.relative_url('/register'))))
+    }
 
 
-@App.html(model=Root, name='login', template='master/login.pt', request_method='POST')
+@App.html(model=Root, name='login', template='master/anon-form.pt', request_method='POST')
 def process_login(context, request):
     controls = list(request.POST.items())
     formschema = dataclass_to_colander(LoginForm)
@@ -41,7 +51,7 @@ def process_login(context, request):
         if not collection.authenticate(username, password):
             request.notify('error', 'Invalid Login',
                            'Please check your username / password')
-            return
+            return morepath.redirect(request.relative_url('/login'))
 
         @request.after
         def remember(response):
@@ -62,6 +72,8 @@ def process_login(context, request):
     request.notify('error', 'Invalid Login',
                    'Please check your username / password')
 
+    return morepath.redirect(request.relative_url('/login'))
+
 
 @App.view(model=Root, name='logout')
 def logout(context, request):
@@ -76,8 +88,25 @@ def logout(context, request):
 class RegistrationForm(object):
     username: str = field(metadata={'required': True})
     email: str = field(metadata={'required': True})
-    password: str = field(metadata={'required': True})
-    password_validate: str = field(metadata={'required': True})
+    password: str = field(metadata={'required': True,
+                                    'deform': {
+                                        'widget': deform.widget.PasswordWidget()
+                                    }})
+    password_validate: str = field(metadata={'required': True,
+                                             'deform': {
+                                                 'widget': deform.widget.PasswordWidget()
+                                             }})
+
+
+@App.html(model=Root, name='register', template='master/nologin-form.pt')
+def register(context, request):
+    schema = dataclass_to_colander(RegistrationForm)
+    return {
+        'form_title': 'Register',
+        'form': deform.Form(schema(), buttons=('Register',
+                                               deform.Button('login', title='Login', type='link',
+                                                             value=request.relative_url('/login'))))
+    }
 
 
 @App.view(model=Root, name='register', request_method='POST')
@@ -98,19 +127,19 @@ def process_register(context, request):
         if data['password'] != data['password_validate']:
             request.notify('error', 'Password does not match',
                            'Please check your password')
-            return morepath.redirect(request.relative_url('/login#signup'))
+            return morepath.redirect(request.relative_url('/register'))
 
         username = data['username'].lower()
         email = data['email']
         if collection.get(username):
             request.notify('error', 'Username already taken',
                            'Please use a different username')
-            return morepath.redirect(request.relative_url('/login#signup'))
+            return morepath.redirect(request.relative_url('/register'))
 
         if collection.get_by_email(email):
             request.notify('error', 'Email already registered',
                            'Log-in using your existing account')
-            return morepath.redirect(request.relative_url('/login#signup'))
+            return morepath.redirect(request.relative_url('/register'))
 
         del data['password_validate']
         data['username'] = data['username'].lower()

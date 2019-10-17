@@ -2,6 +2,7 @@ import colander
 from morpfw.crud.util import dataclass_get_type, dataclass_check_type
 import dataclasses
 from datetime import datetime, date
+from dataclasses import field
 from morpfw.interfaces import ISchema
 from pkg_resources import resource_filename
 from importlib import import_module
