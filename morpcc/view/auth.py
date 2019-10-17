@@ -98,7 +98,7 @@ class RegistrationForm(object):
                                              }})
 
 
-@App.html(model=Root, name='register', template='master/nologin-form.pt')
+@App.html(model=Root, name='register', template='master/anon-form.pt')
 def register(context, request):
     schema = dataclass_to_colander(RegistrationForm)
     return {
