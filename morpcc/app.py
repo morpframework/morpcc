@@ -46,6 +46,7 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     portlet = dectate.directive(directive.PortletFactoryAction)
     portletprovider = dectate.directive(directive.PortletProviderFactoryAction)
     structure_column = dectate.directive(directive.StructureColumnAction)
+    schemaextender = dectate.directive(directive.SchemaExtenderAction)
 
     @reg.dispatch_method(reg.match_instance('model'),
                          reg.match_instance('request'),
@@ -59,7 +60,7 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
 
     @reg.dispatch_method(reg.match_class('schema'))
     def get_schemaextender(self, schema):
-        return None
+        return schema
 
 
 class AuthnPolicy(SQLStorageAuthnPolicy):

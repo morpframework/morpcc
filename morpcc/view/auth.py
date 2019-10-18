@@ -21,7 +21,8 @@ class LoginForm(object):
 
 @App.html(model=Root, name='login', template='master/anon-form.pt')
 def login(context, request):
-    formschema = dataclass_to_colander(LoginForm)
+    schema = request.app.get_schemaextender(LoginForm)
+    formschema = dataclass_to_colander(schema)
     return {
         'form_title': 'Login',
         'form': deform.Form(formschema(),
@@ -34,7 +35,8 @@ def login(context, request):
 @App.html(model=Root, name='login', template='master/anon-form.pt', request_method='POST')
 def process_login(context, request):
     controls = list(request.POST.items())
-    formschema = dataclass_to_colander(LoginForm)
+    schema = request.app.get_schemaextender(LoginForm)
+    formschema = dataclass_to_colander(schema)
     form = deform.Form(formschema())
     failed = False
     try:
@@ -100,20 +102,22 @@ class RegistrationForm(object):
 
 @App.html(model=Root, name='register', template='master/anon-form.pt')
 def register(context, request):
-    schema = dataclass_to_colander(RegistrationForm)
+    schema = request.app.get_schemaextender(RegistrationForm)
+    formschema = dataclass_to_colander(schema)
     return {
         'form_title': 'Register',
-        'form': deform.Form(schema(), buttons=('Register',
-                                               deform.Button('login', title='Login', type='link',
-                                                             value=request.relative_url('/login'))))
+        'form': deform.Form(formschema(),
+                            buttons=('Register',
+                                     deform.Button('login', title='Login', type='link',
+                                                   value=request.relative_url('/login'))))
     }
 
 
 @App.view(model=Root, name='register', request_method='POST')
 def process_register(context, request):
-
     controls = list(request.POST.items())
-    formschema = dataclass_to_colander(RegistrationForm)
+    schema = request.app.get_schemaextender(RegistrationForm)
+    formschema = dataclass_to_colander(schema)
     form = deform.Form(formschema())
     failed = False
     try:
