@@ -4,11 +4,13 @@ import deform
 from morpfw.crud import permission as crudperms
 from ..model import CollectionUI, ModelUI
 from ...app import App
+from ...root import Root
 from ...util import dataclass_to_colander
 import rulez
 
 
 def _term_search(context, request):
+    # FIXME: this need to be secured
     resource_type = request.GET.get('resource_type', '').strip()
     if not resource_type:
         return {}
@@ -48,4 +50,8 @@ def model_term_search(context, request):
 
 @App.json(model=CollectionUI, name='term-search')
 def collection_term_search(context, request):
+    return _term_search(context, request)
+
+@App.json(model=Root, name='term-search')
+def root_term_search(context, request):
     return _term_search(context, request)

@@ -69,6 +69,7 @@
 
     <script src="/__static__/morpcc/gentelella/vendors/jquery/dist/jquery.min.js"></script>
 
+    <script src="/__static__/deform/scripts/jquery.form.js"></script>
     <script src="/__static__/deform/scripts/deform.js"></script>
 
     <metal:slot define-slot="header_script_slot">
@@ -242,6 +243,9 @@
     <script src="/__static__/deform/select2/select2.js"></script>
     <script src="/__static__/deform/tinymce/tinymce.min.js"></script>
     <script src="/__static__/deform/scripts/file_upload.js"></script>
+
+    <!-- Wizard -->
+    <script src="/__static__/morpcc/gentelella/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
 
 
     <!-- Custom Theme Scripts -->

@@ -38,6 +38,10 @@ class WebAppRequest(DBSessionRequest):
         session.save()
         return result
 
+    @property
+    def session(self):
+        return self.environ['beaker.session']
+
 
 class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
 
