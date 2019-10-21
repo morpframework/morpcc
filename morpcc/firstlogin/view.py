@@ -84,8 +84,8 @@ class FirstLoginWizard(Wizard):
             self.request).get_by_userid(self.request.identity.userid)
 
         sm = user.statemachine()
-        breakpoint()
-        sm.initialize()
+        if not sm.initialize():
+            raise AssertionError("User validation failed for some reason")
         self.clear()
         return morepath.redirect(self.request.relative_url('/'))
 
