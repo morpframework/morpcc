@@ -28,7 +28,7 @@
                     <li tal:repeat="step wizard.steps">
                         <a tal:attributes="href string:#${wizard.id}-step-${repeat.step.index}">
                             <span class="step_no">${repeat.step.number}</span>
-                            <span class="step_descr">${step.description}</span>
+                            <span class="step_descr">${step.title}</span>
                         </a>
                     </li>
                 </ul>
@@ -113,6 +113,10 @@
                     var form = $(step_selector).find('form');
                     if ($(form).length) {
                         $(form).attr('data-success', 'false');
+                    }
+                    var blocker_form = $(step_selector).find('form.blocker-step');
+                    if ($(blocker_form).length) {
+                        $('#${wizard.id}').smartWizard('goForward');
                     }
                 },
                 'onLeaveStep': wizardStepLeaveHandler,

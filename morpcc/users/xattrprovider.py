@@ -13,6 +13,8 @@ class UserXattrSchema(object):
     lastname: typing.Optional[str] = None
     displayname: typing.Optional[str] = None
     address: typing.Optional[str] = None
+    agreed_terms: typing.Optional[bool] = None
+    agreed_terms_ts: typing.Optional[int] = None
 
 
 class UserXattrProvider(FieldXattrProvider):

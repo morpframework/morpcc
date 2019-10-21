@@ -33,3 +33,8 @@ ul.msg_list li.read {
 .icon-green, .icon-green:hover {
     color: #52e000;
 }
+
+pre.agreement-text {
+    max-height: 300px;
+    overflow:auto;
+}

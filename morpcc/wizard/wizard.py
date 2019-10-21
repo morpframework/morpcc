@@ -2,12 +2,12 @@ import typing
 import deform
 import morpfw
 import morepath
+from dataclasses import dataclass, field
 from ..util import dataclass_to_colander
 
 
 class WizardStep(object):
-    title: str = "step"
-    description: str = "step description"
+    title: str = ""
     template: str
     index: int
     wizard: 'Wizard'
@@ -125,6 +125,69 @@ class FormWizardStep(WizardStep):
             'step': self,
             'form': result['form']
         }
+
+
+class ConditionalBlockerWizardStep(WizardStep):
+
+    template: str = 'master/wizard/blocker-step.pt'
+
+    def can_handle(self):
+        request = self.request
+        formid = request.POST.get('__formid__')
+        if formid:
+            try:
+                step = int(formid.split('-')[-1])
+            except:
+                return False
+
+            if step == self.index:
+                return True
+
+        return False
+
+    def validate(self) -> bool:
+        raise NotImplementedError
+
+    def handle(self):
+        if not self.validate():
+            return {'step': self, 'error': True}
+
+        return {'step': self, 'error': False}
+
+
+@dataclass
+class AgreementForm(object):
+
+    agree: bool = field(metadata={
+        'deform': {
+            'widget': deform.widget.CheckboxWidget()
+        }
+    })
+
+
+class AgreementWizardStep(FormWizardStep):
+
+    agreement_text: str
+    agreement_checkbox_label: str
+    agreement_error_msg: str
+
+    template = 'master/wizard/agreement-step.pt'
+    schema = AgreementForm
+
+    def handle(self):
+        result = self.process_form()
+        data = result['data']
+
+        if result['failed']:
+            return {'step': self,
+                    'failed': True}
+
+        if not data['agree']:
+            return {'step': self,
+                    'failed': True}
+
+        return {'step': self,
+                'failed': False}
 
 
 class Wizard(object):
