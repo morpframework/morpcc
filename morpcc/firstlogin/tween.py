@@ -2,14 +2,21 @@ from ..app import App
 from morpfw.authn.pas.path import get_user_collection
 import morepath
 
+EXCLUDE_PREFIXES = ['/__static__/']
+EXCLUDE_PATHS = ['/logout', '/send-verification', '/verify']
+
 
 @App.tween_factory()
 def make_tween(app, handler):
     def redirect_to_firstlogin(request: morepath.Request):
-        if request.path.startswith('/__static__/'):
-            return handler(request)
-        if request.path == '/logout':
-            return handler(request)
+        for path in EXCLUDE_PREFIXES:
+            if request.path.startswith(path):
+                return handler(request)
+
+        for path in EXCLUDE_PATHS:
+            if request.path == path:
+                return handler(request)
+
         userid = request.identity.userid
         if userid:
             col = get_user_collection(request)

@@ -2,6 +2,7 @@ import typing
 import deform
 import morpfw
 import morepath
+from morpfw.crud.errors import ValidationError
 from dataclasses import dataclass, field
 from ..util import dataclass_to_colander
 
@@ -36,6 +37,9 @@ class WizardStep(object):
         this is run when wizard is finalized, check that all
         needed values are here
         """
+        return True
+
+    def completed(self) -> bool:
         return True
 
     @property
@@ -104,11 +108,21 @@ class FormWizardStep(WizardStep):
             failed = True
             data = controls
 
+        if not failed:
+            self.sessiondata = data
+
         return {
             'form': form,
             'failed': failed,
             'data': data
         }
+
+    def completed(self):
+        try:
+            self.schema.validate(self.request, self.sessiondata)
+        except ValidationError:
+            return False
+        return True
 
     def handle(self):
         result = self.process_form()
@@ -120,7 +134,6 @@ class FormWizardStep(WizardStep):
                 'form': result['form']
             }
 
-        self.sessiondata = result['data']
         return {
             'step': self,
             'form': result['form']
@@ -148,6 +161,11 @@ class ConditionalBlockerWizardStep(WizardStep):
     def validate(self) -> bool:
         raise NotImplementedError
 
+    def completed(self):
+        if not self.validate():
+            return False
+        return True
+
     def handle(self):
         if not self.validate():
             return {'step': self, 'error': True}
@@ -156,7 +174,7 @@ class ConditionalBlockerWizardStep(WizardStep):
 
 
 @dataclass
-class AgreementForm(object):
+class AgreementForm(morpfw.BaseSchema):
 
     agree: bool = field(metadata={
         'deform': {
@@ -173,6 +191,15 @@ class AgreementWizardStep(FormWizardStep):
 
     template = 'master/wizard/agreement-step.pt'
     schema = AgreementForm
+
+    def completed(self):
+        if not super().completed():
+            return False
+
+        if self.sessiondata.get('agree', False):
+            return True
+
+        return False
 
     def handle(self):
         result = self.process_form()
@@ -226,6 +253,7 @@ class Wizard(object):
         finalize_form = '%s-finalize' % self.id
         if request.POST.get('__formid__') == finalize_form:
             for step in self.steps:
+                assert step.completed() == True
                 step.finalize()
 
             return self.finalize()

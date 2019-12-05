@@ -15,7 +15,9 @@ class UserStateMachine(morpfw.StateMachine):
     ]
 
     def is_validated(self):
-        return False
+        xattr = self._context.xattrprovider()
+        email_validated = xattr.get('morpfw.email.validated', False)
+        return email_validated
 
 
 @App.statemachine(model=UserModel)

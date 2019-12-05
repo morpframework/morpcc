@@ -3,7 +3,9 @@ from ..root import Root
 from ..permission import ViewHome
 from ..wizard import FormWizardStep, Wizard, AgreementWizardStep, WizardStep
 from ..wizard import ConditionalBlockerWizardStep
+import morpfw
 from morpfw.authn.pas.user.path import get_user_collection
+from morpcc.users.path import get_current_user_model_ui
 from dataclasses import dataclass, field
 from datetime import datetime
 import morepath
@@ -22,13 +24,16 @@ class EmailVerificationStep(ConditionalBlockerWizardStep):
 
     title = "Email Verification"
     blocker_error_msg = "You have yet to validate your email address"
+    template = 'master/firstlogin-email.pt'
 
     def validate(self):
-        return False
+        user = morpfw.get_current_user(self.request)
+        xattr = user.xattrprovider()
+        return xattr.get('morpfw.email.validated', False)
 
 
 @dataclass
-class FirstLoginForm(object):
+class FirstLoginForm(morpfw.BaseSchema):
 
     firstname: str = field(metadata={'required': True})
     lastname: str = field(metadata={'required': True})
@@ -65,8 +70,7 @@ class TNCStep(AgreementWizardStep):
 
     def finalize(self):
         data = self.sessiondata
-        user = get_user_collection(
-            self.request).get_by_userid(self.request.identity.userid)
+        user = morpfw.get_current_user(self.request)
 
         xattrprovider = user.xattrprovider()
         xattrprovider.update({

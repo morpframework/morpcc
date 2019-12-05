@@ -87,3 +87,21 @@ class SchemaExtenderAction(dectate.Action):
             reg.methodify(obj),
             schema=self.schema
         )
+
+
+class MessagingProviderAction(dectate.Action):
+
+    app_class_arg = True
+
+    def __init__(self, name):
+        self.name = name
+
+    def identifier(self, app_class):
+        return str((app_class, self.name))
+
+    def perform(self, obj, app_class):
+        app_class.get_messagingprovider.register(
+            reg.methodify(obj),
+            request=morepath.Request,
+            name=self.name
+        )

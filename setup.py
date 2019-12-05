@@ -23,7 +23,8 @@ A meta CMS built on top of MorpFW""",
           "more.chameleon",
           "more.static",
           "deform",
-          "beaker"
+          "beaker",
+          "alembic"
       ],
       entry_points={
       })

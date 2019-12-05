@@ -30,6 +30,8 @@ def forbidden_error(context, request):
     def nocache(response):
         response.headers.add('Cache-Control', 'no-store')
 
+    print('identity')
+    print(request.identity)
     if request.identity is NO_IDENTITY and not request.path.startswith('/api/'):
         return morepath.redirect(
             request.relative_url('/login?came_from=%s' % urllib.parse.quote(request.url)))

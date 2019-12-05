@@ -7,7 +7,7 @@ from .authn import IdentityPolicy
 from more.chameleon import ChameleonApp
 import morepath
 from morepath.publish import resolve_model
-from morpfw.main import create_app, create_sqlapp
+from morpfw.main import create_app
 from beaker.middleware import SessionMiddleware as BeakerMiddleware
 import functools
 import dectate
@@ -51,6 +51,7 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     portletprovider = dectate.directive(directive.PortletProviderFactoryAction)
     structure_column = dectate.directive(directive.StructureColumnAction)
     schemaextender = dectate.directive(directive.SchemaExtenderAction)
+    messagingprovider = dectate.directive(directive.MessagingProviderAction)
 
     @reg.dispatch_method(reg.match_instance('model'),
                          reg.match_instance('request'),
@@ -66,19 +67,26 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     def get_schemaextender(self, schema):
         return schema
 
+    @reg.dispatch_method(reg.match_instance('request'),
+                         reg.match_key('name'))
+    def get_messagingprovider(self, request, name):
+        raise NotImplementedError(
+            'Messaging provider %s is not available' % name)
+
 
 class AuthnPolicy(SQLStorageAuthnPolicy):
 
     def get_identity_policy(self, settings):
-        if settings.application.development_mode:
+        config = settings.configuration.__dict__
+        if config.get('app.development_mode', True):
             secure = False
         else:
             secure = True
 
-        master_secret = getattr(
-            settings.security, 'master_secret', uuid4().hex)
+        master_secret = config.get('morpfw.security.jwt', {}).get(
+            'master_secret', uuid4().hex)
 
-        jwt_settings = settings.security.jwt.copy()
+        jwt_settings = config.get('morpfw.security.jwt').copy()
         if not 'master_secret' in jwt_settings:
             jwt_settings['master_secret'] = master_secret
 
@@ -91,20 +99,18 @@ class AuthnPolicy(SQLStorageAuthnPolicy):
             jwt_settings=jwt_settings,
             itsdangerous_settings=itsdangerous_settings,
             api_root='/api',
-            development_mode=settings.application.development_mode)
+            development_mode=config.get('app.development_mode', True))
 
 
 App.hook_auth_models(prefix='/api/v1/auth')
 
 
-@create_app.register(app=App)
-def create_web_app(app, settings, scan=True, **kwargs):
-    application = create_sqlapp(
-        app=app, settings=settings, scan=scan, **kwargs)
+def create_morpcc_app(settings, scan=True, **kwargs):
+    application = create_app(settings=settings, scan=scan, **kwargs)
     if (settings['beaker_session'].get('session.type', None) is None and
             settings['beaker_session'].get('session.url', None) is None):
         settings['beaker_session']['session.type'] = 'ext:database'
         settings['beaker_session']['session.url'] = (
-            settings['application']['dburi'])
+            settings['configuration']['morpfw.storage.sqlstorage.dburi'])
 
     return MorpBeakerMiddleware(application, settings['beaker_session'])
