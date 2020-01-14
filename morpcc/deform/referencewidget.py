@@ -14,7 +14,7 @@ class ReferenceWidget(SelectWidget):
     values = ()
     multiple = False
 
-    def __init__(self, resource_type, term_field, value_field, **kwargs):
+    def __init__(self, resource_type, term_field='title', value_field='uuid', **kwargs):
         self.resource_type = resource_type
         self.term_field = term_field
         self.value_field = value_field
