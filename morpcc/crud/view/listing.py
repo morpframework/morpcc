@@ -144,7 +144,10 @@ def datatable(context, request):
             if c['name'].startswith('structure:'):
                 row.append(context.get_structure_column(o, request, c['name']))
             else:
-                row.append(html.escape(str(jsonobj[c['name']] or '')))
+                if jsonobj[c['name']] is 0:
+                    row.append(str(jsonobj[c['name']]))
+                else:
+                    row.append(html.escape(str(jsonobj[c['name']] or '')))
         rows.append(row)
     return {
         'draw': data['draw'],
