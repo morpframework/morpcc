@@ -35,6 +35,5 @@ def get_collection_ui(request):
 
 @App.path(model=PageModelUI, path='/page/{identifier}')
 def get_model_ui(request, identifier):
-    col = get_collection(request)
-    model = get_model(request, identifier)
-    return PageModelUI(request, model, PageCollectionUI(request, col))
+    col = get_collection_ui(request)
+    return col.get(identifier)

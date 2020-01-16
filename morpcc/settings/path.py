@@ -41,11 +41,8 @@ def _get_collection_ui(request):
 
 
 def get_model_ui(request, identifier):
-    col = get_collection(request)
-    model = get_model(request, identifier)
-    return SettingModelUI(
-        request, model,
-        SettingCollectionUI(request, col))
+    col = get_collection_ui(request)
+    return col.get(identifier)
 
 @App.path(model=SettingModelUI,
           path='/site-settings/setting/{identifier}')
