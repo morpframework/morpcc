@@ -2,6 +2,7 @@ import morpfw
 import morepath
 from morepath.authentication import NO_IDENTITY
 from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, HTTPUnauthorized
+from morpfw.authn.pas.exc import UserDoesNotExistsError
 import urllib.parse
 from ..app import App
 from ..root import Root
@@ -31,6 +32,10 @@ def forbidden_error(context, request):
         response.headers.add('Cache-Control', 'no-store')
 
     if request.identity is NO_IDENTITY and not request.path.startswith('/api/'):
+        @request.after
+        def forget(response):
+            request.app.forget_identity(response, request)
+
         return morepath.redirect(
             request.relative_url('/login?came_from=%s' % urllib.parse.quote(request.url)))
 
@@ -54,6 +59,18 @@ def forbidden_error(context, request):
 def unauthorized_error(context, request):
     @request.after
     def nocache(response):
+        request.app.forget_identity(response, request)
+        response.headers.add('Cache-Control', 'no-store')
+
+    return morepath.redirect(
+        request.relative_url('/login?came_from=%s' % urllib.parse.quote(request.url)))
+
+
+@App.view(model=UserDoesNotExistsError)
+def unauthorized_nouser_error(context, request):
+    @request.after
+    def nocache(response):
+        request.app.forget_identity(response, request)
         response.headers.add('Cache-Control', 'no-store')
 
     return morepath.redirect(
