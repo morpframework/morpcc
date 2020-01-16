@@ -1,7 +1,7 @@
 import morpfw
 import morepath
 from morepath.authentication import NO_IDENTITY
-from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError
+from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, HTTPUnauthorized
 import urllib.parse
 from ..app import App
 from ..root import Root
@@ -30,8 +30,6 @@ def forbidden_error(context, request):
     def nocache(response):
         response.headers.add('Cache-Control', 'no-store')
 
-    print('identity')
-    print(request.identity)
     if request.identity is NO_IDENTITY and not request.path.startswith('/api/'):
         return morepath.redirect(
             request.relative_url('/login?came_from=%s' % urllib.parse.quote(request.url)))
@@ -50,3 +48,13 @@ def forbidden_error(context, request):
             'master/error_403.pt', morepath.render_html
         )
         return render({}, request)
+
+
+@App.view(model=HTTPUnauthorized)
+def unauthorized_error(context, request):
+    @request.after
+    def nocache(response):
+        response.headers.add('Cache-Control', 'no-store')
+
+    return morepath.redirect(
+        request.relative_url('/login?came_from=%s' % urllib.parse.quote(request.url)))

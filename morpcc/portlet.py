@@ -2,6 +2,7 @@ from .app import App
 from .users.path import get_current_user_model_ui
 from .notification.path import get_collection_ui as get_notification_collection_ui
 from morpfw.authn.pas.user.path import get_user_collection
+from webob.exc import HTTPUnauthorized
 import rulez
 
 
@@ -46,6 +47,8 @@ def navigation_portlet(context, request):
 @App.portlet(name='morpcc.profile', template='master/portlet/profile.pt')
 def profile_portlet(context, request):
     user = get_current_user_model_ui(request)
+    if user is None:
+        raise HTTPUnauthorized
     username = user.model['username']
     xattr = user.model.xattrprovider()
     if user.model.get_blob('profile-photo'):
