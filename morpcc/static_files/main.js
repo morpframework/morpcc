@@ -25,4 +25,11 @@ $(document).ready(function () {
       elem.msRequestFullscreen();
     }
   });
+
+  $(document).on('click', '.modal-link', function (event) {
+    var url = $(this).attr('data-url');
+    $('#iframe-modal iframe').attr('src', url);
+    $('#iframe-modal').modal();
+  });
+
 });

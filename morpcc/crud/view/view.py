@@ -81,6 +81,16 @@ def modal_close(context, request):
     return {}
 
 
+@App.html(
+    model=CollectionUI,
+    name="modal-close",
+    template="master/crud/modal-close.pt",
+    permission=crudperms.View,
+)
+def collection_modal_close(context, request):
+    return {}
+
+
 @App.view(
     model=ModelUI, name="statemachine", permission=crudperms.Edit, request_method="POST"
 )

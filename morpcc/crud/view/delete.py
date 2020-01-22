@@ -60,5 +60,5 @@ def process_delete(context, request):
 )
 def modal_process_delete(context, request):
     context.model.delete()
-    return morepath.redirect(request.link(context.collection_ui, "+modal-view"))
+    return morepath.redirect(request.link(context.collection_ui, "+modal-close"))
 

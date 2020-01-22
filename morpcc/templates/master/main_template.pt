@@ -171,6 +171,20 @@
                          data-title message['title']"></span>
     </div>
 
+    <div id="iframe-modal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document" style="width:90%">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="modal-body">
+            <iframe style="border:0;width:100%;height:500px;"></iframe>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <metal:slot define-slot="footer_body_slot"></metal:slot>
     <!-- Bootstrap -->
     <script src="/__static__/morpcc/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
