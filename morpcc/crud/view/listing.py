@@ -11,7 +11,7 @@ from ...util import dataclass_to_colander
 import colander
 import deform
 from morpfw.crud import permission as crudperms
-
+import typing
 
 @App.html(model=CollectionUI, name='listing', template='master/crud/listing.pt',
           permission=crudperms.Search)
@@ -47,9 +47,15 @@ def _parse_dtdata(data):
     result['columns'] = []
     result['search'] = {}
     result['order'] = {}
+    result['length'] = None
+    result['start'] = 0
+    result['draw'] = 1
+    result['filter'] = None
 
     columns = [(k, v) for k, v in data if k.startswith('columns')]
     orders = [(k, v) for k, v in data if k.startswith('order')]
+    mfilter = [(k, v) for k, v in data if k == 'filter']
+    mfilter = mfilter[0][1] if mfilter else None
 
     column_data = {}
     for k, v in columns:
@@ -95,6 +101,10 @@ def _parse_dtdata(data):
             i = search_pattern.match(k).groups()[0]
             result['search'].setdefault(i, {})
             result['search'][i] = v
+
+    if mfilter:
+        result['filter'] = rulez.parse_dsl(mfilter)
+        
     return result
 
 
@@ -103,16 +113,28 @@ def datatable(context, request):
     collection = context.collection
     data = list(request.GET.items())
     data = _parse_dtdata(data)
-    search = None
-    if data['search']['value']:
-        try:
-            search = rulez.parse_dsl(data['search']['value'])
-        except ValueError:
-            pass
-        except NotImplementedError:
-            pass
-        except ParseError:
-            pass
+    search = []
+    if data['search'] and data['search']['value']:
+        for fn, field in context.collection.schema.__dataclass_fields__.items():
+            if field.type == str:
+                search.append({'field': fn,
+                                'operator': '~',
+                                'value': data['search']['value']})
+            if field.type.__origin__ == typing.Union:
+                if str in field.type.__args__:
+                    search.append({'field': fn,
+                                'operator': '~',
+                                'value': data['search']['value']})   
+        if search:
+            search = rulez.or_(*search)
+        else:
+            search = None
+
+    if data['filter']:
+        if search:
+            rulez.and_(data['filter'], search)
+        else:
+            search = data['filter']
 
     order_by = None
     if data['order']:
@@ -128,7 +150,7 @@ def datatable(context, request):
     except NotImplementedError:
         objs = collection.search(
             limit=data['length'], offset=data['start'], order_by=order_by)
-    total = collection.aggregate(
+    total = collection.aggregate(query=data['filter'],
         group={'count': {'function': 'count', 'field': 'uuid'}})
     try:
         total_filtered = collection.aggregate(

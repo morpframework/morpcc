@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<metal:master define-macro="master">
+<metal:master define-macro="master" tal:define="body_class body_class|nothing;
+                                                body_style body_style|nothing">
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -76,7 +77,7 @@
     </metal:slot>
   </head>
 
-  <body class="nav-md">
+  <body class="nav-md ${body_class}" style="${body_style}">
     <div class="container body" metal:define-slot="body">
       <div class="main_container">
         <div class="col-md-3 left_col">
@@ -168,7 +169,10 @@
       <span tal:repeat="message request.messages()" tal:attributes="data-category message['category'];
                          data-message message['message'];
                          data-title message['title']"></span>
-    </div> <!-- Bootstrap -->
+    </div>
+
+    <metal:slot define-slot="footer_body_slot"></metal:slot>
+    <!-- Bootstrap -->
     <script src="/__static__/morpcc/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- FastClick -->
     <!--<script src="/__static__/morpcc/gentelella/vendors/fastclick/lib/fastclick.js"></script>-->

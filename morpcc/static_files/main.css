@@ -38,3 +38,8 @@ pre.agreement-text {
     max-height: 300px;
     overflow:auto;
 }
+
+body.modal-window {
+    overflow-x:hidden;
+    height: 90%;
+}
