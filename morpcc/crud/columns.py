@@ -30,18 +30,28 @@ def get_buttons_column(model, request, name):
     buttons = [{
         'icon': 'eye',
         'url': request.link(uiobj, '+%s' % uiobj.default_view),
-        'title': 'View'
+        'title': 'View',
     }, {
         'icon': 'edit',
-        'url': request.link(uiobj, '+edit'),
-        'title': 'Edit'
+        'data-url': request.link(uiobj, '+modal-edit'),
+        'title': 'Edit',
+        'class': 'modal-link'
     }, {
         'icon': 'trash',
-        'url': request.link(uiobj, '+delete'),
-        'title': 'Delete'
+        'data-url': request.link(uiobj, '+modal-delete'),
+        'title': 'Delete',
+        'class': 'modal-link'
     }]
     for button in buttons:
-        results += ('<a title="%(title)s" href="%(url)s">'
+        button.setdefault('class', None)
+        if button.get('data-url', None):
+            results += ('<a title="%(title)s" data-url="%(data-url)s" '
+                    'href="#" class="%(class)s">'
+                    '<i class="fa fa-%(icon)s">'
+                    '</i></a> ') % button
+        else:
+            results += ('<a title="%(title)s" href="%(url)s" '
+                    'class="%(class)s"> '
                     '<i class="fa fa-%(icon)s">'
                     '</i></a> ') % button
     return results
