@@ -6,7 +6,7 @@ from ..model import CollectionUI, ModelUI
 from ...app import App
 from ...util import dataclass_to_colander
 from webob.exc import HTTPFound
-
+from deform.widget import HiddenWidget
 
 @App.html(
     model=CollectionUI,
@@ -15,11 +15,24 @@ from webob.exc import HTTPFound
     permission=crudperms.Create,
 )
 def create(context, request):
+    default_value_fields = list(request.GET.keys())
     formschema = dataclass_to_colander(
         context.collection.schema,
         include_fields=context.create_include_fields,
         exclude_fields=context.create_exclude_fields,
     )
+
+    form_data = {}
+    fschemaobj = formschema()
+    for f in default_value_fields:
+        if f in fschemaobj:
+            if fschemaobj[f].widget is None:
+                fschemaobj[f].widget = HiddenWidget()
+            else:
+                fschemaobj[f].widget.hidden = True
+            form_data[f] = request.GET.get(f)
+
+
     return {
         "page_title": "Create %s"
         % html.escape(
@@ -27,6 +40,7 @@ def create(context, request):
         ),
         "form_title": "Create",
         "form": deform.Form(formschema(), buttons=("Submit",)),
+        "form_data": form_data
     }
 
 
