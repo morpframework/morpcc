@@ -8,6 +8,7 @@ from ...util import dataclass_to_colander
 from webob.exc import HTTPFound
 from deform.widget import HiddenWidget
 
+
 @App.html(
     model=CollectionUI,
     name="create",
@@ -20,18 +21,12 @@ def create(context, request):
         context.collection.schema,
         include_fields=context.create_include_fields,
         exclude_fields=context.create_exclude_fields,
+        hidden_fields=default_value_fields,
     )
 
     form_data = {}
-    fschemaobj = formschema()
     for f in default_value_fields:
-        if f in fschemaobj:
-            if fschemaobj[f].widget is None:
-                fschemaobj[f].widget = HiddenWidget()
-            else:
-                fschemaobj[f].widget.hidden = True
-            form_data[f] = request.GET.get(f)
-
+        form_data[f] = request.GET.get(f)
 
     return {
         "page_title": "Create %s"
@@ -40,7 +35,7 @@ def create(context, request):
         ),
         "form_title": "Create",
         "form": deform.Form(formschema(), buttons=("Submit",)),
-        "form_data": form_data
+        "form_data": form_data,
     }
 
 
