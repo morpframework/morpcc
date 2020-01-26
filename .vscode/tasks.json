@@ -6,17 +6,10 @@
         {
             "label": "Build Project",
             "type": "shell",
-            "command": "pipenv install --dev -e .[test]",
+            "command": "./build.sh",
             "group": "build",
             "problemMatcher": []
         },
-//        {
-//            "label": "Install Non-Python Dependencies",
-//            "type": "shell",
-//            "command": "python install-deps.py",
-//            "group": "build",
-//            "problemMatcher": []
-//        },
         {
             "label": "Destroy Pipenv",
             "type": "shell",
@@ -26,22 +19,46 @@
         {
             "label": "Test Project",
             "type": "shell",
-            "command": "pipenv run pytest --cov-report html --cov=morpcc --annotate-output=annotations.json --html=report.html --self-contained-html -s morpcc",
+            "command": "./bin/pytest --cov-report html --cov=morpfw --annotate-output=annotations.json --html=report.html --self-contained-html -s morpcc",
             "group": "test",
-            "options": {
-                "env": {
-                }
-            }
         },
         {
             "label": "Test Current File",
             "type": "shell",
-            "command": "pipenv run pytest -s ${relativeFile}",
+            "command": "./bin/pytest -s ${relativeFile}",
             "group": "test",
+        },
+                {
+            "label": "Initialize Database",
+            "type": "shell",
+            "command": "./bin/morpfw -s ./morpcc/tests/democms/settings.yml initdb",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "clear": false
+            },
             "options": {
-                "env": {
-                }
-            }
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": null
+        },
+        {
+            "label": "Create default admin user (admin:admin)",
+            "type": "shell",
+            "command": "./bin/morpfw -s ./morpcc/tests/democms/settings.yml register-admin -u admin -e admin@localhost.local -p admin",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "clear": false
+            },
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": null
         }
     ]
 }

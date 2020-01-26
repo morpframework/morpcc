@@ -2,20 +2,20 @@ server:
   listen_host: 127.0.0.1
   listen_port: 5000
 
-morpfw:
-  scan:
+
+configuration:
+  morpfw.scan:
     - morpcc.tests.democms
+  morpfw.authn.policy: morpcc.app:AuthnPolicy
+  morpfw.storage.sqlstorage.dburi: 'postgresql://postgres:postgres@localhost:5432/morpcc_democms'
+  morpfw.secret.fernet_key: ghVRZXc-6nijmxqmcn5SnkAwjdCo39hCC9cH9SSUKPE=
 
 application:
   title: Demo CMS
-  app: morpcc.tests.democms.app:App
+  class: morpcc.tests.democms.app:App
+  factory: morpcc.app:create_morpcc_app
   fsblobstorage_path: '%(here)s/blobstorage'
-  authn_policy: morpcc.app:AuthnPolicy
-  dburi: 'postgresql://postgres@localhost:45678/morpcc_tests'
+  development_mode: true
 
-security:
-  master_secret: secret
-  jwt:
-    master_secret: secret
 beaker_session:
   session.cookie_expires: False

@@ -2,8 +2,8 @@ from ..app import App
 from morpfw.authn.pas.path import get_user_collection
 import morepath
 
-EXCLUDE_PREFIXES = ['/__static__/']
-EXCLUDE_PATHS = ['/logout', '/send-verification', '/verify']
+EXCLUDE_PREFIXES = ["/__static__/"]
+EXCLUDE_PATHS = ["/logout", "/send-verification", "/verify"]
 
 
 @App.tween_factory()
@@ -21,9 +21,10 @@ def make_tween(app, handler):
         if userid:
             col = get_user_collection(request)
             userobj = col.get_by_userid(userid)
-            if userobj['state'] == 'new' and not request.path.startswith('/firstlogin'):
-                resp = morepath.redirect(request.relative_url('/firstlogin'))
-                resp.headers['Cache-Control'] = 'no-store'
+            if userobj["state"] == "new" and not request.path.startswith("/firstlogin"):
+                resp = morepath.redirect(request.relative_url("/firstlogin"))
+                resp.headers["Cache-Control"] = "no-store"
                 return resp
         return handler(request)
+
     return redirect_to_firstlogin

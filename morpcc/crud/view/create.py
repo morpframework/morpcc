@@ -2,6 +2,7 @@ import morepath
 import html
 import deform
 from morpfw.crud import permission as crudperms
+from morpfw.crud.errors import AlreadyExistsError
 from ..model import CollectionUI, ModelUI
 from ...app import App
 from ...util import dataclass_to_colander
@@ -67,6 +68,7 @@ def process_create(context, request):
     form = deform.Form(formschema(), buttons=("Submit",))
 
     failed = False
+    data = {}
     try:
         data = form.validate(controls)
     except deform.ValidationFailure as e:
@@ -74,10 +76,16 @@ def process_create(context, request):
         failed = True
 
     if not failed:
-        obj = context.collection.create(data)
-        return morepath.redirect(
-            request.link(context.modelui_class(request, obj, context))
-        )
+        try:
+            obj = context.collection.create(data)
+        except AlreadyExistsError as e:
+            failed = True
+            request.notify("error", "Already Exists", "Object already exists")
+
+        if not failed:
+            return morepath.redirect(
+                request.link(context.modelui_class(request, obj, context))
+            )
 
     return {
         "page_title": "Create %s"
@@ -86,6 +94,7 @@ def process_create(context, request):
         ),
         "form_title": "Create",
         "form": form,
+        "form_data": data,
     }
 
 
