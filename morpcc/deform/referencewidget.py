@@ -8,16 +8,24 @@ from ..users.path import get_user_collection_ui
 
 
 class ReferenceWidget(SelectWidget):
-    template = 'reference'
-    readonly_template = 'readonly/reference'
+    template = "reference"
+    readonly_template = "readonly/reference"
     null_value = ""
     values = ()
     multiple = False
 
-    def __init__(self, resource_type, term_field='title', value_field='uuid', **kwargs):
+    def __init__(
+        self,
+        resource_type,
+        term_field="title",
+        value_field="uuid",
+        get_search_url=None,
+        **kwargs
+    ):
         self.resource_type = resource_type
         self.term_field = term_field
         self.value_field = value_field
+        self.get_search_url = get_search_url
         super().__init__(**kwargs)
 
     def deserialize(self, *args, **kwargs):
@@ -25,8 +33,19 @@ class ReferenceWidget(SelectWidget):
         return result
 
     def get_resource_search_url(self, context, request):
-        return request.link(context, '+term-search?resource_type=%s&term_field=%s&value_field=%s' % (
-            self.resource_type, self.term_field, self.value_field))
+        if self.get_search_url is None:
+            baselink = request.relative_url("/+term-search")
+        else:
+            baselink = self.get_search_url(self, context, request)
+        if "?" not in baselink:
+            baselink += "?"
+        else:
+            baselink += "&"
+        return baselink + "resource_type=%s&term_field=%s&value_field=%s" % (
+            self.resource_type,
+            self.term_field,
+            self.value_field,
+        )
 
     def get_resource_url(self, request, identifier):
         m = self.get_resource(request, identifier)
@@ -36,10 +55,11 @@ class ReferenceWidget(SelectWidget):
 
     def get_resource(self, request, identifier):
         typeinfo = request.app.config.type_registry.get_typeinfo(
-            name=self.resource_type, request=request)
-        if not (identifier or '').strip():
+            name=self.resource_type, request=request
+        )
+        if not (identifier or "").strip():
             return None
-        m = typeinfo['model_ui_factory'](request, identifier)
+        m = typeinfo["model_ui_factory"](request, identifier)
         return m
 
     def get_resource_term(self, request, identifier):
@@ -50,8 +70,13 @@ class ReferenceWidget(SelectWidget):
 
 
 class UserReferenceWidget(ReferenceWidget):
-
-    def __init__(self, resource_type='morpfw.pas.user', term_field='username', value_field='uuid', **kwargs):
+    def __init__(
+        self,
+        resource_type="morpfw.pas.user",
+        term_field="username",
+        value_field="uuid",
+        **kwargs
+    ):
         super().__init__(resource_type, term_field, value_field, **kwargs)
 
     def get_resource(self, request, identifier):

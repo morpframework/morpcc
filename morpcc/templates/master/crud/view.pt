@@ -19,7 +19,7 @@
                     </ul>
                     <div metal:fill-slot="panel-content">
                         <div
-                            tal:replace="structure:form.render(form_data, readonly=True, request=request, context=context)">
+                            tal:replace="structure:form.render(appstruct=form_data, readonly=True, request=request, context=context)">
                         </div>
                     </div>
                 </div>
@@ -28,7 +28,7 @@
                     <h2 metal:fill-slot="panel-title">Extended Attributes</h2>
                     <div metal:fill-slot="panel-content">
                         <div
-                            tal:replace="structure:xattrform.render(xattrform_data, readonly=True, request=request, context=context)">
+                            tal:replace="structure:xattrform.render(appstruct=xattrform_data, readonly=True, request=request, context=context)">
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                     <h2 metal:fill-slot="panel-title">Metadata</h2>
                     <div metal:fill-slot="panel-content">
                         <div
-                            tal:replace="structure:metadataform.render(form_data, readonly=True, request=request, context=context)">
+                            tal:replace="structure:metadataform.render(appstruct=form_data, readonly=True, request=request, context=context)">
                         </div>
                     </div>
                 </div>
