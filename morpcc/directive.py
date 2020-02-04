@@ -9,9 +9,7 @@ PORTLET_FACTORY_IDS: dict = {}
 
 class PortletFactoryAction(dectate.Action):
 
-    config = {
-        'portlet_registry': PortletRegistry
-    }
+    config = {"portlet_registry": PortletRegistry}
 
     depends = [SettingAction]
 
@@ -25,18 +23,13 @@ class PortletFactoryAction(dectate.Action):
 
     def perform(self, obj, portlet_registry: PortletRegistry):
         portlet_registry.register(
-            obj,
-            name=self.name,
-            template=self.template,
-            permission=self.permission
+            obj, name=self.name, template=self.template, permission=self.permission
         )
 
 
 class PortletProviderFactoryAction(dectate.Action):
 
-    config = {
-        'portletprovider_registry': PortletProviderRegistry
-    }
+    config = {"portletprovider_registry": PortletProviderRegistry}
 
     depends = [SettingAction]
 
@@ -49,9 +42,7 @@ class PortletProviderFactoryAction(dectate.Action):
 
     def perform(self, obj, portletprovider_registry: PortletProviderRegistry):
         portletprovider_registry.register(
-            obj,
-            name=self.name,
-            permission=self.permission
+            obj, name=self.name, permission=self.permission
         )
 
 
@@ -69,7 +60,10 @@ class StructureColumnAction(dectate.Action):
     def perform(self, obj, app_class):
         app_class.get_structure_column.register(
             reg.methodify(obj),
-            model=self.model, request=morepath.Request, name=self.name)
+            model=self.model,
+            request=morepath.Request,
+            name=self.name,
+        )
 
 
 class SchemaExtenderAction(dectate.Action):
@@ -83,10 +77,7 @@ class SchemaExtenderAction(dectate.Action):
         return str((app_class, self.schema))
 
     def perform(self, obj, app_class):
-        app_class.get_schemaextender.register(
-            reg.methodify(obj),
-            schema=self.schema
-        )
+        app_class.get_schemaextender.register(reg.methodify(obj), schema=self.schema)
 
 
 class MessagingProviderAction(dectate.Action):
@@ -101,7 +92,21 @@ class MessagingProviderAction(dectate.Action):
 
     def perform(self, obj, app_class):
         app_class.get_messagingprovider.register(
-            reg.methodify(obj),
-            request=morepath.Request,
-            name=self.name
+            reg.methodify(obj), request=morepath.Request, name=self.name
+        )
+
+
+class VocabularyAction(dectate.Action):
+
+    app_class_arg = True
+
+    def __init__(self, name):
+        self.name = name
+
+    def identifier(self, app_class):
+        return str((app_class, self.name))
+
+    def perform(self, obj, app_class):
+        app_class.get_vocabulary.register(
+            reg.methodify(obj), request=morepath.Request, name=self.name
         )
