@@ -19,12 +19,12 @@
                             <tal:cond condition="form_data">
                                 <tal:cond condition="readonly">
                                     <div
-                                        tal:replace="structure:form.render(form_data, readonly=True, request=request, context=context)">
+                                        tal:replace="structure:form.render(appstruct=form_data, readonly=True, request=request, context=context)">
                                     </div>
                                 </tal:cond>
                                 <tal:cond condition="not:readonly">
                                     <div
-                                        tal:replace="structure:form.render(form_data, request=request, context=context)">
+                                        tal:replace="structure:form.render(appstruct=form_data, request=request, context=context)">
 
                                     </div>
                                 </tal:cond>
