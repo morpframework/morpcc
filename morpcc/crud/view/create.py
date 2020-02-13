@@ -1,13 +1,15 @@
-import morepath
 import html
+
 import deform
+import morepath
+from deform.widget import HiddenWidget
 from morpfw.crud import permission as crudperms
 from morpfw.crud.errors import AlreadyExistsError
-from ..model import CollectionUI, ModelUI
+from webob.exc import HTTPFound
+
 from ...app import App
 from ...util import dataclass_to_colander
-from webob.exc import HTTPFound
-from deform.widget import HiddenWidget
+from ..model import CollectionUI, ModelUI
 
 
 @App.html(
@@ -69,15 +71,15 @@ def process_create(context, request):
 
     failed = False
     data = {}
+
     try:
         data = form.validate(controls)
     except deform.ValidationFailure as e:
         form = e
         failed = True
-
     if not failed:
         try:
-            obj = context.collection.create(data)
+            obj = context.collection.create(data, deserialize=False)
         except AlreadyExistsError as e:
             failed = True
             request.notify("error", "Already Exists", "Object already exists")

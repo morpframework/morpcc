@@ -1,11 +1,13 @@
-import morepath
 import html
+
 import deform
+import morepath
 from morpfw.crud import permission as crudperms
-from ..model import CollectionUI, ModelUI
+from webob.exc import HTTPFound, HTTPNotFound
+
 from ...app import App
 from ...util import dataclass_to_colander
-from webob.exc import HTTPNotFound, HTTPFound
+from ..model import CollectionUI, ModelUI
 
 
 @App.html(
@@ -17,6 +19,7 @@ from webob.exc import HTTPNotFound, HTTPFound
 def edit(context, request):
     formschema = dataclass_to_colander(
         context.model.schema,
+        mode="edit",
         include_fields=context.edit_include_fields,
         exclude_fields=context.edit_exclude_fields,
     )
@@ -49,6 +52,7 @@ def modal_edit(context, request):
 def process_edit(context, request):
     formschema = dataclass_to_colander(
         context.model.schema,
+        mode="edit-process",
         include_fields=context.edit_include_fields,
         exclude_fields=context.edit_exclude_fields,
     )
@@ -63,11 +67,7 @@ def process_edit(context, request):
         form = e
         failed = True
     if not failed:
-        # FIXME: model update should allow datetime object
-        prov = request.app.get_dataprovider(
-            context.model.schema, data, context.model.storage
-        )
-        context.model.update(prov.as_json())
+        context.model.update(data, deserialize=False)
         return morepath.redirect(request.link(context))
 
     return {
@@ -176,4 +176,3 @@ def modal_process_xattredit(context, request):
     if isinstance(result, HTTPFound):
         return morepath.redirect(request.link(context, "+modal-close"))
     return result
-

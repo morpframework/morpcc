@@ -1,7 +1,8 @@
-import morpfw
-from dataclasses import dataclass, field
 import typing
+from dataclasses import dataclass, field
 from datetime import datetime
+
+import morpfw
 from morpcc.deform.referencewidget import UserReferenceWidget
 
 
@@ -10,11 +11,6 @@ class NotificationSchema(morpfw.Schema):
 
     message: typing.Optional[str] = None
     userid: typing.Optional[str] = field(
-        default=None,
-        metadata={
-            'deform': {
-                'widget': UserReferenceWidget()
-            }
-        }
+        default=None, metadata={"deform.widget": UserReferenceWidget()}
     )
     read: typing.Optional[datetime] = None

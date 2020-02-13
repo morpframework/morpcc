@@ -69,7 +69,7 @@
     </metal:slot>
 
     <script src="/__static__/morpcc/gentelella/vendors/jquery/dist/jquery.min.js"></script>
-
+    <script src="/__static__/morpcc/modernizr/modernizr-min.js"></script>   
     <script src="/__static__/deform/scripts/jquery.form.js"></script>
     <script src="/__static__/deform/scripts/deform.js"></script>
 

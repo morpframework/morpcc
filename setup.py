@@ -24,7 +24,8 @@ A meta CMS built on top of MorpFW""",
           "more.static",
           "deform",
           "beaker",
-          "alembic"
+          "alembic",
+          "pygments",
       ],
       entry_points={
       })
