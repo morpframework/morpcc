@@ -110,8 +110,7 @@ def _parse_dtdata(data):
     return result
 
 
-@App.json(model=CollectionUI, name="datatable.json", permission=crudperms.View)
-def datatable(context, request):
+def datatable_search(context, request, additional_filters=None):
     collection = context.collection
     data = list(request.GET.items())
     data = _parse_dtdata(data)
@@ -134,9 +133,15 @@ def datatable(context, request):
 
     if data["filter"]:
         if search:
-            rulez.and_(data["filter"], search)
+            search = rulez.and_(data["filter"], search)
         else:
             search = data["filter"]
+
+    if additional_filters:
+        if search:
+            search = rulez.and_(additional_filters, search)
+        else:
+            search = additional_filters
 
     order_by = None
     if data["order"]:
@@ -184,3 +189,7 @@ def datatable(context, request):
         "recordsFiltered": total_filtered[0]["count"],
         "data": rows,
     }
+
+@App.json(model=CollectionUI, name="datatable.json", permission=crudperms.View)
+def datatable(context, request):
+    return datatable_search(context, request)
