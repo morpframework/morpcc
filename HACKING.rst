@@ -26,8 +26,8 @@ Starting Demo CMS
 of the platform. You will need to setup following databases on your local
 PostgreSQL installation:
 
- * morpcc_democms
- * morpcc_democms_warehouse
+* morpcc_democms
+* morpcc_democms_warehouse
 
 You will need to generate an alembic migration script to initialize your
 database. We decided not to include default migration scripts so that it is

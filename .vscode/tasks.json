@@ -28,6 +28,22 @@
 
         },
         {
+            "label": "Reset Database",
+            "type": "shell",
+            "command": "./bin/morpfw -s ./morpcc/tests/democms/settings.yml resetdb",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "clear": false
+            },
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": null
+        },
+        {
             "label": "Test Project",
             "type": "shell",
             "command": "./bin/pytest --cov-report html --cov=morpfw --annotate-output=annotations.json --html=report.html --self-contained-html -s morpcc",
@@ -40,7 +56,7 @@
             "group": "test",
         },
                 {
-            "label": "Initialize Database",
+            "label": "Update Database",
             "type": "shell",
             "command": "./bin/alembic upgrade head",
             "presentation": {
@@ -75,6 +91,7 @@
     "inputs": [
         {"id":"message",
             "type": "promptString",
-            "description" : "Revision message"}
+            "description" : "Revision message",
+            "default": "update"}
     ]
 }
