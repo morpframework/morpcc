@@ -110,3 +110,24 @@ class VocabularyAction(dectate.Action):
         app_class.get_vocabulary.register(
             reg.methodify(obj), request=morepath.Request, name=self.name
         )
+
+
+class IndexerAction(dectate.Action):
+
+    app_class_arg = True
+
+    def __init__(self, model, name):
+        self.model = model
+        self.name = name
+
+    def identifier(self, app_class):
+        return str((app_class, self.model, self.name))
+
+    def perform(self, obj, app_class):
+        app_class.get_indexer.register(
+            reg.methodify(obj),
+            model=self.model,
+            name=self.name,
+        )
+
+

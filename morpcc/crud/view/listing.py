@@ -1,17 +1,19 @@
-import re
-import rulez
-import json
 import html
-import morepath
-from ..model import CollectionUI, ModelUI
-from ...app import App
-from boolean.boolean import ParseError
-from ...permission import ViewHome
-from ...util import dataclass_to_colander
+import json
+import re
+import typing
+
 import colander
 import deform
+import morepath
+import rulez
+from boolean.boolean import ParseError
 from morpfw.crud import permission as crudperms
-import typing
+
+from ...app import App
+from ...permission import ViewHome
+from ...util import dataclass_to_colander
+from ..model import CollectionUI, ModelUI
 
 
 @App.html(
@@ -117,11 +119,13 @@ def datatable_search(context, request, additional_filters=None):
     search = []
     if data["search"] and data["search"]["value"]:
         for fn, field in context.collection.schema.__dataclass_fields__.items():
+            if field.metadata.get("format", None) == "uuid":
+                continue
             if field.type == str:
                 search.append(
                     {"field": fn, "operator": "~", "value": data["search"]["value"]}
                 )
-            if field.type.__origin__ == typing.Union:
+            elif field.type.__origin__ == typing.Union:
                 if str in field.type.__args__:
                     search.append(
                         {"field": fn, "operator": "~", "value": data["search"]["value"]}
@@ -189,6 +193,7 @@ def datatable_search(context, request, additional_filters=None):
         "recordsFiltered": total_filtered[0]["count"],
         "data": rows,
     }
+
 
 @App.json(model=CollectionUI, name="datatable.json", permission=crudperms.View)
 def datatable(context, request):

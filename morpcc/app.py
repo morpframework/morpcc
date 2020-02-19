@@ -52,6 +52,14 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     schemaextender = dectate.directive(directive.SchemaExtenderAction)
     messagingprovider = dectate.directive(directive.MessagingProviderAction)
     vocabulary = dectate.directive(directive.VocabularyAction)
+    indexer = dectate.directive(directive.IndexerAction)
+
+    @reg.dispatch_method(
+        reg.match_instance("model"),
+        reg.match_key("name")
+    )
+    def get_indexer(self, model, name):
+        return None
 
     @reg.dispatch_method(
         reg.match_instance("model"),

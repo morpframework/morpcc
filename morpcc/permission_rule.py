@@ -13,3 +13,8 @@ def root_view_permission(identity, model, permission):
 @App.permission_rule(model=Root, permission=permission.ManageSite)
 def root_manage_site(identity, model, permission):
     return True
+
+
+@App.permission_rule(model=Root, permission=permission.SiteSearch)
+def root_site_search(identity, model, permission):
+    return True

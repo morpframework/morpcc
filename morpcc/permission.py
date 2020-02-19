@@ -9,3 +9,6 @@ class ViewHome(All):
 
 class ManageSite(All):
     pass
+
+class SiteSearch(All):
+    pass

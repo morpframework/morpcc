@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<metal:macro use-macro="load_template('master/page.pt').macros.master">
+
+
+    <body>
+        <span metal:fill-slot="page-title">
+            Edit: ${context.model['title']}
+        </span>
+        <div metal:fill-slot="page-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+                        <h2 metal:fill-slot="panel-title">General</h2>
+                        <div metal:fill-slot="panel-content">
+                            <div tal:replace="structure:form.render(form_data, request=request, context=context)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class="col-md-12">
+                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+
+                        <h2 metal:fill-slot="panel-title">Attributes</h2>
+                        <div metal:fill-slot="panel-content">
+                            <table id="attribute-listing"
+                                class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                                width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Attribute</th>
+                                        <th>Type</th>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+
+
+                            <button id="attribute-add" class="btn btn-default modal-link"
+                                data-url="${request.relative_url('/attribute/+modal-create?datamodel_uuid=' + context.model.uuid)}">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class="col-md-12">
+                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+
+
+                        <h2 metal:fill-slot="panel-title">Relationships</h2>
+                        <div metal:fill-slot="panel-content">
+                            <table id="relationship-listing"
+                                class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                                width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Attribute</th>
+                                        <th>Title</th>
+                                        <th>Reference Attribute</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+
+                            <button id="attribute-add" class="btn btn-default modal-link"
+                                data-url="${request.relative_url('/relationship/+modal-create?datamodel_uuid=' + context.model.uuid)}">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class='row'>
+                <div class="col-md-12">
+                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+
+
+                        <h2 metal:fill-slot="panel-title">Back Relationships</h2>
+                        <div metal:fill-slot="panel-content">
+                            <table id="backrelationship-listing"
+                                class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                                width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Attribute</th>
+                                        <th>Title</th>
+                                        <th>Reference Attribute</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+
+                            <button id="backrelationship-add" class="btn btn-default modal-link"
+                                data-url="${request.relative_url('/backrelationship/+modal-create?datamodel_uuid=' + context.model.uuid)}">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class="col-md-12">
+                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+
+
+                        <h2 metal:fill-slot="panel-title">Constraints</h2>
+                        <div metal:fill-slot="panel-content">
+                            <table id="constraint-listing"
+                                class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                                width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Validator</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+
+                            <button id="constraint-add" class="btn btn-default modal-link"
+                                data-url="${request.relative_url('/datamodelconstraint/+modal-create?datamodel_uuid=' + context.model.uuid)}">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div metal:fill-slot="footer_script_slot">
+            <script>
+                $('#attribute-listing').DataTable({
+                    serverSide: true,
+                    processing: true,
+                    ajax: "${request.relative_url('/attribute/+datatable.json?filter=datamodel_uuid%3D%3D' + context.model.uuid)}",
+                    columns: [
+                        { 'name': 'name' },
+                        { 'name': 'type' },
+                        { 'name': 'title' },
+                        { 'name': 'description' },
+                        { 'name': 'structure:buttons' }
+                    ]
+                });
+                $('#relationship-listing').DataTable({
+                    serverSide: true,
+                    processing: true,
+                    ajax: "${request.relative_url('/relationship/+datatable.json?filter=datamodel_uuid%3D%3D' + context.model.uuid)}",
+                    columns: [
+                        { 'name': 'name' },
+                        { 'name': 'title' },
+                        { 'name': 'reference_attribute_uuid' },
+                        { 'name': 'structure:buttons' }
+                    ]
+                });
+                $('#backrelationship-listing').DataTable({
+                    serverSide: true,
+                    processing: true,
+                    ajax: "${request.relative_url('/backrelationship/+datatable.json?filter=datamodel_uuid%3D%3D' + context.model.uuid)}",
+                    columns: [
+                        { 'name': 'name' },
+                        { 'name': 'title' },
+                        { 'name': 'relationship_uuid' },
+                        { 'name': 'structure:buttons' }
+                    ]
+                });
+                $('#constraint-listing').DataTable({
+                    serverSide: true,
+                    processing: true,
+                    ajax: "${request.relative_url('/datamodelconstraint/+datatable.json?filter=datamodel_uuid%3D%3D' + context.model.uuid)}",
+                    columns: [
+                        { 'name': 'title' },
+                        { 'name': 'validator' },
+                        { 'name': 'structure:buttons' }
+                    ]
+                });
+
+                $('#iframe-modal').on('hidden.bs.modal', function () {
+                    ['#attribute-listing', '#relationship-listing', '#backrelationship-listing'].map(
+                        function (identifier) {
+                            var el = $(identifier);
+                            if ($.fn.DataTable.isDataTable(el)) {
+                                el.DataTable().ajax.reload();
+                            }
+                        }
+                    )
+                });
+            </script>
+        </div>
+    </body>
+
+</metal:macro>
