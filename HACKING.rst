@@ -50,3 +50,8 @@ To start, in VSCode, press F5 or on the window menu, ``Debug > Start Debugging``
 To run unit tests, in VSCode command prompt, ``Tasks: Run Task > Test Project``
 
 Demo CMS shall be running at http://127.0.0.1:5000
+
+Contacting The Author
+======================
+
+Come over to https://t.me/morpfw 
