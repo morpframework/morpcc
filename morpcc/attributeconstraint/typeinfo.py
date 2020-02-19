@@ -12,7 +12,7 @@ from .path import get_collection_ui, get_model_ui
 #
 
 
-@App.typeinfo(name="morpcc.attributeconstraint")
+@App.typeinfo(name="morpcc.attributeconstraint", schema=AttributeConstraintSchema)
 def get_typeinfo(request):
     return {
         "title": "AttributeConstraint",

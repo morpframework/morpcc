@@ -23,7 +23,7 @@ class LoginForm(object):
 @App.html(model=Root, name="login", template="master/anon-form.pt")
 def login(context, request):
     schema = request.app.get_schemaextender(LoginForm)
-    formschema = dataclass_to_colander(schema)
+    formschema = dataclass_to_colander(schema, request=request)
     return {
         "form_title": "Login",
         "form": deform.Form(
@@ -47,7 +47,7 @@ def login(context, request):
 def process_login(context, request):
     controls = list(request.POST.items())
     schema = request.app.get_schemaextender(LoginForm)
-    formschema = dataclass_to_colander(schema)
+    formschema = dataclass_to_colander(schema, request=request)
     form = deform.Form(formschema())
     failed = False
     try:
@@ -118,7 +118,7 @@ class RegistrationForm(object):
 @App.html(model=Root, name="register", template="master/anon-form.pt")
 def register(context, request):
     schema = request.app.get_schemaextender(RegistrationForm)
-    formschema = dataclass_to_colander(schema)
+    formschema = dataclass_to_colander(schema, request=request)
     return {
         "form_title": "Register",
         "form": deform.Form(
@@ -140,7 +140,7 @@ def register(context, request):
 def process_register(context, request):
     controls = list(request.POST.items())
     schema = request.app.get_schemaextender(RegistrationForm)
-    formschema = dataclass_to_colander(schema)
+    formschema = dataclass_to_colander(schema, request=request)
     form = deform.Form(formschema())
     failed = False
     try:

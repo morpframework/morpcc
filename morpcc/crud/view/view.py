@@ -27,20 +27,23 @@ def model_index(context, request):
 def view(context, request):
     formschema = dataclass_to_colander(
         context.model.schema,
+        request=request,
         include_fields=context.view_include_fields,
         exclude_fields=context.view_exclude_fields,
     )
 
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
-        xattrformschema = dataclass_to_colander(xattrprovider.schema)
+        xattrformschema = dataclass_to_colander(xattrprovider.schema, 
+                request=request)
     else:
         xattrformschema = None
     data = context.model.data.as_dict()
     sm = context.model.statemachine()
 
     metadataschema = dataclass_to_colander(
-        morpfw.Schema, exclude_fields=["blobs", "xattrs"]
+        morpfw.Schema, exclude_fields=["blobs", "xattrs"],
+        request=request
     )
     if sm:
         triggers = [

@@ -10,7 +10,7 @@ from .path import get_collection_ui, get_model_ui
 # 
 
 
-@App.typeinfo(name='morpcc.referencedatakey')
+@App.typeinfo(name='morpcc.referencedatakey', schema=ReferenceDataKeySchema)
 def get_typeinfo(request):
     return {
         'title': 'ReferenceDataKey',

@@ -10,7 +10,7 @@ from .path import get_collection_ui, get_model_ui
 #
 
 
-@App.typeinfo(name='morpcc.notification')
+@App.typeinfo(name='morpcc.notification', schema=NotificationSchema)
 def get_typeinfo(request):
     return {
         'title': 'Notification',

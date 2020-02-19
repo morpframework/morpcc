@@ -17,6 +17,7 @@ def delete(context, request):
 
     formschema = dataclass_to_colander(
         context.model.schema,
+        request=request,
         include_fields=context.view_include_fields,
         exclude_fields=context.view_exclude_fields,
     )

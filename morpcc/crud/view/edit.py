@@ -19,6 +19,7 @@ from ..model import CollectionUI, ModelUI
 def edit(context, request):
     formschema = dataclass_to_colander(
         context.model.schema,
+        request=request,
         mode="edit",
         include_fields=context.edit_include_fields,
         exclude_fields=context.edit_exclude_fields,
@@ -52,6 +53,7 @@ def modal_edit(context, request):
 def process_edit(context, request):
     formschema = dataclass_to_colander(
         context.model.schema,
+        request=request,
         mode="edit-process",
         include_fields=context.edit_include_fields,
         exclude_fields=context.edit_exclude_fields,
@@ -102,7 +104,8 @@ def xattredit(context, request):
 
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
-        xattrformschema = dataclass_to_colander(xattrprovider.schema)
+        xattrformschema = dataclass_to_colander(xattrprovider.schema,
+                request=request)
     else:
         raise HTTPNotFound()
 
@@ -137,7 +140,8 @@ def process_xattredit(context, request):
 
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
-        xattrformschema = dataclass_to_colander(xattrprovider.schema)
+        xattrformschema = dataclass_to_colander(xattrprovider.schema,
+                request=request)
     else:
         raise HTTPNotFound()
 

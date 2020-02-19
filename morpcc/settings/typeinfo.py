@@ -10,7 +10,7 @@ from .path import get_collection_ui, get_model_ui
 # 
 
 
-@App.typeinfo(name='morpcc.setting')
+@App.typeinfo(name='morpcc.setting', schema=SettingSchema)
 def get_typeinfo(request):
     return {
         'title': 'Setting',

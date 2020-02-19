@@ -26,32 +26,31 @@
                     </div>
                 </div>
             </div>
+            <h2 metal:fill-slot="panel-title">Data Models</h2>
+            <a id="upgrade-schema-btn" tal:attributes="style '' if need_update else 'display:none'"
+                href="${request.link(context,'+schema-upgrade')}">
+                <button class="btn btn-danger">
+                    <i class="fa fa-arrow-up"></i>
+                    Upgrade Database Schema</button>
+            </a>
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
-                        <h2 metal:fill-slot="panel-title">Data Models</h2>
-                        <div metal:fill-slot="panel-content">
-                            <a id="upgrade-schema-btn" tal:attributes="style '' if need_update else 'display:none'"
-                                href="${request.link(context,'+schema-upgrade')}">
-                                <button class="btn btn-danger">
-                                    <i class="fa fa-arrow-up"></i>
-                                    Upgrade Database Schema</button>
-                            </a>
-                            <div class="row-fluid">
-                                <div class="col-xs-12 col-md-2">
-                                    <div class="card" tal:repeat="datamodel datamodels">
-                                        <i style="text-align: center;font-size:40px" class="fa fa-database"
-                                            aria-hidden="true"></i>
-                                        <h4><a href="${request.link(datamodel.ui())}"
-                                                tal:content="datamodel['title']">Title</a></h4>
-                                        <p tal:content="datamodel['description']"></p>
-                                    </div>
-                                </div>
-                            </div>
+
+                    <tal:repeat repeat="datamodel datamodels">
+                        <div class="col-md-2 col-sm-3 col-xs-4" tal:define="card_icon string:database;
+                                card_icon_link request.link(datamodel.ui(), 'records')">
+                            <metal:card use-macro="load_template('master/card.pt').macros.card">
+                                <metal:body fill-slot="card_content">
+                                    <h4 style="text-align:center"><a
+                                            href="${request.link(datamodel.ui())}">${datamodel['title']}</a></h4>
+                                    <p tal:content="datamodel['description']"></p>
+                                </metal:body>
+                            </metal:card>
                         </div>
-                    </div>
+                    </tal:repeat>
                 </div>
             </div>
+
         </metal:body>
     </body>
 </metal:master>

@@ -66,7 +66,8 @@ def userinfo_form(request) -> deform.Form:
 
 def attributes_form(context, request) -> deform.Form:
     schema = context.xattrprovider().schema
-    return deform.Form(dataclass_to_colander(schema)(), buttons=('Submit',), formid='personalinfo-form')
+    return deform.Form(dataclass_to_colander(schema, request=request)(), 
+            buttons=('Submit',), formid='personalinfo-form')
 
 
 def password_form(request) -> deform.Form:

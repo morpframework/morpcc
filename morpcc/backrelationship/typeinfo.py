@@ -10,7 +10,7 @@ from .path import get_collection_ui, get_model_ui
 # 
 
 
-@App.typeinfo(name='morpcc.backrelationship')
+@App.typeinfo(name='morpcc.backrelationship', schema=BackRelationshipSchema)
 def get_typeinfo(request):
     return {
         'title': 'BackRelationship',

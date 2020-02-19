@@ -6,7 +6,7 @@ from .path import get_collection, get_model
 from .path import get_collection_ui, get_model_ui
 
 
-@App.typeinfo(name='democms.page')
+@App.typeinfo(name='democms.page', schema=PageSchema)
 def get_typeinfo(request):
     return {
         'title': 'Page',

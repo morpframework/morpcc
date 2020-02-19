@@ -22,6 +22,7 @@ def create(context, request):
     default_value_fields = list(request.GET.keys())
     formschema = dataclass_to_colander(
         context.collection.schema,
+        request=request,
         include_fields=context.create_include_fields,
         exclude_fields=context.create_exclude_fields,
         hidden_fields=default_value_fields,
@@ -62,6 +63,7 @@ def modal_create(context, request):
 def process_create(context, request):
     formschema = dataclass_to_colander(
         context.collection.schema,
+        request=request,
         include_fields=context.create_include_fields,
         exclude_fields=context.create_exclude_fields,
     )

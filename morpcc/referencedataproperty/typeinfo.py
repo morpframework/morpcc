@@ -12,7 +12,7 @@ from .path import get_collection_ui, get_model_ui
 #
 
 
-@App.typeinfo(name="morpcc.referencedataproperty")
+@App.typeinfo(name="morpcc.referencedataproperty", schema=ReferenceDataPropertySchema)
 def get_typeinfo(request):
     return {
         "title": "ReferenceDataProperty",

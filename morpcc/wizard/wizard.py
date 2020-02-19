@@ -78,7 +78,7 @@ class FormWizardStep(WizardStep):
     schema: object
 
     def get_form(self, formid):
-        formschema = dataclass_to_colander(self.schema)
+        formschema = dataclass_to_colander(self.schema, request=self.request)
         return deform.Form(formschema(), formid=formid)
 
     def can_handle(self):
@@ -97,7 +97,7 @@ class FormWizardStep(WizardStep):
 
     def process_form(self):
         request = self.request
-        formschema = dataclass_to_colander(self.schema)
+        formschema = dataclass_to_colander(self.schema, request=self.request)
         controls = request.POST.items()
         form = deform.Form(formschema(), formid=request.POST.get('__formid__'))
         failed = False
