@@ -21,6 +21,7 @@ class RelationshipSchema(morpfw.Schema):
     datamodel_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "format": "uuid",
             "required": True,
             "editable": False,
             "deform.widget": ReferenceWidget("morpcc.datamodel", "title", "uuid"),
@@ -30,6 +31,7 @@ class RelationshipSchema(morpfw.Schema):
     reference_attribute_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "format": "uuid",
             "required": True,
             "deform.widget": ReferenceWidget(
                 "morpcc.attribute", "title", "uuid", get_search_url=attribute_search_url

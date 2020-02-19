@@ -25,5 +25,9 @@ class DataModelConstraintSchema(morpfw.Schema):
     )
     datamodel_uuid: typing.Optional[str] = field(
         default=None,
-        metadata={"required": True, "deform.widget": ReferenceWidget("morpcc.datamodel")},
+        metadata={
+            "format": "uuid",
+            "required": True,
+            "deform.widget": ReferenceWidget("morpcc.datamodel"),
+        },
     )

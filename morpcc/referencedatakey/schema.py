@@ -19,6 +19,7 @@ class ReferenceDataKeySchema(morpfw.Schema):
     referencedata_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "format":"uuid",
             "editable": False,
             "required": True,
             "deform.widget": ReferenceWidget("morpcc.referencedata", "title", "uuid")

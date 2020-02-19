@@ -21,17 +21,21 @@ class BackRelationshipSchema(morpfw.Schema):
     description: typing.Optional[str] = None
     datamodel_uuid: typing.Optional[str] = field(
         default=None,
-        metadata={"deform.widget": ReferenceWidget("morpcc.datamodel", "title", "uuid")},
+        metadata={
+            "format": "uuid",
+            "deform.widget": ReferenceWidget("morpcc.datamodel", "title", "uuid"),
+        },
     )
 
     reference_relationship_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "format": "uuid",
             "deform.widget": ReferenceWidget(
                 "morpcc.relationship",
                 "title",
                 "uuid",
                 get_search_url=relationship_search_url,
-            )
+            ),
         },
     )

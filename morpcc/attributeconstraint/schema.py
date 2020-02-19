@@ -23,5 +23,9 @@ class AttributeConstraintSchema(morpfw.Schema):
     )
     attribute_uuid: typing.Optional[str] = field(
         default=None,
-        metadata={"required": True, "deform.widget": ReferenceWidget("morpcc.attribute")},
+        metadata={
+            "required": True,
+            "format": "uuid",
+            "deform.widget": ReferenceWidget("morpcc.attribute"),
+        },
     )

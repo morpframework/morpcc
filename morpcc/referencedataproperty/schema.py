@@ -15,20 +15,18 @@ class ReferenceDataPropertySchema(morpfw.Schema):
             "required": True,
             "deform.widget": SelectWidget(
                 values=[("value", "Value"), ("label", "Label")]
-            )
+            ),
         },
     )
-    value: typing.Optional[str] = field(
-        default=None,
-        metadata={"required": True}
-    )
+    value: typing.Optional[str] = field(default=None, metadata={"required": True})
     description: typing.Optional[str] = None
     referencedatakey_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "format": "uuid",
             "required": True,
-            "editable" :False,
-            "deform.widget": ReferenceWidget("morpcc.referencedatakey", "name", "uuid")
+            "editable": False,
+            "deform.widget": ReferenceWidget("morpcc.referencedatakey", "name", "uuid"),
         },
     )
 

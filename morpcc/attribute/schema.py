@@ -35,6 +35,7 @@ class AttributeSchema(morpfw.Schema):
     datamodel_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "format": "uuid",
             "required": True,
             "editable": False,
             "deform.widget": ReferenceWidget("morpcc.datamodel", "title", "uuid"),

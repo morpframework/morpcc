@@ -1,5 +1,4 @@
-from morpcc.crud.columns import \
-    get_buttons_column as default_get_buttons_column
+from morpcc.crud.columns import get_buttons_column as default_get_buttons_column
 
 from ..app import App
 from .model import DataModelContentModel, DataModelModel
@@ -27,12 +26,7 @@ def get_content_buttons_column(model, request, name):
             "url": request.link(uiobj, "+%s" % uiobj.default_view),
             "title": "View",
         },
-        {
-            "icon": "edit",
-            "data-url": request.link(uiobj, "+modal-edit"),
-            "title": "Edit",
-            "class": "modal-link",
-        },
+        {"icon": "edit", "url": request.link(uiobj, "+edit"), "title": "Edit",},
         {
             "icon": "trash",
             "data-url": request.link(uiobj, "+modal-delete"),

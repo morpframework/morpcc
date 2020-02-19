@@ -8,6 +8,7 @@ import morpfw.crud.storage.sqlstorage
 import rulez
 import sqlalchemy
 import sqlalchemy_jsonfield.jsonfield
+import sqlalchemy_utils
 from alembic.autogenerate.api import (
     AutogenContext,
     compare_metadata,

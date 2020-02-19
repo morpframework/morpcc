@@ -17,6 +17,7 @@ class DataModelSchema(morpfw.Schema):
     application_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "format": "uuid",
             "required": True,
             "editable": False,
             "deform.widget": ReferenceWidget("morpcc.application", "title", "uuid"),
