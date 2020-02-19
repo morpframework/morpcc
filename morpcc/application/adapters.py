@@ -4,15 +4,10 @@ import pprint
 import tempfile
 import typing
 
-import sqlalchemy
-from sqlalchemy import MetaData, create_engine
-from sqlalchemy.schema import CreateSchema
-
 import morpfw.crud.storage.sqlstorage
 import rulez
+import sqlalchemy
 import sqlalchemy_jsonfield.jsonfield
-import sqlalchemy_utils.types
-from alembic import command
 from alembic.autogenerate.api import (
     AutogenContext,
     compare_metadata,
@@ -26,6 +21,8 @@ from alembic.operations import Operations
 from alembic.operations.ops import UpgradeOps
 from morpfw.crud.schemaconverter.dataclass2pgsqla import dataclass_to_pgsqla
 from RestrictedPython import compile_restricted, safe_globals
+from sqlalchemy import MetaData, create_engine
+from sqlalchemy.schema import CreateSchema
 
 from ..datamodel.path import get_collection as get_dm_collection
 from .model import ApplicationModel

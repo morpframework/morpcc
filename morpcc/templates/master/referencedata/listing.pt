@@ -163,7 +163,7 @@
 
 
                 $('#iframe-modal').on('hidden.bs.modal', function () {
-                    ['#refdata-listing', '#refdatakey-listing', '#refdatapro-listing'].map(
+                    ['#refdata-listing', '#refdatakey-listing', '#refdataprop-listing'].map(
                         function (identifier) {
                             var el = $(identifier);
                             if ($.fn.DataTable.isDataTable(el)) {

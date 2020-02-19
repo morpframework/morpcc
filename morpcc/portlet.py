@@ -1,6 +1,7 @@
 from .app import App
 from .users.path import get_current_user_model_ui
 from .notification.path import get_collection_ui as get_notification_collection_ui
+from .application.path import get_collection as get_app_collection
 from morpfw.authn.pas.user.path import get_user_collection
 from webob.exc import HTTPUnauthorized
 import rulez
@@ -18,6 +19,29 @@ def topnav_portlets(context, request):
 
 @App.portlet(name='morpcc.main_navigation', template='master/portlet/navigation.pt')
 def navigation_portlet(context, request):
+
+    general_children = [
+        {'title': 'Home', 'icon': 'home', 'href': request.relative_url('/')},
+    ]
+
+
+    appcol = get_app_collection(request)
+    apps_nav = []
+    for app in appcol.search():
+        appui = app.ui()
+        apps_nav.append(
+            {
+                "title": app["title"],
+                "href": request.link(appui, "+{}".format(appui.default_view)),
+            }
+        )
+
+    if apps_nav:
+        general_children.append(
+            {"title": "Applications", "icon": "cubes", "children": apps_nav}
+        )
+
+
     types = request.app.config.type_registry.get_typeinfos(request)
     types_nav = []
     for typeinfo in types.values():
@@ -29,13 +53,13 @@ def navigation_portlet(context, request):
             'href': request.link(collectionui, '+%s' % collectionui.default_view)
         })
     types_nav.sort(key=lambda x: x['title'])
-    general_children = [
-        {'title': 'Home', 'icon': 'home', 'href': request.relative_url('/')},
-    ]
 
     if types_nav:
         general_children.append({'title': 'Collections', 'icon': 'database',
                                  'children': types_nav})
+
+
+
     return {
         'navtree': [{
             'section': 'General',

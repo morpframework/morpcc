@@ -11,10 +11,21 @@
             "problemMatcher": []
         },
         {
-            "label": "Destroy Pipenv",
+            "label": "Generate migrations",
             "type": "shell",
-            "command": "pipenv --rm",
-            "group": "build"
+            "command": "./bin/alembic revision --autogenerate -m ${input:message}",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "clear": false
+            },
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": null
+
         },
         {
             "label": "Test Project",
@@ -31,7 +42,7 @@
                 {
             "label": "Initialize Database",
             "type": "shell",
-            "command": "./bin/morpfw -s ./morpcc/tests/democms/settings.yml initdb",
+            "command": "./bin/alembic upgrade head",
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -60,5 +71,10 @@
             },
             "problemMatcher": null
         }
+    ],
+    "inputs": [
+        {"id":"message",
+            "type": "promptString",
+            "description" : "Revision message"}
     ]
 }

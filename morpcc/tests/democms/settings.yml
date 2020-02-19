@@ -8,6 +8,7 @@ configuration:
     - morpcc.tests.democms
   morpfw.authn.policy: morpcc.app:AuthnPolicy
   morpfw.storage.sqlstorage.dburi: 'postgresql://postgres:postgres@localhost:5432/morpcc_democms'
+  morpfw.storage.sqlstorage.dburi.warehouse: 'postgresql://postgres:postgres@localhost:5432/morpcc_democms_warehouse'
   morpfw.secret.fernet_key: ghVRZXc-6nijmxqmcn5SnkAwjdCo39hCC9cH9SSUKPE=
 
 application:
