@@ -29,21 +29,24 @@ PostgreSQL installation:
 * morpcc_democms
 * morpcc_democms_warehouse
 
+Configuration of the democms application resides in
+``morpcc/tests/democms/settings.yml``
+
 You will need to generate an alembic migration script to initialize your
 database. We decided not to include default migration scripts so that it is
 easier for devs to customize migration scripts to suit their own needs. 
 
-To generate alembic migration, in VSCode command prompt, **Tasks: Run Task >
-Generate Migrations**.
+To generate alembic migration, in VSCode command prompt, ``Tasks: Run Task >
+Generate Migrations``.
 
-To initialize database, in VSCode command prompt, **Tasks: Run Task > Update
-database**
+To initialize database, in VSCode command prompt, ``Tasks: Run Task > Update
+database``
 
-To create initial admin user, in VSCode command prompt, **Tasks: Run Task >
-Create default admin user (admin:admin)**
+To create initial admin user, in VSCode command prompt, ``Tasks: Run Task >
+Create default admin user (admin:admin)``
 
-To start, in VSCode, press F5 or on the window menu, **Debug > Start Debugging**
+To start, in VSCode, press F5 or on the window menu, ``Debug > Start Debugging``
 
-To run unit tests, in VSCode command prompt, **Tasks: Run Task > Test Project**
+To run unit tests, in VSCode command prompt, ``Tasks: Run Task > Test Project``
 
 Demo CMS shall be running at http://127.0.0.1:5000
