@@ -63,6 +63,7 @@ class DataModelModel(morpfw.Model):
     def dataclass(self):
 
         attrs = []
+        primary_key = []
         for k, attr in self.attributes().items():
             metadata = {
                 "required": attr["required"],
@@ -72,6 +73,8 @@ class DataModelModel(morpfw.Model):
             attrs.append(
                 (attr["name"], attr.datatype(), field(default=None, metadata=metadata))
             )
+            if attr["primary_key"]:
+                primary_key.append(attr["name"])
 
         for r, rel in self.relationships().items():
             refsearch = rel.reference_search_attribute()
@@ -100,8 +103,15 @@ class DataModelModel(morpfw.Model):
                 (rel["name"], rel.datatype(), field(default=None, metadata=metadata))
             )
 
+            if attr["primary_key"]:
+                primary_key.append(attr["name"])
+
         name = self["name"] or "Model"
-        return make_dataclass(name, fields=attrs, bases=(morpfw.Schema,))
+
+        dc = make_dataclass(name, fields=attrs, bases=(morpfw.Schema,))
+        if primary_key:
+            dc.__unique_constraint__ = tuple(primary_key)
+        return dc
 
     def attributes(self):
         attrcol = get_attribute_collection(self.request)

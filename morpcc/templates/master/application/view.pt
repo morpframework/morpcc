@@ -42,7 +42,8 @@
                             <metal:card use-macro="load_template('master/card.pt').macros.card">
                                 <metal:body fill-slot="card_content">
                                     <h4 style="text-align:center"><a
-                                            href="${request.link(datamodel.ui())}">${datamodel['title']}</a></h4>
+                                            href="${request.link(datamodel.ui(), 'records')}">${datamodel['title']}</a>
+                                    </h4>
                                     <p tal:content="datamodel['description']"></p>
                                 </metal:body>
                             </metal:card>

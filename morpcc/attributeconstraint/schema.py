@@ -18,13 +18,12 @@ class AttributeConstraintSchema(morpfw.Schema):
             "deform.widget": VocabularyWidget("morpcc.attributevalidators"),
         },
     )
-    parameters: typing.Optional[str] = field(
-        default=None, metadata={"deform.widget": TextAreaWidget()}
-    )
+    parameters: typing.Optional[str] = field(default=None, metadata={"format": "text"})
     attribute_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
             "required": True,
+            "editable": False,
             "format": "uuid",
             "deform.widget": ReferenceWidget("morpcc.attribute"),
         },

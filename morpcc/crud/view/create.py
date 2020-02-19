@@ -4,7 +4,7 @@ import deform
 import morepath
 from deform.widget import HiddenWidget
 from morpfw.crud import permission as crudperms
-from morpfw.crud.errors import AlreadyExistsError
+from morpfw.crud.errors import AlreadyExistsError, ValidationError
 from webob.exc import HTTPFound
 
 from ...app import App
@@ -85,6 +85,14 @@ def process_create(context, request):
         except AlreadyExistsError as e:
             failed = True
             request.notify("error", "Already Exists", "Object already exists")
+        except ValidationError as e:
+            failed = True
+            for form_error in e.form_errors:
+                request.notify("error", "Form Validation Error", form_error.message)
+            for field_error in e.field_errors:
+                request.notify("error", 
+                    "Field {} Validation Error".format(field_error.path),
+                    field_error.message)
 
         if not failed:
             return morepath.redirect(

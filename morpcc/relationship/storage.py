@@ -17,6 +17,7 @@ class Relationship(morpfw.sql.Base):
     reference_attribute_uuid = sa.Column(morpfw.sql.GUID)
     reference_search_attribute_uuid = sa.Column(morpfw.sql.GUID)
     required = sa.Column(sa.Boolean())
+    primary_key = sa.Column(sa.Boolean())
 
 
 class RelationshipStorage(morpfw.SQLStorage):

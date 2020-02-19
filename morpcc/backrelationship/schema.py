@@ -3,6 +3,9 @@ from dataclasses import dataclass, field
 
 import morpfw
 from morpcc.deform.referencewidget import ReferenceWidget
+from morpfw.validator.field import valid_identifier
+
+from ..attribute.form_validator import unique_attribute
 
 
 def relationship_search_url(widget, context, request):
@@ -16,12 +19,21 @@ def relationship_search_url(widget, context, request):
 @dataclass
 class BackRelationshipSchema(morpfw.Schema):
 
-    name: typing.Optional[str] = None
-    title: typing.Optional[str] = None
-    description: typing.Optional[str] = None
+    name: typing.Optional[str] = field(
+        default=None,
+        metadata={
+            "required": True,
+            "editable": False,
+            "validators": [valid_identifier],
+        },
+    )
+    title: typing.Optional[str] = field(default=None, metadata={"required": True})
+    description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
     datamodel_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "required": True,
+            "editable": False,
             "format": "uuid",
             "deform.widget": ReferenceWidget("morpcc.datamodel", "title", "uuid"),
         },
@@ -31,6 +43,8 @@ class BackRelationshipSchema(morpfw.Schema):
         default=None,
         metadata={
             "format": "uuid",
+            "required": True,
+            "editable": False,
             "deform.widget": ReferenceWidget(
                 "morpcc.relationship",
                 "title",
@@ -39,3 +53,5 @@ class BackRelationshipSchema(morpfw.Schema):
             ),
         },
     )
+
+    __validators__ = [unique_attribute]

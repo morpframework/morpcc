@@ -9,12 +9,15 @@ from morpcc.deform.referencewidget import ReferenceWidget
 @dataclass
 class IndexSchema(morpfw.Schema):
 
-    name: typing.Optional[str] = field(default=None, metadata={"required": True})
+    name: typing.Optional[str] = field(
+        default=None, metadata={"required": True, "editable": False}
+    )
     title: typing.Optional[str] = field(default=None, metadata={"required": True})
     type: typing.Optional[str] = field(
         default=None,
         metadata={
             "required": True,
+            "editable": False,
             "deform.widget": SelectWidget(
                 values=[
                     ("fulltextindex", "Full Text Index"),
@@ -23,6 +26,4 @@ class IndexSchema(morpfw.Schema):
             ),
         },
     )
-    description: typing.Optional[str] = field(
-        default=None, metadata={"deform.widget": TextAreaWidget()}
-    )
+    description: typing.Optional[str] = field(default=None, metadata={"format": "text"})

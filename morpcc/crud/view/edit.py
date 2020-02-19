@@ -3,6 +3,7 @@ import html
 import deform
 import morepath
 from morpfw.crud import permission as crudperms
+from morpfw.crud.errors import AlreadyExistsError, ValidationError
 from webob.exc import HTTPFound, HTTPNotFound
 
 from ...app import App
@@ -69,8 +70,20 @@ def process_edit(context, request):
         form = e
         failed = True
     if not failed:
-        context.model.update(data, deserialize=False)
-        return morepath.redirect(request.link(context))
+        try:
+            context.model.update(data, deserialize=False)
+        except ValidationError as e:
+            failed = True
+            for form_error in e.form_errors:
+                request.notify("error", "Form Validation Error", form_error.message)
+            for field_error in e.field_errors:
+                request.notify(
+                    "error",
+                    "Field {} Validation Error".format(field_error.path),
+                    field_error.message,
+                )
+        if not failed:
+            return morepath.redirect(request.link(context))
 
     return {
         "page_title": "Edit %s" % html.escape(str(context.model.__class__.__name__)),
@@ -104,8 +117,7 @@ def xattredit(context, request):
 
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
-        xattrformschema = dataclass_to_colander(xattrprovider.schema,
-                request=request)
+        xattrformschema = dataclass_to_colander(xattrprovider.schema, request=request)
     else:
         raise HTTPNotFound()
 
@@ -140,8 +152,7 @@ def process_xattredit(context, request):
 
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
-        xattrformschema = dataclass_to_colander(xattrprovider.schema,
-                request=request)
+        xattrformschema = dataclass_to_colander(xattrprovider.schema, request=request)
     else:
         raise HTTPNotFound()
 

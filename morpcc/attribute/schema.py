@@ -4,6 +4,9 @@ from dataclasses import dataclass, field
 import morpfw
 from deform.widget import SelectWidget
 from morpcc.deform.referencewidget import ReferenceWidget
+from morpfw.validator.field import valid_identifier
+
+from .form_validator import required_if_primary_key, unique_attribute
 
 ACCEPTED_TYPES = (
     ("string", "String"),
@@ -20,7 +23,12 @@ ACCEPTED_TYPES = (
 class AttributeSchema(morpfw.Schema):
 
     name: typing.Optional[str] = field(
-        default=None, metadata={"required": True, "editable": False}
+        default=None,
+        metadata={
+            "required": True,
+            "editable": False,
+            "validators": [valid_identifier],
+        },
     )
     type: typing.Optional[str] = field(
         default=None,
@@ -32,6 +40,7 @@ class AttributeSchema(morpfw.Schema):
     title: typing.Optional[str] = field(default=None, metadata={"required": True})
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
     required: typing.Optional[bool] = False
+    primary_key: typing.Optional[bool] = False
     datamodel_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
@@ -43,3 +52,5 @@ class AttributeSchema(morpfw.Schema):
     )
 
     __unique_constraint__ = ["datamodel_uuid", "name"]
+
+    __validators__ = [unique_attribute, required_if_primary_key]
