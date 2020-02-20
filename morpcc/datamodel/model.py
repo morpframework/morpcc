@@ -10,6 +10,8 @@ from sqlalchemy import MetaData
 from ..attribute.path import get_collection as get_attribute_collection
 from ..backrelationship.path import \
     get_collection as get_backrelationship_collection
+from ..behaviorassignment.path import \
+    get_collection as get_behaviorassignment_collection
 from ..relationship.path import get_collection as get_relationship_collection
 from ..relationship.widget import DataModelContentReferenceWidget
 from .modelui import (DataModelCollectionUI, DataModelContentCollectionUI,
@@ -108,7 +110,13 @@ class DataModelModel(morpfw.Model):
 
         name = self["name"] or "Model"
 
-        dc = make_dataclass(name, fields=attrs, bases=(morpfw.Schema,))
+        bases = []
+        for behavior in self.behaviors():
+            bases.append(behavior.schema)
+
+        bases.append(morpfw.Schema)
+
+        dc = make_dataclass(name, fields=attrs, bases=tuple(bases))
         if primary_key:
             dc.__unique_constraint__ = tuple(primary_key)
         return dc
@@ -143,6 +151,18 @@ class DataModelModel(morpfw.Model):
 
         return result
 
+    def behaviors(self):
+        bhvcol = get_behaviorassignment_collection(self.request)
+        assignments = bhvcol.search(rulez.field["datamodel_uuid"] == self.uuid)
+        behaviors = []
+        for assignment in assignments:
+            behavior = self.request.app.config.behavior_registry.get_behavior(
+                assignment["behavior"], self.request
+            )
+            behaviors.append(behavior)
+
+        return behaviors
+
     def application(self):
         from ..application.path import get_model as get_app
 
@@ -154,14 +174,53 @@ class DataModelModel(morpfw.Model):
         return dmapp.content_metadata()
 
     def content_collection(self):
-        class Model(DataModelContentModel):
+        behaviors = self.behaviors()
+
+        model_markers = []
+        modelui_markers = []
+        collection_markers = []
+        collectionui_markers = []
+
+        for behavior in behaviors:
+            model_markers.append(behavior.model_marker)
+            modelui_markers.append(behavior.modelui_marker)
+            collection_markers.append(behavior.collection_marker)
+            collectionui_markers.append(behavior.collectionui_marker)
+
+        modelui_markers.append(DataModelContentModelUI)
+
+        ModelUI = type("ModelUI", tuple(modelui_markers), {})
+
+        class ContentCollectionUI(DataModelContentCollectionUI):
+
+            modelui_class = ModelUI
+
+        collectionui_markers.append(ContentCollectionUI)
+
+        CollectionUI = type("CollectionUI", tuple(collectionui_markers), {})
+
+        class ContentModel(DataModelContentModel):
             schema = self.dataclass()
 
             __path_model__ = DataModelContentModel
 
-        class Collection(DataModelContentCollection):
+            def ui(self):
+                return ModelUI(self.request, self, self.collection.uu())
+
+        model_markers.append(ContentModel)
+
+        Model = type("Model", tuple(model_markers), {})
+
+        class ContentCollection(DataModelContentCollection):
 
             __path_model__ = DataModelContentCollection
+
+            def ui(self):
+                return CollectionUI(self.request, self)
+
+        collection_markers.append(ContentCollection)
+
+        Collection = type("Collection", tuple(collection_markers), {})
 
         class Storage(PgSQLStorage):
             model = Model

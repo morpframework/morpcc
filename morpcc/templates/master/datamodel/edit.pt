@@ -20,6 +20,35 @@
                     </div>
                 </div>
             </div>
+
+            <div class='row'>
+                <div class="col-md-12">
+                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+
+                        <h2 metal:fill-slot="panel-title">Behaviors</h2>
+                        <div metal:fill-slot="panel-content">
+                            <table id="behavior-listing" class="table table-striped table-bordered dt-responsive nowrap"
+                                cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Behavior</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+
+
+                            <button id="attribute-add" class="btn btn-default modal-link"
+                                data-url="${request.relative_url('/behaviorassignment/+modal-create?datamodel_uuid=' + context.model.uuid)}">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class='row'>
                 <div class="col-md-12">
                     <div metal:use-macro="load_template('master/panel.pt').macros.panel">
@@ -146,6 +175,15 @@
         </div>
         <div metal:fill-slot="footer_script_slot">
             <script>
+                $('#behavior-listing').DataTable({
+                    serverSide: true,
+                    processing: true,
+                    ajax: "${request.relative_url('/behaviorassignment/+datatable.json?filter=datamodel_uuid%3D%3D' + context.model.uuid)}",
+                    columns: [
+                        { 'name': 'behavior' },
+                        { 'name': 'structure:buttons' }
+                    ]
+                });
                 $('#attribute-listing').DataTable({
                     serverSide: true,
                     processing: true,
@@ -192,7 +230,7 @@
                 });
 
                 $('#iframe-modal').on('hidden.bs.modal', function () {
-                    ['#attribute-listing', '#relationship-listing', '#backrelationship-listing'].map(
+                    ['#behavior-listing', '#attribute-listing', '#relationship-listing', '#backrelationship-listing'].map(
                         function (identifier) {
                             var el = $(identifier);
                             if ($.fn.DataTable.isDataTable(el)) {

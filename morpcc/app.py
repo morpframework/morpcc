@@ -53,6 +53,7 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     messagingprovider = dectate.directive(directive.MessagingProviderAction)
     vocabulary = dectate.directive(directive.VocabularyAction)
     indexer = dectate.directive(directive.IndexerAction)
+    behavior = dectate.directive(directive.BehaviorAction)
 
     @reg.dispatch_method(
         reg.match_instance("model"),
@@ -85,6 +86,10 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     @reg.dispatch_method(reg.match_instance("request"), reg.match_key("name"))
     def get_vocabulary(self, request, name):
         return None
+
+    @reg.dispatch_method(reg.match_key('name'))
+    def get_behavior_factory(self, name):
+        raise NotImplementedError
 
 
 class AuthnPolicy(SQLStorageAuthnPolicy):

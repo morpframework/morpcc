@@ -30,6 +30,14 @@ def get_model(request, identifier):
     return col.get(identifier)
 
 
+def get_collection_ui(request):
+    return get_collection(request).ui()
+
+
+def get_model_ui(request, identifier):
+    return get_collection_ui(request).get(identifier)
+
+
 @App.path(model=DataModelCollection, path="/api/v1/datamodel")
 def _get_collection(request):
     return get_collection(request)
@@ -67,18 +75,13 @@ def _get_content_model(request, identifier, recordidentifier):
 #
 
 
-def get_collection_ui(request):
-    col = get_collection(request)
-    return DataModelCollectionUI(request, col)
-
-
 @App.path(model=DataModelCollectionUI, path="/datamodel")
 def _get_collection_ui(request):
-    return get_collection_ui(request)
+    return get_collection(request).ui()
 
 
 def get_model_ui(request, identifier):
-    col = get_collection_ui(request)
+    col = get_collection(request).ui()
     return col.get(identifier)
 
 
@@ -93,7 +96,7 @@ DATA = {}
 
 def _get_model_content_collection_ui(parent, request):
     col = parent.content_collection()
-    return DataModelContentCollectionUI(request, col)
+    return col.ui()
 
 
 @App.path(

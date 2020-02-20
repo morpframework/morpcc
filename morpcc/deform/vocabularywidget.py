@@ -1,7 +1,6 @@
-from deform.widget import Widget, SelectWidget
+from colander import Invalid, null
 from deform.compat import string_types
-from colander import null
-from colander import Invalid
+from deform.widget import SelectWidget, Widget
 
 
 class VocabularyWidget(SelectWidget):
@@ -29,4 +28,3 @@ class VocabularyWidget(SelectWidget):
             if v["value"] == identifier:
                 return v["label"]
         return ""
-

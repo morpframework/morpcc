@@ -26,8 +26,21 @@ class DataModelContentCollectionUI(CollectionUI):
     def columns(self):
         columns = []
 
-        for n, attr in self.collection.__parent__.attributes().items():
+        attrs = self.collection.__parent__.attributes()
+
+        for behavior in self.collection.__parent__.behaviors():
+            for n, attr in behavior.schema.__dataclass_fields__.items():
+                if n in attrs.keys():
+                    continue
+
+                title = n
+                if attr.metadata.get("title", None):
+                    title = attr.metadata["title"]
+                columns.append({"title": title, "name": n})
+
+        for n, attr in attrs.items():
             columns.append({"title": attr["title"], "name": n})
+
         columns.append({"title": "Actions", "name": "structure:buttons"})
 
         return columns

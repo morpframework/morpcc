@@ -1,0 +1,3 @@
+
+class BaseBehavior(object):
+    pass

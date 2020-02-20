@@ -1,8 +1,10 @@
 import dectate
-import reg
 import morepath
+import reg
 from morepath.directive import SettingAction
-from .portletregistry import PortletRegistry, PortletProviderRegistry
+
+from .behaviorregistry import BehaviorRegistry
+from .portletregistry import PortletProviderRegistry, PortletRegistry
 
 PORTLET_FACTORY_IDS: dict = {}
 
@@ -130,4 +132,24 @@ class IndexerAction(dectate.Action):
             name=self.name,
         )
 
+class BehaviorAction(dectate.Action):
 
+    config = {"behavior_registry": BehaviorRegistry}
+
+    app_class_arg = True
+
+    depends = [SettingAction]
+
+    def __init__(self, name):
+        self.name = name
+
+    def identifier(self, app_class, behavior_registry: BehaviorRegistry):
+        return self.name
+
+    def perform(self, obj, app_class, behavior_registry: BehaviorRegistry):
+
+        def factory(name):
+            return obj
+
+        app_class.get_behavior_factory.register(reg.methodify(factory), name=self.name)
+        behavior_registry.register_behavior(name=self.name)
