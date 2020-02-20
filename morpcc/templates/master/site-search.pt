@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+   <metal:master use-macro="load_template('master/page.pt').macros.master">
+      <metal:slot fill-slot="page-title">
+         Search
+      </metal:slot>
+      <metal:slot metal:fill-slot="page-body">
+         <div class="container-fluid">
+            <div class="row">
+               <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="x_panel widget_card">
+                     <div class="x_content">
+                        <form method="GET" action="${request.link(context, '+site-search')}">
+                           <div class="input-group">
+                              <input name="q" type="text" class="form-control" placeholder="Search for..." />
+                              <span class="input-group-btn">
+                                 <input type="submit" class="btn btn-default" value="Go!" />
+                              </span>
+                           </div>
+                        </form>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="row" tal:repeat="result results">
+               <div class="col-md-1 col-sm-1 colx-xs-1"></div>
+               <div class="col-md-10 col-sm-10 col-xs-10">
+                  <div class="x_panel widget_card">
+                     <div class="x_content">
+                        <a href="${result['url']}">
+                           <h4>${result['title']}</h4>
+                           <p tal:condition="result['description']">
+                              ${result['description']}
+                           </p>
+                           <tal:c condition="result['preview']">
+                              <div tal:content="structure result['preview']">
+                              </div>
+                           </tal:c>
+                        </a>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-md-1 col-sm-1 colx-xs-1"></div>
+            </div>
+         </div>
+      </metal:slot>
+   </metal:master>
+</body>
+
+</html>

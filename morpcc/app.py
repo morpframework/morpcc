@@ -1,19 +1,21 @@
-import os
-import morpfw
-from morpfw.app import DBSessionRequest
-from morpfw.authn.pas.policy import SQLStorageAuthnPolicy, SQLStorageAuthApp
-from morpfw.authz.pas import DefaultAuthzPolicy
-from .authn import IdentityPolicy
-from more.chameleon import ChameleonApp
-import morepath
-from morepath.publish import resolve_model
-from morpfw.main import create_app
-from beaker.middleware import SessionMiddleware as BeakerMiddleware
 import functools
-import dectate
-import reg
-from . import directive
+import os
 from uuid import uuid4
+
+import dectate
+import morepath
+import morpfw
+import reg
+from beaker.middleware import SessionMiddleware as BeakerMiddleware
+from more.chameleon import ChameleonApp
+from morepath.publish import resolve_model
+from morpfw.app import DBSessionRequest
+from morpfw.authn.pas.policy import SQLStorageAuthApp, SQLStorageAuthnPolicy
+from morpfw.authz.pas import DefaultAuthzPolicy
+from morpfw.main import create_app
+
+from . import directive
+from .authn import IdentityPolicy
 
 
 class MorpBeakerMiddleware(BeakerMiddleware):
@@ -53,12 +55,10 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     messagingprovider = dectate.directive(directive.MessagingProviderAction)
     vocabulary = dectate.directive(directive.VocabularyAction)
     indexer = dectate.directive(directive.IndexerAction)
+    indexresolver = dectate.directive(directive.IndexResolverAction)
     behavior = dectate.directive(directive.BehaviorAction)
 
-    @reg.dispatch_method(
-        reg.match_instance("model"),
-        reg.match_key("name")
-    )
+    @reg.dispatch_method(reg.match_instance("model"), reg.match_key("name"))
     def get_indexer(self, model, name):
         return None
 
@@ -87,8 +87,12 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     def get_vocabulary(self, request, name):
         return None
 
-    @reg.dispatch_method(reg.match_key('name'))
+    @reg.dispatch_method(reg.match_key("name"))
     def get_behavior_factory(self, name):
+        raise NotImplementedError
+
+    @reg.dispatch_method(reg.match_key("name"))
+    def get_index_resolver(self, name):
         raise NotImplementedError
 
 

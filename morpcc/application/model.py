@@ -1,11 +1,10 @@
 from dataclasses import field, make_dataclass
 
-from sqlalchemy import DDL, MetaData
-
 import morpfw
 import rulez
 from morpfw.crud import signals
 from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
+from sqlalchemy import DDL, MetaData
 
 from ..datamodel.model import DataModelContentModel
 from ..datamodel.path import get_collection as get_dm_collection
@@ -47,7 +46,8 @@ class ApplicationModel(morpfw.Model):
                 offset += 1000
 
     def index_sync(self, model):
-        idxcol = get_index_collection(self.request).content_collection()
+        col = get_index_collection(self.request)
+        idxcol = col.content_collection()
         existing = idxcol.search(
             rulez.and_(
                 rulez.field["application_uuid"] == model.datamodel().application().uuid,
@@ -57,20 +57,9 @@ class ApplicationModel(morpfw.Model):
         )
 
         data = {}
-        for keyidx in [
-            "application_uuid",
-            "datamodel_content_uuid",
-            "datamodel_uuid",
-            "searchabletext",
-        ]:
+        for keyidx in [i[0] for i in col.index_attrs()]:
             res = self.request.app.get_indexer(model, keyidx)
-            assert res is not None
-            data[keyidx] = res.lower()
-
-        for idx in get_index_collection(self.request).search():
-            res = self.request.app.get_indexer(model, idx["name"])
-            if res:
-                data[idx["name"]] = res.lower()
+            data[keyidx] = res
 
         if existing:
             existing[0].update(data)

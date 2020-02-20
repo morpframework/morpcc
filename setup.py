@@ -26,6 +26,7 @@ A meta CMS built on top of MorpFW""",
           "beaker",
           "alembic",
           "pygments",
+          "nltk"
       ],
       entry_points={
       })

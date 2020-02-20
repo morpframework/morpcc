@@ -1,4 +1,5 @@
 from dataclasses import field, make_dataclass
+import typing
 
 import morpfw
 from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
@@ -16,6 +17,22 @@ from .schema import IndexSchema
 class IndexContentModel(morpfw.Model):
     def ui(self):
         return IndexContentModelUI(self.request, self, self.collection.ui())
+
+    def json(self):
+        idxcol = self.collection.__parent__
+        res = {}
+        for idx in idxcol.index_attrs():
+            res[idx[0]] = self[idx[0]]
+        return res
+
+    def get_object(self):
+        resolver = self["index_resolver"]
+        if not resolver:
+            raise ValueError("Unable to locate resolver")
+
+        resolve = self.request.app.get_index_resolver(resolver)
+
+        return resolve(self, self.request)
 
 
 class IndexContentCollection(morpfw.Collection):
@@ -66,18 +83,22 @@ class IndexCollection(morpfw.Collection):
             storage=Storage(self.request, metadata=self.content_metadata()),
         )
 
-    def dataclass(self):
+    def index_attrs(self):
         attrs = [
-            ("application_uuid", str, field(default=None, metadata={"format": "uuid"})),
-            ("datamodel_uuid", str, field(default=None, metadata={"format": "uuid"})),
+            ("title", typing.Optional[str], field(default=None)),
+            ("description", typing.Optional[str], field(default=None)),
+            ("index_resolver", typing.Optional[str], field(default=None)),
+            ("preview", typing.Optional[str], field(default=None)),
+            ("application_uuid", typing.Optional[str], field(default=None, metadata={"format": "uuid"})),
+            ("datamodel_uuid", typing.Optional[str], field(default=None, metadata={"format": "uuid"})),
             (
                 "datamodel_content_uuid",
-                str,
+                typing.Optional[str],
                 field(default=None, metadata={"format": "uuid"}),
             ),
             (
                 "searchabletext",
-                str,
+                typing.Optional[str],
                 field(default=None, metadata={"format": "fulltextindex"}),
             ),
         ]
@@ -87,6 +108,10 @@ class IndexCollection(morpfw.Collection):
             if idx["type"] == "fulltextindex":
                 metadata["format"] = "fulltextindex"
 
-            attrs.append((idx["name"], str, field(default=None, metadata=metadata)))
+            attrs.append((idx["name"], typing.Optional[str], field(default=None, metadata=metadata)))
 
+        return attrs
+
+    def dataclass(self):
+        attrs = self.index_attrs()
         return make_dataclass("morpcc_catalog", attrs, bases=(morpfw.Schema,))

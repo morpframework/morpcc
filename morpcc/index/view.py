@@ -55,17 +55,40 @@ def process_schema_upgrade(context, request):
     return morpfw.redirect(request.link(context))
 
 
-@App.json(
-    model=Root,
-    name="search.json",
-#    template="master/site-search.pt",
-    permission=mccperm.SiteSearch,
-)
-def search(context, request):
+def _search(context, request):
     col = get_collection(request).content_collection()
     prov = col.searchprovider()
     search = prov.parse_query(request.GET.get("q", None))
     res = []
+    if search is None:
+        return {
+            'results': []
+        }
     for obj in prov.search(search):
-        res.append(obj.json())
-    return res
+        r = {
+            'title': obj['title'],
+            'description': obj['description'],
+            'preview': obj['preview'],
+            'url': request.link(obj.get_object().ui())
+        }
+        res.append(r)
+    return {
+        'results': res
+    }
+
+@App.json(
+    model=Root,
+    name="search.json",
+    permission=mccperm.SiteSearch,
+)
+def search_json(context, request):
+    return _search(context, request)
+
+@App.html(
+    model=Root,
+    name="site-search",
+    template="master/site-search.pt",
+    permission=mccperm.SiteSearch,
+)
+def search(context, request):
+    return _search(context, request)

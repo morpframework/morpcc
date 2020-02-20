@@ -153,3 +153,22 @@ class BehaviorAction(dectate.Action):
 
         app_class.get_behavior_factory.register(reg.methodify(factory), name=self.name)
         behavior_registry.register_behavior(name=self.name)
+
+
+class IndexResolverAction(dectate.Action):
+
+    app_class_arg = True
+
+    def __init__(self, name):
+        self.name = name
+
+    def identifier(self, app_class):
+        return str((app_class, self.name))
+
+    def perform(self, obj, app_class):
+        def factory(name):
+            return obj
+
+        app_class.get_index_resolver.register(
+            reg.methodify(factory), name=self.name
+        )

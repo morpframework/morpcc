@@ -1,9 +1,14 @@
+import string
+
+import nltk
 import rulez
 from morpfw.crud.searchprovider.base import SearchProvider
 
 from ..app import App
 from ..datamodel.path import get_collection as get_dm_collection
 from .model import IndexContentCollection
+
+nltk.download("punkt")
 
 
 class IndexSearchProvider(SearchProvider):
@@ -12,7 +17,14 @@ class IndexSearchProvider(SearchProvider):
             return None
         if not qs.strip():
             return None
-        return {"field": "searchabletext", "operator": "match", "value": qs}
+
+        query = qs.translate(str.maketrans("", "", string.punctuation)).lower()
+
+        if not query.strip():
+            return None
+
+        query = " & ".join(nltk.word_tokenize(query))
+        return {"field": "searchabletext", "operator": "match", "value": query}
 
     def search(self, query=None, offset=0, limit=None, order_by=None):
         idxcol = self.context
@@ -24,24 +36,7 @@ class IndexSearchProvider(SearchProvider):
                 lorder_by.append(ob)
         if not lorder_by:
             lorder_by = None
-        searchres = idxcol.search(query, offset, limit, order_by=lorder_by)
-        result = []
-        dmcol = get_dm_collection(self.context.request)
-        cached_dm = {}
-        for sr in searchres:
-            dm = cached_dm.get(sr["datamodel_uuid"], None)
-            if dm is None:
-                dm = dmcol.get(sr["datamodel_uuid"])
-                cached_dm[sr["datamodel_uuid"]] = dm
-
-            if dm is None:
-                continue
-
-            ccol = dm.content_collection()
-            item = ccol.get(sr["datamodel_content_uuid"])
-            result.append(item)
-
-        return result
+        return idxcol.search(query, offset, limit, order_by=lorder_by)
 
 
 @App.searchprovider(model=IndexContentCollection)

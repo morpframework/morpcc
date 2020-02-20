@@ -8,14 +8,18 @@ from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
 from sqlalchemy import MetaData
 
 from ..attribute.path import get_collection as get_attribute_collection
-from ..backrelationship.path import \
-    get_collection as get_backrelationship_collection
-from ..behaviorassignment.path import \
-    get_collection as get_behaviorassignment_collection
+from ..backrelationship.path import get_collection as get_backrelationship_collection
+from ..behaviorassignment.path import (
+    get_collection as get_behaviorassignment_collection,
+)
 from ..relationship.path import get_collection as get_relationship_collection
 from ..relationship.widget import DataModelContentReferenceWidget
-from .modelui import (DataModelCollectionUI, DataModelContentCollectionUI,
-                      DataModelContentModelUI, DataModelModelUI)
+from .modelui import (
+    DataModelCollectionUI,
+    DataModelContentCollectionUI,
+    DataModelContentModelUI,
+    DataModelModelUI,
+)
 from .schema import DataModelSchema
 
 
@@ -93,6 +97,7 @@ class DataModelModel(morpfw.Model):
                 # refsearch field and ref field must come from the same datamodel
                 assert dm["uuid"] == refsearch.datamodel()["uuid"]
             metadata = {
+                "format": "uuid",
                 "required": rel["required"],
                 "title": rel["title"],
                 "description": rel["description"],
@@ -205,7 +210,7 @@ class DataModelModel(morpfw.Model):
             __path_model__ = DataModelContentModel
 
             def ui(self):
-                return ModelUI(self.request, self, self.collection.uu())
+                return ModelUI(self.request, self, self.collection.ui())
 
         model_markers.append(ContentModel)
 
