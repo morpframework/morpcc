@@ -23,5 +23,6 @@ class ApplicationSchema(morpfw.Schema):
     title: typing.Optional[str] = field(default=None, metadata={"required": True})
 
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
+    icon: typing.Optional[str] = field(default=None)
 
     __unique_constraint__ = ["name"]

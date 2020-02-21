@@ -97,7 +97,6 @@ class DataModelModel(morpfw.Model):
                 # refsearch field and ref field must come from the same datamodel
                 assert dm["uuid"] == refsearch.datamodel()["uuid"]
             metadata = {
-                "format": "uuid",
                 "required": rel["required"],
                 "title": rel["title"],
                 "description": rel["description"],

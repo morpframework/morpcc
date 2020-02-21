@@ -13,6 +13,7 @@ class Application(morpfw.sql.Base):
     name = sa.Column(sa.String(length=1024))
     title = sa.Column(sa.String(length=1024))
     description = sa.Column(sa.Text())
+    icon = sa.Column(sa.String(length=1024))
 
 
 class ApplicationStorage(morpfw.SQLStorage):

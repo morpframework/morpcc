@@ -16,14 +16,6 @@ def get_approot(request):
     return AppRoot(request)
 
 
-@App.html(model=AppRoot, template='democms/index.pt',
-          permission=ccperm.ViewHome)
-def index(context, request):
-    return {
-        "message": "Welcome to DemoCMS"
-    }
-
-
 @App.template_directory()
 def get_template_directory():
     return 'templates'

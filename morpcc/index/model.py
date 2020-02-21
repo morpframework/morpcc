@@ -1,5 +1,5 @@
-from dataclasses import field, make_dataclass
 import typing
+from dataclasses import field, make_dataclass
 
 import morpfw
 from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
@@ -88,9 +88,21 @@ class IndexCollection(morpfw.Collection):
             ("title", typing.Optional[str], field(default=None)),
             ("description", typing.Optional[str], field(default=None)),
             ("index_resolver", typing.Optional[str], field(default=None)),
-            ("preview", typing.Optional[str], field(default=None)),
-            ("application_uuid", typing.Optional[str], field(default=None, metadata={"format": "uuid"})),
-            ("datamodel_uuid", typing.Optional[str], field(default=None, metadata={"format": "uuid"})),
+            (
+                "preview",
+                typing.Optional[str],
+                field(default=None, metadata={"format": "text"}),
+            ),
+            (
+                "application_uuid",
+                typing.Optional[str],
+                field(default=None, metadata={"format": "uuid"}),
+            ),
+            (
+                "datamodel_uuid",
+                typing.Optional[str],
+                field(default=None, metadata={"format": "uuid"}),
+            ),
             (
                 "datamodel_content_uuid",
                 typing.Optional[str],
@@ -108,7 +120,13 @@ class IndexCollection(morpfw.Collection):
             if idx["type"] == "fulltextindex":
                 metadata["format"] = "fulltextindex"
 
-            attrs.append((idx["name"], typing.Optional[str], field(default=None, metadata=metadata)))
+            attrs.append(
+                (
+                    idx["name"],
+                    typing.Optional[str],
+                    field(default=None, metadata=metadata),
+                )
+            )
 
         return attrs
 
