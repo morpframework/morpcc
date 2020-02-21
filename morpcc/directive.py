@@ -4,6 +4,7 @@ import reg
 from morepath.directive import SettingAction
 
 from .behaviorregistry import BehaviorRegistry
+from .applicationbehaviorregistry import ApplicationBehaviorRegistry
 from .portletregistry import PortletProviderRegistry, PortletRegistry
 
 PORTLET_FACTORY_IDS: dict = {}
@@ -153,6 +154,30 @@ class BehaviorAction(dectate.Action):
 
         app_class.get_behavior_factory.register(reg.methodify(factory), name=self.name)
         behavior_registry.register_behavior(name=self.name)
+
+
+class ApplicationBehaviorAction(dectate.Action):
+
+    config = {"application_behavior_registry": ApplicationBehaviorRegistry}
+
+    app_class_arg = True
+
+    depends = [SettingAction]
+
+    def __init__(self, name):
+        self.name = name
+
+    def identifier(self, app_class, application_behavior_registry: ApplicationBehaviorRegistry):
+        return self.name
+
+    def perform(self, obj, app_class, application_behavior_registry: ApplicationBehaviorRegistry):
+
+        def factory(name):
+            return obj
+
+        app_class.get_application_behavior_factory.register(reg.methodify(factory), name=self.name)
+        application_behavior_registry.register_behavior(name=self.name)
+
 
 
 class IndexResolverAction(dectate.Action):

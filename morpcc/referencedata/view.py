@@ -17,11 +17,14 @@ def view(context, request):
 
 @App.json(model=ReferenceDataCollectionUI, name="export", permission=crudperms.Search)
 def export(context, request):
+    result = {}
     for refdata in context.collection.search():
 
         m = refdata
-        result = {
-            m["name"]: {"name": m["name"], "description": m["description"], "keys": {}}
+        result[m["name"]] = {
+            "name": m["name"],
+            "description": m["description"],
+            "keys": {},
         }
         for k in m.referencedatakeys():
             kdata = {"name": k["name"], "description": k["description"], "values": {}}

@@ -6,19 +6,36 @@ from morpfw.crud import signals
 from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
 from sqlalchemy import DDL, MetaData
 
+from ..applicationbehaviorassignment.path import get_collection as get_aba_collection
 from ..datamodel.model import DataModelContentModel
 from ..datamodel.path import get_collection as get_dm_collection
 from ..index.model import IndexContentCollection, IndexContentModel
 from ..index.path import get_collection as get_index_collection
-from .modelui import ApplicationCollectionUI, ApplicationModelUI
+from .modelui import (
+    ApplicationCollectionUI,
+    ApplicationModelUI,
+    BehaviorableApplicationModelUI,
+)
 from .schema import ApplicationSchema
+
+
+def get_behaviors(request, app_uuid):
+    col = get_aba_collection(request)
+    assignments = col.search(rulez.field["application_uuid"] == app_uuid)
+    behaviors = []
+    for assignment in assignments:
+        behavior = request.app.config.application_behavior_registry.get_behavior(
+            assignment["behavior"], request
+        )
+        behaviors.append(behavior)
+    return behaviors
 
 
 class ApplicationModel(morpfw.Model):
     schema = ApplicationSchema
 
     def ui(self):
-        return ApplicationModelUI(self.request, self, self.collection.ui())
+        return BehaviorableApplicationModelUI(self.request, self, self.collection.ui())
 
     def content_metadata(self):
         return MetaData(schema=self["name"])
@@ -27,6 +44,9 @@ class ApplicationModel(morpfw.Model):
         col = get_dm_collection(self.request)
         dms = col.search(rulez.field["application_uuid"] == self.uuid)
         return dms
+
+    def behaviors(self):
+        return get_behaviors(self.request, self.uuid)
 
     def reindex(self):
         for dm in self.datamodels():
@@ -82,6 +102,22 @@ class ApplicationModel(morpfw.Model):
 
         if existing:
             existing[0].delete(permanent=True)
+
+
+class BehaviorableApplicationModel(ApplicationModel):
+    def __new__(cls, request, collection, data):
+        prov = request.app.get_dataprovider(cls.schema, data, collection.storage)
+
+        behaviors = get_behaviors(request, prov["uuid"])
+        if not behaviors:
+            return ApplicationModel(request, collection, data)
+
+        markers = [behavior.model_marker for behavior in behaviors]
+        markers.append(ApplicationModel)
+        klass = type(
+            "ApplicationModel", tuple(markers), {"__path_model__": ApplicationModel}
+        )
+        return klass(request, collection, data)
 
 
 class ApplicationCollection(morpfw.Collection):

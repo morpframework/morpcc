@@ -1,7 +1,4 @@
-
-
-
-class BehaviorRegistry(object):
+class ApplicationBehaviorRegistry(object):
 
     def __init__(self):
         self.behaviors = []
@@ -12,7 +9,7 @@ class BehaviorRegistry(object):
 
     def get_behavior(self, name, request):
         try:
-            factory = request.app.get_behavior_factory(name)
+            factory = request.app.get_application_behavior_factory(name)
         except NotImplementedError:
             factory = None
 

@@ -25,14 +25,16 @@
                             <tbody>
                             </tbody>
                         </table>
-                        <div>
-                            <a class="modal-link" tal:attributes="data-url request.link(context, '+modal-create')"
-                                href="#">
-                                <button class="btn btn-primary">
-                                    <i class="fa fa-plus"></i>Add</button>
+                        <a class="modal-link" tal:attributes="data-url request.link(context, '+modal-create')" href="#">
+                            <button class="btn btn-primary">
+                                <i class="fa fa-plus"></i>
+                                Add</button>
 
-                            </a>
-                        </div>
+                        </a>
+                        <a href="${request.link(context, '+schema-upgrade')}" tal:condition="need_update">
+                            <button class="btn btn-danger"><i class="fa fa-arrow-up"></i>
+                                Update Database Schema</button>
+                        </a>
                     </div>
                 </div>
             </div>

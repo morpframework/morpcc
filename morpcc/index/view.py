@@ -1,13 +1,12 @@
-from pygments import highlight
-from pygments.formatters import HtmlFormatter
-from pygments.lexers import PythonLexer
-
 import morpfw
 from morpcc import permission as mccperm
 from morpcc.crud.view.edit import edit as default_edit
 from morpcc.crud.view.listing import listing as default_listing
 from morpcc.crud.view.view import view as default_view
 from morpfw.crud import permission as crudperm
+from pygments import highlight
+from pygments.formatters import HtmlFormatter
+from pygments.lexers import PythonLexer
 
 from ..app import App
 from ..root import Root
@@ -61,28 +60,24 @@ def _search(context, request):
     search = prov.parse_query(request.GET.get("q", None))
     res = []
     if search is None:
-        return {
-            'results': []
-        }
+        return {"results": []}
     for obj in prov.search(search):
         r = {
-            'title': obj['title'],
-            'description': obj['description'],
-            'preview': obj['preview'],
-            'url': request.link(obj.get_object().ui())
+            "title": obj["title"],
+            "description": obj["description"],
+            "preview": obj["preview"],
+            "url": request.link(obj.get_object().ui()),
         }
         res.append(r)
-    return {
-        'results': res
-    }
+    return {"results": res}
+
 
 @App.json(
-    model=Root,
-    name="search.json",
-    permission=mccperm.SiteSearch,
+    model=Root, name="search.json", permission=mccperm.SiteSearch,
 )
 def search_json(context, request):
     return _search(context, request)
+
 
 @App.html(
     model=Root,
@@ -92,3 +87,16 @@ def search_json(context, request):
 )
 def search(context, request):
     return _search(context, request)
+
+
+@App.html(
+    model=IndexCollectionUI,
+    name="listing",
+    permission=crudperm.View,
+    template="master/index/listing.pt",
+)
+def listing(context, request):
+    result = default_listing(context, request)
+    dbsync = IndexDatabaseSyncAdapter(context.collection, request)
+    result["need_update"] = dbsync.need_update
+    return result
