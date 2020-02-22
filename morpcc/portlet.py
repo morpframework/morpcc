@@ -32,7 +32,7 @@ def navigation_portlet(context, request):
         apps_nav.append(
             {
                 "title": app["title"],
-                "icon": "cubes",
+                "icon": app["icon"] or "cubes",
                 "href": request.link(appui, "+{}".format(appui.default_view)),
             }
         )
