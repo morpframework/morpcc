@@ -14,6 +14,7 @@ class Entity(morpfw.sql.Base):
     name = sa.Column(sa.String(length=1024))
     title = sa.Column(sa.String(length=1024))
     description = sa.Column(sa.Text())
+    icon = sa.Column(sa.String(length=1024))
     application_uuid = sa.Column(morpfw.sql.GUID())
 
 

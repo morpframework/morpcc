@@ -37,7 +37,7 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
 
                     <tal:repeat repeat="entity entities">
-                        <div class="col-md-2 col-sm-3 col-xs-4" tal:define="card_icon string:database;
+                        <div class="col-md-2 col-sm-3 col-xs-4" tal:define="card_icon entity['icon'] or 'database';
                                 card_icon_link request.link(entity.ui(), 'records')">
                             <metal:card use-macro="load_template('master/card.pt').macros.card">
                                 <metal:body fill-slot="card_content">

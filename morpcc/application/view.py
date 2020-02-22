@@ -1,13 +1,12 @@
-from pygments import highlight
-from pygments.formatters import HtmlFormatter
-from pygments.lexers import PythonLexer
-
 import morpfw
 import rulez
 from morpcc.crud.view.edit import edit as default_edit
 from morpcc.crud.view.listing import listing as default_listing
 from morpcc.crud.view.view import view as default_view
 from morpfw.crud import permission as crudperm
+from pygments import highlight
+from pygments.formatters import HtmlFormatter
+from pygments.lexers import PythonLexer
 
 from ..app import App
 from ..entity.path import get_collection as get_dm_collection
@@ -28,7 +27,7 @@ def view(context, request):
     dmcol = get_dm_collection(request)
     dbsync = ApplicationDatabaseSyncAdapter(context.model, request)
     entities = dmcol.search(rulez.field["application_uuid"] == context.model["uuid"])
-    result["entities"] = entities
+    result["entities"] = sorted(entities, key=lambda x: x["title"])
     result["need_update"] = dbsync.need_update
     return result
 

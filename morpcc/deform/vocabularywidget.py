@@ -41,6 +41,8 @@ class VocabularyWidget(SelectWidget):
 
     def get_data_json(self, request, identifier, selected=False):
         data = self.get_data(request, identifier)
+        if data is None:
+            return ""
         data["id"] = data["value"]
         if selected:
             data["selected"] = True

@@ -6,7 +6,9 @@ from morpfw.crud.field import Field
 from morpfw.validator.field import valid_identifier
 
 from ..deform.referencewidget import ReferenceWidget
+from ..deform.vocabularywidget import VocabularyWidget
 from ..validator.reference import ReferenceValidator
+from ..validator.vocabulary import VocabularyValidator
 
 
 @dataclass
@@ -21,6 +23,13 @@ class EntitySchema(morpfw.Schema):
     )
     title: typing.Optional[str] = Field().default(None).required().init()
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
+    icon: typing.Optional[str] = field(
+        default=None,
+        metadata={
+            "validators": [VocabularyValidator("morpcc.fa-icons")],
+            "deform.widget": VocabularyWidget("morpcc.fa-icons"),
+        },
+    )
 
     application_uuid: typing.Optional[str] = field(
         default=None,
