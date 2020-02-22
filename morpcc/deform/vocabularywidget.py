@@ -1,3 +1,5 @@
+import json
+
 from colander import Invalid, null
 from deform.compat import string_types
 from deform.widget import SelectWidget, Widget
@@ -20,11 +22,26 @@ class VocabularyWidget(SelectWidget):
         )
         return baselink
 
-    def get_label(self, request, identifier):
+    def get_label(self, request, identifier, html=False):
+        data = self.get_data(request, identifier)
+        if data:
+            if html and data.get("html", None):
+                return data["html"]
+            return data["label"]
+        return ""
+
+    def get_data(self, request, identifier):
         vocab = request.app.get_vocabulary(request=request, name=self.vocabulary)
         if vocab is None:
             return ""
         for v in vocab:
             if v["value"] == identifier:
-                return v["label"]
-        return ""
+                return v
+        return None
+
+    def get_data_json(self, request, identifier, selected=False):
+        data = self.get_data(request, identifier)
+        data["id"] = data["value"]
+        if selected:
+            data["selected"] = True
+        return json.dumps(data)

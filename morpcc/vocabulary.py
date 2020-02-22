@@ -31,4 +31,11 @@ def fa_icons(request, name):
             icons = json.loads(icons_file.read())
         CACHED["icons"] = icons
 
-    return [{"value": k, "label": k} for k, v in icons.items()]
+    return [
+        {
+            "value": k,
+            "label": k,
+            "html": "<span><i class='fa {}'></i> {}</span>".format(v, k),
+        }
+        for k, v in icons.items()
+    ]

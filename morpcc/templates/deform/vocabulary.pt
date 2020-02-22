@@ -27,7 +27,8 @@
           style style;
           attributes|field.widget.attributes|{};">
     <option tal:attributes="selected field.widget.get_select_value(cstruct, cstruct);
-                                  value cstruct" tal:content="field.widget.get_label(request, cstruct)"></option>
+                                  value cstruct" tal:content="field.widget.get_label(request, cstruct)">
+    </option>
   </select>
 
   <script type="text/javascript">
@@ -38,6 +39,9 @@
           containerCssClass: 'form-control',
           placeholder: "${str(field.widget.placeholder).replace('"','\\"')|""}" || undefined,
           allowClear: "${hasattr(field.widget, 'placeholder')}",
+          data: [${ structure: field.widget.get_data_json(request, cstruct, selected = True) }],
+          templateResult: function (result) { if (!result.html) { return result.text } else { return $(result.html) } },
+          templateSelection: function (selection) { if (!selection.html) { return selection.text } else { return $(selection.html) } },
           tags: ${ str(getattr(field.widget, 'tags', 'undefined')).lower()
       },
       ajax: {
@@ -45,6 +49,7 @@
       dataType: 'json'
     }
        });
+
      }
    );
   </script>

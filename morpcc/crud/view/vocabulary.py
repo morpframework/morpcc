@@ -22,8 +22,10 @@ def vocabulary_search(context, request):
         if term:
             if not term.lower() in v["label"].lower():
                 continue
-
-        result["results"].append({"id": v["value"], "text": v["label"]})
+        r = {"id": v["value"], "text": v["label"]}
+        if v['html']:
+            r['html'] = v['html']
+        result["results"].append(r)
 
     return result
 
