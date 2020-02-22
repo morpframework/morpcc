@@ -25,7 +25,7 @@ from RestrictedPython import compile_restricted, safe_globals
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.schema import CreateSchema
 
-from ..datamodel.path import get_collection as get_dm_collection
+from ..entity.path import get_collection as get_dm_collection
 from .model import ApplicationModel
 
 

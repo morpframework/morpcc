@@ -1,10 +1,10 @@
 import morpfw
-from .schema import DataModelConstraintSchema
+from .schema import EntityConstraintSchema
 
 
-class DataModelConstraintModel(morpfw.Model):
-    schema = DataModelConstraintSchema
+class EntityConstraintModel(morpfw.Model):
+    schema = EntityConstraintSchema
 
 
-class DataModelConstraintCollection(morpfw.Collection):
-    schema = DataModelConstraintSchema
+class EntityConstraintCollection(morpfw.Collection):
+    schema = EntityConstraintSchema

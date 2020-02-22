@@ -12,7 +12,7 @@ class BackRelationship(morpfw.sql.Base):
     name = sa.Column(sa.String(length=1024))
     title = sa.Column(sa.String(length=1024))
     description = sa.Column(sa.Text())
-    datamodel_uuid = sa.Column(morpfw.sql.GUID)
+    entity_uuid = sa.Column(morpfw.sql.GUID)
     reference_relationship_uuid = sa.Column(morpfw.sql.GUID)
 
 

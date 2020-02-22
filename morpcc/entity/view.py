@@ -1,28 +1,23 @@
 import json
 
-from pygments import highlight
-from pygments.formatters import HtmlFormatter
-from pygments.lexers import PythonLexer
-
 import morpfw
 from morpcc.crud.view.edit import edit as default_edit
 from morpcc.crud.view.listing import listing as default_listing
 from morpcc.crud.view.view import view as default_view
 from morpfw.crud import permission as crudperm
+from pygments import highlight
+from pygments.formatters import HtmlFormatter
+from pygments.lexers import PythonLexer
 
 from ..app import App
-from .modelui import (
-    DataModelCollectionUI,
-    DataModelContentCollectionUI,
-    DataModelContentModelUI,
-    DataModelModelUI,
-)
+from .modelui import (EntityCollectionUI, EntityContentCollectionUI,
+                      EntityContentModelUI, EntityModelUI)
 
 
 @App.html(
-    model=DataModelCollectionUI,
+    model=EntityCollectionUI,
     name="listing",
-    template="master/datamodel/listing.pt",
+    template="master/entity/listing.pt",
     permission=crudperm.View,
 )
 def listing(context, request):
@@ -30,16 +25,16 @@ def listing(context, request):
     return result
 
 
-@App.json(model=DataModelCollectionUI, name="ajax-status", permission=crudperm.View)
+@App.json(model=EntityCollectionUI, name="ajax-status", permission=crudperm.View)
 def need_update(context, request):
     dbsync = DatabaseSyncAdapter(context.collection, request)
     return {"need_update": dbsync.need_update()}
 
 
 @App.html(
-    model=DataModelModelUI,
+    model=EntityModelUI,
     name="edit",
-    template="master/datamodel/edit.pt",
+    template="master/entity/edit.pt",
     permission=crudperm.Edit,
 )
 def edit(context, request):
@@ -47,9 +42,9 @@ def edit(context, request):
 
 
 @App.html(
-    model=DataModelModelUI,
+    model=EntityModelUI,
     name="view",
-    template="master/datamodel/view.pt",
+    template="master/entity/view.pt",
     permission=crudperm.View,
 )
 def view(context, request):
@@ -58,7 +53,7 @@ def view(context, request):
     return result
 
 
-@App.json(model=DataModelModelUI, name="term-search", permission=crudperm.View)
+@App.json(model=EntityModelUI, name="term-search", permission=crudperm.View)
 def term_search(context, request):
     value_field = request.GET.get("value_field", "").strip()
     if not value_field:
@@ -79,9 +74,9 @@ def term_search(context, request):
 
 
 @App.html(
-    model=DataModelContentModelUI,
+    model=EntityContentModelUI,
     name="view",
-    template="master/datamodel/content/view.pt",
+    template="master/entity/content/view.pt",
     permission=crudperm.View,
 )
 def content_view(context, request):
@@ -90,8 +85,8 @@ def content_view(context, request):
     for r, rel in sorted(context.model.relationships().items(), key=lambda x: x[0]):
         relmodel = rel.resolve_relationship(context.model)
         if relmodel:
-            colui = DataModelContentCollectionUI(request, relmodel.collection)
-            relmodelui = DataModelContentModelUI(request, relmodel, colui)
+            colui = EntityContentCollectionUI(request, relmodel.collection)
+            relmodelui = EntityContentModelUI(request, relmodel, colui)
             reldata = default_view(relmodelui, request)
             reldata["title"] = rel["title"]
             reldata["context"] = relmodelui
@@ -100,10 +95,10 @@ def content_view(context, request):
     for br, brel in sorted(
         context.model.backrelationships().items(), key=lambda x: x[0]
     ):
-        refmodel = brel.reference_relationship().datamodel()
+        refmodel = brel.reference_relationship().entity()
         columns = []
         column_options = []
-        for colname, col in refmodel.attributes().items():
+        for colname, col in refmodel.effective_attributes().items():
             columns.append(colname)
             column_options.append({"name": colname, "orderable": True})
         breldata = {

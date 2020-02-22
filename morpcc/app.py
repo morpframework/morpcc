@@ -18,9 +18,6 @@ from . import directive
 from .authn import IdentityPolicy
 
 
-class MorpBeakerMiddleware(BeakerMiddleware):
-    def initdb(self):
-        self.app.initdb()
 
 
 class WebAppRequest(DBSessionRequest):
@@ -137,9 +134,9 @@ def create_morpcc_app(settings, scan=True, **kwargs):
         settings["beaker_session"].get("session.type", None) is None
         and settings["beaker_session"].get("session.url", None) is None
     ):
-        settings["beaker_session"]["session.type"] = "ext:database"
-        settings["beaker_session"]["session.url"] = settings["configuration"][
-            "morpfw.storage.sqlstorage.dburi"
-        ]
+        settings["beaker_session"]["session.type"] = (
+            settings['configuration'].get("morpcc.beaker.session.type"))
+        settings["beaker_session"]["session.url"] = (
+            settings["configuration"].get("morpcc.beaker.session.url"))
 
-    return MorpBeakerMiddleware(application, settings["beaker_session"])
+    return BeakerMiddleware(application, settings["beaker_session"])

@@ -61,12 +61,15 @@ def _search(context, request):
     res = []
     if search is None:
         return {"results": []}
-    for obj in prov.search(search):
+    for entry in prov.search(search):
+        obj = entry.get_object()
+        if obj is None:
+            continue
         r = {
-            "title": obj["title"],
-            "description": obj["description"],
-            "preview": obj["preview"],
-            "url": request.link(obj.get_object().ui()),
+            "title": entry["title"],
+            "description": entry["description"],
+            "preview": entry["preview"],
+            "url": request.link(obj.ui()),
         }
         res.append(r)
     return {"results": res}

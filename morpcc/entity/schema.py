@@ -8,7 +8,7 @@ from morpfw.validator.field import valid_identifier
 
 
 @dataclass
-class DataModelSchema(morpfw.Schema):
+class EntitySchema(morpfw.Schema):
     name: typing.Optional[str] = field(
         default=None,
         metadata={

@@ -20,7 +20,7 @@ class BackRelationshipModel(morpfw.Model):
 
         col = typeinfo["collection_factory"](self.request)
         attr = col.get(self["reference_attribute_uuid"])
-        return typing.List[attr.datamodel().dataclass()]
+        return typing.List[attr.entity().dataclass()]
 
     def reference_relationship(self):
         typeinfo = self.request.app.config.type_registry.get_typeinfo(
@@ -33,12 +33,12 @@ class BackRelationshipModel(morpfw.Model):
 
     def content_collection(self):
         rel = self.reference_relationship()
-        dm = rel.datamodel()
+        dm = rel.entity()
         return dm.content_collection()
 
     def resolve_relationship(self, context):
         rel = self.reference_relationship()
-        dm = rel.datamodel()
+        dm = rel.entity()
         col = dm.content_collection()
 
         attr = rel.reference_attribute()

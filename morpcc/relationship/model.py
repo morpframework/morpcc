@@ -32,19 +32,19 @@ class RelationshipModel(morpfw.Model):
     def resolve_relationship(self, context):
         """ return the modelcontent of the relationship """
         attr = self.reference_attribute()
-        col = attr.datamodel().content_collection()
+        col = attr.entity().content_collection()
         res = col.search(rulez.field[attr["name"]] == context[self["name"]])
         if res:
             return res[0]
         return None
 
-    def datamodel(self):
+    def entity(self):
         typeinfo = self.request.app.config.type_registry.get_typeinfo(
-            name="morpcc.datamodel", request=self.request
+            name="morpcc.entity", request=self.request
         )
 
         col = typeinfo["collection_factory"](self.request)
-        dm = col.get(self["datamodel_uuid"])
+        dm = col.get(self["entity_uuid"])
         return dm
 
 

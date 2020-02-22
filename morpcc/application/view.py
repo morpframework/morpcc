@@ -10,7 +10,7 @@ from morpcc.crud.view.view import view as default_view
 from morpfw.crud import permission as crudperm
 
 from ..app import App
-from ..datamodel.path import get_collection as get_dm_collection
+from ..entity.path import get_collection as get_dm_collection
 from ..index.path import get_collection as get_index_collection
 from .adapters import ApplicationDatabaseSyncAdapter
 from .model import ApplicationModel
@@ -27,8 +27,8 @@ def view(context, request):
     result = default_view(context, request)
     dmcol = get_dm_collection(request)
     dbsync = ApplicationDatabaseSyncAdapter(context.model, request)
-    datamodels = dmcol.search(rulez.field["application_uuid"] == context.model["uuid"])
-    result["datamodels"] = datamodels
+    entities = dmcol.search(rulez.field["application_uuid"] == context.model["uuid"])
+    result["entities"] = entities
     result["need_update"] = dbsync.need_update
     return result
 

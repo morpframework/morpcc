@@ -4,23 +4,23 @@ from morpfw.crud.schemaconverter.dataclass2colander import \
     dataclass_to_colander
 
 from ..app import App
-from .model import DataModelContentModel
+from .model import EntityContentModel
 
 
-@App.indexer(model=DataModelContentModel, name="title")
+@App.indexer(model=EntityContentModel, name="title")
 def title(context, name):
-    datamodel = context.collection.__parent__
-    application = datamodel.application()
+    entity = context.collection.__parent__
+    application = entity.application()
 
-    return "{}/{}/{}".format(application["title"], datamodel["title"], context.uuid)
+    return "{}/{}/{}".format(application["title"], entity["title"], context.uuid)
 
 
-@App.indexer(model=DataModelContentModel, name="description")
+@App.indexer(model=EntityContentModel, name="description")
 def description(context, name):
     return None
 
 
-@App.indexer(model=DataModelContentModel, name="preview")
+@App.indexer(model=EntityContentModel, name="preview")
 def preview(context, name):
     ui = context.ui()
     request = context.request
@@ -35,16 +35,16 @@ def preview(context, name):
     return form.render(appstruct=form_data, readonly=True, request=request, context=ui)
 
 
-@App.indexer(model=DataModelContentModel, name="index_resolver")
+@App.indexer(model=EntityContentModel, name="index_resolver")
 def index_resolver(context, name):
-    return "morpcc.datamodel.content"
+    return "morpcc.entity.content"
 
 
-@App.indexer(model=DataModelContentModel, name="searchabletext")
+@App.indexer(model=EntityContentModel, name="searchabletext")
 def searchabletext(context, name):
-    datamodel = context.collection.__parent__
+    entity = context.collection.__parent__
     text = []
-    for name, attr in datamodel.dataclass().__dataclass_fields__.items():
+    for name, attr in entity.dataclass().__dataclass_fields__.items():
         dctype = dataclass_get_type(attr)
         if dctype["type"] == str:
             if dctype["metadata"].get("format", None) == "uuid":
@@ -56,16 +56,16 @@ def searchabletext(context, name):
     return " ".join(text)
 
 
-@App.indexer(model=DataModelContentModel, name="application_uuid")
+@App.indexer(model=EntityContentModel, name="application_uuid")
 def application_uuid(context, name):
     return context.collection.__parent__.application().uuid
 
 
-@App.indexer(model=DataModelContentModel, name="datamodel_uuid")
-def datamodel_content_uuid(context, name):
+@App.indexer(model=EntityContentModel, name="entity_uuid")
+def entity_content_uuid(context, name):
     return context.collection.__parent__.uuid
 
 
-@App.indexer(model=DataModelContentModel, name="datamodel_content_uuid")
-def datamodel_content_uuid(context, name):
+@App.indexer(model=EntityContentModel, name="entity_content_uuid")
+def entity_content_uuid(context, name):
     return context.uuid

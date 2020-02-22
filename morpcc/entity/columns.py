@@ -1,18 +1,18 @@
 from morpcc.crud.columns import get_buttons_column as default_get_buttons_column
 
 from ..app import App
-from .model import DataModelContentModel, DataModelModel
-from .modelui import DataModelContentModelUI
+from .model import EntityContentModel, EntityModel
+from .modelui import EntityContentModelUI
 from .path import get_model_content_collection_ui
 
 
-@App.structure_column(model=DataModelContentModel, name="buttons")
+@App.structure_column(model=EntityContentModel, name="buttons")
 def get_content_buttons_column(model, request, name):
     results = ""
     typeinfos = request.app.config.type_registry.get_typeinfos(request)
     uiobj = None
     # FIXME: have a nicer API through typeregistry
-    uiobj = DataModelContentModelUI(
+    uiobj = EntityContentModelUI(
         request,
         model,
         get_model_content_collection_ui(
@@ -53,7 +53,7 @@ def get_content_buttons_column(model, request, name):
     return results
 
 
-@App.structure_column(model=DataModelModel, name="buttons")
+@App.structure_column(model=EntityModel, name="buttons")
 def get_buttons_column(model, request, name):
     results = ""
     typeinfos = request.app.config.type_registry.get_typeinfos(request)

@@ -12,8 +12,8 @@ class BehaviorAssignmentSchema(morpfw.Schema):
     behavior: typing.Optional[str] = field(default=None,
             metadata={'required': True, 'deform.widget':
             VocabularyWidget("morpcc.behaviors")})
-    datamodel_uuid: typing.Optional[str] = field(
+    entity_uuid: typing.Optional[str] = field(
             default=None, metadata={'format': 'uuid', "required":True,
-            "deform.widget": ReferenceWidget("morpcc.datamodel", "title", "uuid"),
+            "deform.widget": ReferenceWidget("morpcc.entity", "title", "uuid"),
             }
     )

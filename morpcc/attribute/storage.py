@@ -16,7 +16,7 @@ class Attribute(morpfw.sql.Base):
     description = sa.Column(sa.Text())
     required = sa.Column(sa.Boolean())
     primary_key = sa.Column(sa.Boolean())
-    datamodel_uuid = sa.Column(morpfw.sql.GUID())
+    entity_uuid = sa.Column(morpfw.sql.GUID())
 
 
 class AttributeStorage(morpfw.SQLStorage):

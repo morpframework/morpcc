@@ -41,7 +41,7 @@
 
 
                             <button id="attribute-add" class="btn btn-default modal-link"
-                                data-url="${request.relative_url('/behaviorassignment/+modal-create?datamodel_uuid=' + context.model.uuid)}">
+                                data-url="${request.relative_url('/behaviorassignment/+modal-create?entity_uuid=' + context.model.uuid)}">
                                 Add
                             </button>
                         </div>
@@ -73,7 +73,7 @@
 
 
                             <button id="attribute-add" class="btn btn-default modal-link"
-                                data-url="${request.relative_url('/attribute/+modal-create?datamodel_uuid=' + context.model.uuid)}">
+                                data-url="${request.relative_url('/attribute/+modal-create?entity_uuid=' + context.model.uuid)}">
                                 Add
                             </button>
                         </div>
@@ -103,7 +103,7 @@
                             </table>
 
                             <button id="attribute-add" class="btn btn-default modal-link"
-                                data-url="${request.relative_url('/relationship/+modal-create?datamodel_uuid=' + context.model.uuid)}">
+                                data-url="${request.relative_url('/relationship/+modal-create?entity_uuid=' + context.model.uuid)}">
                                 Add
                             </button>
                         </div>
@@ -134,7 +134,7 @@
                             </table>
 
                             <button id="backrelationship-add" class="btn btn-default modal-link"
-                                data-url="${request.relative_url('/backrelationship/+modal-create?datamodel_uuid=' + context.model.uuid)}">
+                                data-url="${request.relative_url('/backrelationship/+modal-create?entity_uuid=' + context.model.uuid)}">
                                 Add
                             </button>
                         </div>
@@ -163,7 +163,7 @@
                             </table>
 
                             <button id="constraint-add" class="btn btn-default modal-link"
-                                data-url="${request.relative_url('/datamodelconstraint/+modal-create?datamodel_uuid=' + context.model.uuid)}">
+                                data-url="${request.relative_url('/entityconstraint/+modal-create?entity_uuid=' + context.model.uuid)}">
                                 Add
                             </button>
                         </div>
@@ -178,7 +178,7 @@
                 $('#behavior-listing').DataTable({
                     serverSide: true,
                     processing: true,
-                    ajax: "${request.relative_url('/behaviorassignment/+datatable.json?filter=datamodel_uuid%3D%3D' + context.model.uuid)}",
+                    ajax: "${request.relative_url('/behaviorassignment/+datatable.json?filter=entity_uuid%3D%3D' + context.model.uuid)}",
                     columns: [
                         { 'name': 'behavior' },
                         { 'name': 'structure:buttons' }
@@ -187,7 +187,7 @@
                 $('#attribute-listing').DataTable({
                     serverSide: true,
                     processing: true,
-                    ajax: "${request.relative_url('/attribute/+datatable.json?filter=datamodel_uuid%3D%3D' + context.model.uuid)}",
+                    ajax: "${request.relative_url('/attribute/+datatable.json?filter=entity_uuid%3D%3D' + context.model.uuid)}",
                     columns: [
                         { 'name': 'name' },
                         { 'name': 'type' },
@@ -199,7 +199,7 @@
                 $('#relationship-listing').DataTable({
                     serverSide: true,
                     processing: true,
-                    ajax: "${request.relative_url('/relationship/+datatable.json?filter=datamodel_uuid%3D%3D' + context.model.uuid)}",
+                    ajax: "${request.relative_url('/relationship/+datatable.json?filter=entity_uuid%3D%3D' + context.model.uuid)}",
                     columns: [
                         { 'name': 'name' },
                         { 'name': 'title' },
@@ -210,7 +210,7 @@
                 $('#backrelationship-listing').DataTable({
                     serverSide: true,
                     processing: true,
-                    ajax: "${request.relative_url('/backrelationship/+datatable.json?filter=datamodel_uuid%3D%3D' + context.model.uuid)}",
+                    ajax: "${request.relative_url('/backrelationship/+datatable.json?filter=entity_uuid%3D%3D' + context.model.uuid)}",
                     columns: [
                         { 'name': 'name' },
                         { 'name': 'title' },
@@ -221,7 +221,7 @@
                 $('#constraint-listing').DataTable({
                     serverSide: true,
                     processing: true,
-                    ajax: "${request.relative_url('/datamodelconstraint/+datatable.json?filter=datamodel_uuid%3D%3D' + context.model.uuid)}",
+                    ajax: "${request.relative_url('/entityconstraint/+datatable.json?filter=entity_uuid%3D%3D' + context.model.uuid)}",
                     columns: [
                         { 'name': 'title' },
                         { 'name': 'validator' },

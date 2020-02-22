@@ -26,9 +26,8 @@
 
                         <h2 metal:fill-slot="panel-title">Data Models</h2>
                         <div metal:fill-slot="panel-content">
-                            <table id="datamodel-listing"
-                                class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
-                                width="100%">
+                            <table id="entity-listing" class="table table-striped table-bordered dt-responsive nowrap"
+                                cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
@@ -42,8 +41,8 @@
                             </table>
 
 
-                            <button id="datamodel-add" class="btn btn-default modal-link"
-                                data-url="${request.relative_url('/datamodel/+modal-create?application_uuid=' + context.model.uuid)}">
+                            <button id="entity-add" class="btn btn-default modal-link"
+                                data-url="${request.relative_url('/entity/+modal-create?application_uuid=' + context.model.uuid)}">
                                 Add
                             </button>
                         </div>
@@ -82,10 +81,10 @@
         </div>
         <div metal:fill-slot="footer_script_slot">
             <script>
-                $('#datamodel-listing').DataTable({
+                $('#entity-listing').DataTable({
                     serverSide: true,
                     processing: true,
-                    ajax: "${request.relative_url('/datamodel/+datatable.json?filter=application_uuid%3D%3D' + context.model.uuid)}",
+                    ajax: "${request.relative_url('/entity/+datatable.json?filter=application_uuid%3D%3D' + context.model.uuid)}",
                     columns: [
                         { 'name': 'name' },
                         { 'name': 'title' },
@@ -105,7 +104,7 @@
                 });
 
                 $('#iframe-modal').on('hidden.bs.modal', function () {
-                    ['#datamodel-listing', '#behavior-listing'].map(
+                    ['#entity-listing', '#behavior-listing'].map(
                         function (identifier) {
                             var el = $(identifier);
                             if ($.fn.DataTable.isDataTable(el)) {

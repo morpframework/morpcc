@@ -4,24 +4,24 @@ from deform.compat import string_types
 from deform.widget import SelectWidget, Widget
 
 
-class DataModelContentReferenceWidget(SelectWidget):
+class EntityContentReferenceWidget(SelectWidget):
     template = "reference"
     readonly_template = "readonly/reference"
     null_value = ""
     values = ()
     multiple = False
 
-    def __init__(self, datamodel, term_field, value_field, **kwargs):
-        self.datamodel = datamodel
+    def __init__(self, entity, term_field, value_field, **kwargs):
+        self.entity = entity
         self.term_field = term_field
         self.value_field = value_field
         super().__init__(**kwargs)
 
     def get_resource_search_url(self, context, request):
-        from ..datamodel.modelui import DataModelModelUI, DataModelCollectionUI
+        from ..entity.modelui import EntityModelUI, EntityCollectionUI
 
-        colui = DataModelCollectionUI(request, self.datamodel.collection)
-        mui = DataModelModelUI(request, self.datamodel, colui)
+        colui = EntityCollectionUI(request, self.entity.collection)
+        mui = EntityModelUI(request, self.entity, colui)
         baselink = request.link(mui, "+term-search")
 
         return baselink + "?term_field=%s&value_field=%s" % (
@@ -36,9 +36,9 @@ class DataModelContentReferenceWidget(SelectWidget):
         return request.link(m)
 
     def get_resource(self, request, identifier):
-        from ..datamodel.path import _get_model_content_collection_ui
+        from ..entity.path import _get_model_content_collection_ui
 
-        col = _get_model_content_collection_ui(self.datamodel, request)
+        col = _get_model_content_collection_ui(self.entity, request)
         res = col.search(rulez.field[self.value_field] == identifier)
         if res:
             return res[0]

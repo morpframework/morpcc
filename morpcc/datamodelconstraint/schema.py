@@ -11,24 +11,24 @@ from morpcc.deform.vocabularywidget import VocabularyWidget
 
 
 @dataclass
-class DataModelConstraintSchema(morpfw.Schema):
+class EntityConstraintSchema(morpfw.Schema):
 
     title: typing.Optional[str] = None
     validator: typing.Optional[str] = field(
         default=None,
         metadata={
             "required": True,
-            "deform.widget": VocabularyWidget("morpcc.datamodelvalidators"),
+            "deform.widget": VocabularyWidget("morpcc.entityvalidators"),
         },
     )
     parameters: typing.Optional[str] = field(
         default=None, metadata={"deform.widget": TextAreaWidget()}
     )
-    datamodel_uuid: typing.Optional[str] = field(
+    entity_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
             "format": "uuid",
             "required": True,
-            "deform.widget": ReferenceWidget("morpcc.datamodel"),
+            "deform.widget": ReferenceWidget("morpcc.entity"),
         },
     )

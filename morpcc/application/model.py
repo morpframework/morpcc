@@ -7,8 +7,8 @@ from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
 from sqlalchemy import DDL, MetaData
 
 from ..applicationbehaviorassignment.path import get_collection as get_aba_collection
-from ..datamodel.model import DataModelContentModel
-from ..datamodel.path import get_collection as get_dm_collection
+from ..entity.model import EntityContentModel
+from ..entity.path import get_collection as get_dm_collection
 from ..index.model import IndexContentCollection, IndexContentModel
 from ..index.path import get_collection as get_index_collection
 from .modelui import (
@@ -40,7 +40,7 @@ class ApplicationModel(morpfw.Model):
     def content_metadata(self):
         return MetaData(schema=self["name"])
 
-    def datamodels(self):
+    def entities(self):
         col = get_dm_collection(self.request)
         dms = col.search(rulez.field["application_uuid"] == self.uuid)
         return dms
@@ -49,7 +49,7 @@ class ApplicationModel(morpfw.Model):
         return get_behaviors(self.request, self.uuid)
 
     def reindex(self):
-        for dm in self.datamodels():
+        for dm in self.entities():
             col = dm.content_collection()
             agg = col.aggregate(group={"total": {"function": "count", "field": "*"}})
             total = agg["total"]
@@ -70,9 +70,9 @@ class ApplicationModel(morpfw.Model):
         idxcol = col.content_collection()
         existing = idxcol.search(
             rulez.and_(
-                rulez.field["application_uuid"] == model.datamodel().application().uuid,
-                rulez.field["datamodel_uuid"] == model.datamodel().uuid,
-                rulez.field["datamodel_content_uuid"] == model.uuid,
+                rulez.field["application_uuid"] == model.entity().application().uuid,
+                rulez.field["entity_uuid"] == model.entity().uuid,
+                rulez.field["entity_content_uuid"] == model.uuid,
             )
         )
 
@@ -94,9 +94,9 @@ class ApplicationModel(morpfw.Model):
 
         existing = idxcol.search(
             rulez.and_(
-                rulez.field["application_uuid"] == model.datamodel().application().uuid,
-                rulez.field["datamodel_uuid"] == model.datamodel().uuid,
-                rulez.field["datamodel_content_uuid"] == model.uuid,
+                rulez.field["application_uuid"] == model.entity().application().uuid,
+                rulez.field["entity_uuid"] == model.entity().uuid,
+                rulez.field["entity_content_uuid"] == model.uuid,
             )
         )
 

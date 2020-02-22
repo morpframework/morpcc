@@ -90,14 +90,20 @@ def process_create(context, request):
             for form_error in e.form_errors:
                 request.notify("error", "Form Validation Error", form_error.message)
             for field_error in e.field_errors:
-                request.notify("error", 
+                request.notify(
+                    "error",
                     "Field {} Validation Error".format(field_error.path),
-                    field_error.message)
+                    field_error.message,
+                )
 
         if not failed:
             return morepath.redirect(
                 request.link(context.modelui_class(request, obj, context))
             )
+
+    @request.after
+    def set_header(response):
+        response.headers.add("X-MORP-FORM-FAILED", "True")
 
     return {
         "page_title": "Create %s"

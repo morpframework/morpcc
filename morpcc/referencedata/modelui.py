@@ -1,12 +1,12 @@
 from morpcc.crud.model import ModelUI, CollectionUI
 
 
-class ReferenceDataModelUI(ModelUI):
+class ReferenceEntityUI(ModelUI):
     pass
 
 
 class ReferenceDataCollectionUI(CollectionUI):
-    modelui_class = ReferenceDataModelUI
+    modelui_class = ReferenceEntityUI
 
     columns = [
         {"title": "Title", "name": "title"},

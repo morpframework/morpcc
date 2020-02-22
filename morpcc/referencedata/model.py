@@ -4,7 +4,7 @@ from ..referencedatakey.path import get_collection as get_keys_collection
 import rulez
 
 
-class ReferenceDataModel(morpfw.Model):
+class ReferenceEntity(morpfw.Model):
     schema = ReferenceDataSchema
 
     def referencedatakeys(self):

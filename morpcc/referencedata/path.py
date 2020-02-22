@@ -1,7 +1,7 @@
 from ..app import App
-from .model import ReferenceDataModel, ReferenceDataCollection
+from .model import ReferenceEntity, ReferenceDataCollection
 #
-from .modelui import ReferenceDataModelUI, ReferenceDataCollectionUI
+from .modelui import ReferenceEntityUI, ReferenceDataCollectionUI
 #
 from .storage import ReferenceDataStorage
 from webob.exc import HTTPNotFound
@@ -23,7 +23,7 @@ def _get_collection(request):
     return get_collection(request)
 
 
-@App.path(model=ReferenceDataModel,
+@App.path(model=ReferenceEntity,
           path='/api/v1/referencedata/{identifier}')
 def _get_model(request, identifier):
     return get_model(request, identifier)
@@ -46,11 +46,11 @@ def get_model_ui(request, identifier):
     model = get_model(request, identifier)
     if model is None:
         return None
-    return ReferenceDataModelUI(
+    return ReferenceEntityUI(
         request, model,
         ReferenceDataCollectionUI(request, col))
 
-@App.path(model=ReferenceDataModelUI,
+@App.path(model=ReferenceEntityUI,
           path='/referencedata/{identifier}')
 def _get_model_ui(request, identifier):
     return get_model_ui(request, identifier)

@@ -2,7 +2,7 @@ from morpcc.crud.view.listing import listing as default_listing
 from morpfw.crud import permission as crudperms
 
 from ..app import App
-from .modelui import ReferenceDataCollectionUI, ReferenceDataModelUI
+from .modelui import ReferenceDataCollectionUI, ReferenceEntityUI
 
 
 @App.html(

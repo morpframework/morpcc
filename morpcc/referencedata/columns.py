@@ -1,8 +1,8 @@
 from ..app import App
-from .model import ReferenceDataModel
+from .model import ReferenceEntity
 
 
-@App.structure_column(model=ReferenceDataModel, name="buttons")
+@App.structure_column(model=ReferenceEntity, name="buttons")
 def get_buttons_column(model, request, name):
     results = ""
     typeinfos = request.app.config.type_registry.get_typeinfos(request)

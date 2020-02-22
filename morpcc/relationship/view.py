@@ -6,7 +6,7 @@ from .modelui import RelationshipCollectionUI
 
 def _attribute_search(context, request):
     # FIXME: this need to be secured
-    datamodel_resource_type = "morpcc.datamodel"
+    entity_resource_type = "morpcc.entity"
     attribute_resource_type = "morpcc.attribute"
     value_field = request.GET.get("value_field", "").strip()
     if not value_field:
@@ -20,7 +20,7 @@ def _attribute_search(context, request):
     )
 
     dmtypeinfo = request.app.config.type_registry.get_typeinfo(
-        name=datamodel_resource_type, request=request
+        name=entity_resource_type, request=request
     )
 
     attrcol = attrtypeinfo["collection_factory"](request)
@@ -38,7 +38,7 @@ def _attribute_search(context, request):
     attrs = []
 
     for dm in dms:
-        query = rulez.field["datamodel_uuid"] == dm.uuid
+        query = rulez.field["entity_uuid"] == dm.uuid
         if attrterm:
             query = rulez.and_(
                 query, {"field": "title", "operator": "~", "value": attrterm}

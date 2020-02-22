@@ -9,10 +9,10 @@ from ..attribute.form_validator import unique_attribute
 
 
 def relationship_search_url(widget, context, request):
-    datamodel_uuid = request.GET.get("datamodel_uuid", None)
+    entity_uuid = request.GET.get("entity_uuid", None)
     baseurl = request.relative_url("/backrelationship/+relationship-search")
-    if datamodel_uuid:
-        return "{}?datamodel_uuid={}".format(baseurl, datamodel_uuid)
+    if entity_uuid:
+        return "{}?entity_uuid={}".format(baseurl, entity_uuid)
     return baseurl
 
 
@@ -29,13 +29,13 @@ class BackRelationshipSchema(morpfw.Schema):
     )
     title: typing.Optional[str] = field(default=None, metadata={"required": True})
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
-    datamodel_uuid: typing.Optional[str] = field(
+    entity_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
             "required": True,
             "editable": False,
             "format": "uuid",
-            "deform.widget": ReferenceWidget("morpcc.datamodel", "title", "uuid"),
+            "deform.widget": ReferenceWidget("morpcc.entity", "title", "uuid"),
         },
     )
 

@@ -18,7 +18,7 @@ def unique_attribute(context, request, data, mode=None):
         if col.search(
             rulez.and_(
                 rulez.field["name"] == data["name"],
-                rulez.field["datamodel_uuid"] == data["datamodel_uuid"],
+                rulez.field["entity_uuid"] == data["entity_uuid"],
             )
         ):
             return message

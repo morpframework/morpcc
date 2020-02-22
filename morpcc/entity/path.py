@@ -2,27 +2,27 @@ from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
 
 from ..app import App
 from .model import (
-    DataModelCollection,
-    DataModelContentCollection,
-    DataModelContentModel,
-    DataModelModel,
+    EntityCollection,
+    EntityContentCollection,
+    EntityContentModel,
+    EntityModel,
 )
 
 #
 from .modelui import (
-    DataModelCollectionUI,
-    DataModelContentCollectionUI,
-    DataModelContentModelUI,
-    DataModelModelUI,
+    EntityCollectionUI,
+    EntityContentCollectionUI,
+    EntityContentModelUI,
+    EntityModelUI,
 )
 
 #
-from .storage import DataModelStorage
+from .storage import EntityStorage
 
 
 def get_collection(request):
-    storage = DataModelStorage(request)
-    return DataModelCollection(request, storage)
+    storage = EntityStorage(request)
+    return EntityCollection(request, storage)
 
 
 def get_model(request, identifier):
@@ -38,19 +38,19 @@ def get_model_ui(request, identifier):
     return get_collection_ui(request).get(identifier)
 
 
-@App.path(model=DataModelCollection, path="/api/v1/datamodel")
+@App.path(model=EntityCollection, path="/api/v1/entity")
 def _get_collection(request):
     return get_collection(request)
 
 
-@App.path(model=DataModelModel, path="/api/v1/datamodel/{identifier}")
+@App.path(model=EntityModel, path="/api/v1/entity/{identifier}")
 def _get_model(request, identifier):
     return get_model(request, identifier)
 
 
 @App.path(
-    model=DataModelContentCollection,
-    path="/api/v1/datamodel/{identifier}/records",
+    model=EntityContentCollection,
+    path="/api/v1/entity/{identifier}/records",
     variables=lambda obj: {"identifier": obj.__parent__.identifier,},
 )
 def _get_content_collection(request, identifier):
@@ -59,8 +59,8 @@ def _get_content_collection(request, identifier):
 
 
 @App.path(
-    model=DataModelContentModel,
-    path="/api/v1/datamodel/{identifier}/records/{recordidentifier}",
+    model=EntityContentModel,
+    path="/api/v1/entity/{identifier}/records/{recordidentifier}",
     variables=lambda obj: {
         "identifier": obj.collection.__parent__.identifier,
         "recordidentifier": obj.identifier,
@@ -75,7 +75,7 @@ def _get_content_model(request, identifier, recordidentifier):
 #
 
 
-@App.path(model=DataModelCollectionUI, path="/datamodel")
+@App.path(model=EntityCollectionUI, path="/entity")
 def _get_collection_ui(request):
     return get_collection(request).ui()
 
@@ -85,7 +85,7 @@ def get_model_ui(request, identifier):
     return col.get(identifier)
 
 
-@App.path(model=DataModelModelUI, path="/datamodel/{identifier}")
+@App.path(model=EntityModelUI, path="/entity/{identifier}")
 def _get_model_ui(request, identifier):
     return get_model_ui(request, identifier)
 
@@ -100,8 +100,8 @@ def _get_model_content_collection_ui(parent, request):
 
 
 @App.path(
-    model=DataModelContentCollectionUI,
-    path="/datamodel/{identifier}/records/",
+    model=EntityContentCollectionUI,
+    path="/entity/{identifier}/records/",
     variables=lambda obj: {"identifier": obj.collection.__parent__.identifier},
 )
 def get_model_content_collection_ui(request, identifier):
@@ -110,8 +110,8 @@ def get_model_content_collection_ui(request, identifier):
 
 
 @App.path(
-    model=DataModelContentModelUI,
-    path="/datamodel/{identifier}/records/{recordidentifier}",
+    model=EntityContentModelUI,
+    path="/entity/{identifier}/records/{recordidentifier}",
     variables=lambda obj: {
         "identifier": obj.collection_ui.collection.__parent__.identifier,
         "recordidentifier": obj.model.identifier,

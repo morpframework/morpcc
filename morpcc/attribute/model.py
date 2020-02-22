@@ -21,13 +21,13 @@ class AttributeModel(morpfw.Model):
         key = self["type"]
         return DATATYPE_MAPPING[key]["type"]
 
-    def datamodel(self):
+    def entity(self):
         typeinfo = self.request.app.config.type_registry.get_typeinfo(
-            name="morpcc.datamodel", request=self.request
+            name="morpcc.entity", request=self.request
         )
 
         col = typeinfo["collection_factory"](self.request)
-        dm = col.get(self["datamodel_uuid"])
+        dm = col.get(self["entity_uuid"])
         return dm
 
 

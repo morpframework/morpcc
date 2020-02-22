@@ -13,58 +13,58 @@ from ..behaviorassignment.path import (
     get_collection as get_behaviorassignment_collection,
 )
 from ..relationship.path import get_collection as get_relationship_collection
-from ..relationship.widget import DataModelContentReferenceWidget
+from ..relationship.widget import EntityContentReferenceWidget
 from .modelui import (
-    DataModelCollectionUI,
-    DataModelContentCollectionUI,
-    DataModelContentModelUI,
-    DataModelModelUI,
+    EntityCollectionUI,
+    EntityContentCollectionUI,
+    EntityContentModelUI,
+    EntityModelUI,
 )
-from .schema import DataModelSchema
+from .schema import EntitySchema
 
 
-class DataModelContentCollection(morpfw.Collection):
+class EntityContentCollection(morpfw.Collection):
     def __init__(self, parent, request, storage, data=None):
         self.__parent__ = parent
         super().__init__(request, storage, data=data)
 
     def ui(self):
-        return DataModelContentCollectionUI(self.request, self)
+        return EntityContentCollectionUI(self.request, self)
 
     @property
     def schema(self):
         return self.__parent__.dataclass()
 
 
-class DataModelContentModel(morpfw.Model):
+class EntityContentModel(morpfw.Model):
     @property
     def schema(self):
         return self.collection.schema
 
     def ui(self):
-        return DataModelContentModelUI(self.request, self, self.collection.ui())
+        return EntityContentModelUI(self.request, self, self.collection.ui())
 
     def attributes(self):
-        datamodel = self.collection.__parent__
-        return datamodel.attributes()
+        entity = self.collection.__parent__
+        return entity.attributes()
 
     def relationships(self):
-        datamodel = self.collection.__parent__
-        return datamodel.relationships()
+        entity = self.collection.__parent__
+        return entity.relationships()
 
     def backrelationships(self):
-        datamodel = self.collection.__parent__
-        return datamodel.backrelationships()
+        entity = self.collection.__parent__
+        return entity.backrelationships()
 
-    def datamodel(self):
+    def entity(self):
         return self.collection.__parent__
 
 
-class DataModelModel(morpfw.Model):
-    schema = DataModelSchema
+class EntityModel(morpfw.Model):
+    schema = EntitySchema
 
     def ui(self):
-        return DataModelModelUI(self.request, self, self.collection.ui())
+        return EntityModelUI(self.request, self, self.collection.ui())
 
     def dataclass(self):
 
@@ -91,17 +91,17 @@ class DataModelModel(morpfw.Model):
             else:
                 refsearch_field = ref["name"]
 
-            dm = ref.datamodel()
+            dm = ref.entity()
 
             if refsearch:
-                # refsearch field and ref field must come from the same datamodel
-                assert dm["uuid"] == refsearch.datamodel()["uuid"]
+                # refsearch field and ref field must come from the same entity
+                assert dm["uuid"] == refsearch.entity()["uuid"]
             metadata = {
                 "required": rel["required"],
                 "title": rel["title"],
                 "description": rel["description"],
-                "deform.widget": DataModelContentReferenceWidget(
-                    datamodel=dm, term_field=refsearch_field, value_field=ref_field
+                "deform.widget": EntityContentReferenceWidget(
+                    entity=dm, term_field=refsearch_field, value_field=ref_field
                 ),
             }
 
@@ -109,8 +109,8 @@ class DataModelModel(morpfw.Model):
                 (rel["name"], rel.datatype(), field(default=None, metadata=metadata))
             )
 
-            if attr["primary_key"]:
-                primary_key.append(attr["name"])
+            if rel["primary_key"]:
+                primary_key.append(rel["name"])
 
         name = self["name"] or "Model"
 
@@ -127,7 +127,7 @@ class DataModelModel(morpfw.Model):
 
     def attributes(self):
         attrcol = get_attribute_collection(self.request)
-        attrs = attrcol.search(rulez.field["datamodel_uuid"] == self.uuid)
+        attrs = attrcol.search(rulez.field["entity_uuid"] == self.uuid)
         result = {}
 
         for attr in attrs:
@@ -135,9 +135,31 @@ class DataModelModel(morpfw.Model):
 
         return result
 
+    def effective_attributes(self):
+
+        result = {}
+        
+        attrs = self.attributes()
+
+        for behavior in self.behaviors():
+            for n, attr in behavior.schema.__dataclass_fields__.items():
+                if n in attrs.keys():
+                    continue
+
+                title = n
+                if attr.metadata.get("title", None):
+                    title = attr.metadata["title"]
+                result[n] = {"title": title, "name": n}
+
+        for n, attr in attrs.items():
+            result[n] = {"title": attr["title"], "name": n}
+
+        return result
+
+
     def relationships(self):
         relcol = get_relationship_collection(self.request)
-        rels = relcol.search(rulez.field["datamodel_uuid"] == self.uuid)
+        rels = relcol.search(rulez.field["entity_uuid"] == self.uuid)
 
         result = {}
 
@@ -148,7 +170,7 @@ class DataModelModel(morpfw.Model):
 
     def backrelationships(self):
         brelcol = get_backrelationship_collection(self.request)
-        brels = brelcol.search(rulez.field["datamodel_uuid"] == self.uuid)
+        brels = brelcol.search(rulez.field["entity_uuid"] == self.uuid)
         result = {}
         for brel in brels:
             result[brel["name"]] = brel
@@ -157,7 +179,7 @@ class DataModelModel(morpfw.Model):
 
     def behaviors(self):
         bhvcol = get_behaviorassignment_collection(self.request)
-        assignments = bhvcol.search(rulez.field["datamodel_uuid"] == self.uuid)
+        assignments = bhvcol.search(rulez.field["entity_uuid"] == self.uuid)
         behaviors = []
         for assignment in assignments:
             behavior = self.request.app.config.behavior_registry.get_behavior(
@@ -191,11 +213,11 @@ class DataModelModel(morpfw.Model):
             collection_markers.append(behavior.collection_marker)
             collectionui_markers.append(behavior.collectionui_marker)
 
-        modelui_markers.append(DataModelContentModelUI)
+        modelui_markers.append(EntityContentModelUI)
 
         ModelUI = type("ModelUI", tuple(modelui_markers), {})
 
-        class ContentCollectionUI(DataModelContentCollectionUI):
+        class ContentCollectionUI(EntityContentCollectionUI):
 
             modelui_class = ModelUI
 
@@ -203,10 +225,10 @@ class DataModelModel(morpfw.Model):
 
         CollectionUI = type("CollectionUI", tuple(collectionui_markers), {})
 
-        class ContentModel(DataModelContentModel):
+        class ContentModel(EntityContentModel):
             schema = self.dataclass()
 
-            __path_model__ = DataModelContentModel
+            __path_model__ = EntityContentModel
 
             def ui(self):
                 return ModelUI(self.request, self, self.collection.ui())
@@ -215,9 +237,9 @@ class DataModelModel(morpfw.Model):
 
         Model = type("Model", tuple(model_markers), {})
 
-        class ContentCollection(DataModelContentCollection):
+        class ContentCollection(EntityContentCollection):
 
-            __path_model__ = DataModelContentCollection
+            __path_model__ = EntityContentCollection
 
             def ui(self):
                 return CollectionUI(self.request, self)
@@ -240,8 +262,8 @@ class DataModelModel(morpfw.Model):
         )
 
 
-class DataModelCollection(morpfw.Collection):
-    schema = DataModelSchema
+class EntityCollection(morpfw.Collection):
+    schema = EntitySchema
 
     def ui(self):
-        return DataModelCollectionUI(self.request, self)
+        return EntityCollectionUI(self.request, self)

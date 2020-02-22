@@ -85,6 +85,10 @@ def process_edit(context, request):
         if not failed:
             return morepath.redirect(request.link(context))
 
+    @request.after
+    def set_header(response):
+        response.headers.add('X-MORP-FORM-FAILED', 'True')
+
     return {
         "page_title": "Edit %s" % html.escape(str(context.model.__class__.__name__)),
         "form_title": "Edit",

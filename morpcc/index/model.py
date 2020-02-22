@@ -53,7 +53,7 @@ class IndexCollection(morpfw.Collection):
         return IndexCollectionUI(self.request, self)
 
     def content_metadata(self):
-        return MetaData(schema="morpfw_catalog")
+        return MetaData(schema="morpcc_catalog")
 
     def content_collection(self):
         class Model(IndexContentModel):
@@ -99,12 +99,12 @@ class IndexCollection(morpfw.Collection):
                 field(default=None, metadata={"format": "uuid"}),
             ),
             (
-                "datamodel_uuid",
+                "entity_uuid",
                 typing.Optional[str],
                 field(default=None, metadata={"format": "uuid"}),
             ),
             (
-                "datamodel_content_uuid",
+                "entity_content_uuid",
                 typing.Optional[str],
                 field(default=None, metadata={"format": "uuid"}),
             ),

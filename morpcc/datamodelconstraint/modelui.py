@@ -1,9 +1,9 @@
 from morpcc.crud.model import ModelUI, CollectionUI
 
 
-class DataModelConstraintModelUI(ModelUI):
+class EntityConstraintModelUI(ModelUI):
     pass
 
 
-class DataModelConstraintCollectionUI(CollectionUI):
-    modelui_class = DataModelConstraintModelUI
+class EntityConstraintCollectionUI(CollectionUI):
+    modelui_class = EntityConstraintModelUI

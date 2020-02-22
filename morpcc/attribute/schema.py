@@ -41,16 +41,16 @@ class AttributeSchema(morpfw.Schema):
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
     required: typing.Optional[bool] = False
     primary_key: typing.Optional[bool] = False
-    datamodel_uuid: typing.Optional[str] = field(
+    entity_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
             "format": "uuid",
             "required": True,
             "editable": False,
-            "deform.widget": ReferenceWidget("morpcc.datamodel", "title", "uuid"),
+            "deform.widget": ReferenceWidget("morpcc.entity", "title", "uuid"),
         },
     )
 
-    __unique_constraint__ = ["datamodel_uuid", "name"]
+    __unique_constraint__ = ["entity_uuid", "name"]
 
     __validators__ = [unique_attribute, required_if_primary_key]

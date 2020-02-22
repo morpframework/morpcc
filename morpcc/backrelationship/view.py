@@ -2,14 +2,14 @@ import rulez
 from morpcc.crud.view.listing import datatable_search
 
 from ..app import App
-from ..datamodel.model import DataModelContentModelUI
+from ..entity.model import EntityContentModelUI
 from .modelui import BackRelationshipCollectionUI, BackRelationshipModelUI
 from .path import get_model as get_backrelationship
 
 
 def _relationship_search(context, request):
     # FIXME: this need to be secured
-    datamodel_resource_type = "morpcc.datamodel"
+    entity_resource_type = "morpcc.entity"
     relationship_resource_type = "morpcc.relationship"
     value_field = request.GET.get("value_field", "").strip()
     if not value_field:
@@ -19,14 +19,14 @@ def _relationship_search(context, request):
     if not term:
         return {}
 
-    datamodel_uuid = request.GET.get("datamodel_uuid", "").strip()
+    entity_uuid = request.GET.get("entity_uuid", "").strip()
 
     reltypeinfo = request.app.config.type_registry.get_typeinfo(
         name=relationship_resource_type, request=request
     )
 
     dmtypeinfo = request.app.config.type_registry.get_typeinfo(
-        name=datamodel_resource_type, request=request
+        name=entity_resource_type, request=request
     )
 
     relcol = reltypeinfo["collection_factory"](request)
@@ -43,17 +43,17 @@ def _relationship_search(context, request):
     rels = []
 
     for dm in dms:
-        query = rulez.field["datamodel_uuid"] == dm.uuid
+        query = rulez.field["entity_uuid"] == dm.uuid
         if relterm:
             query = rulez.and_(
                 query, {"field": "title", "operator": "~", "value": relterm}
             )
         rels += [(dm, rel) for rel in relcol.search(query=query)]
 
-    if datamodel_uuid:
+    if entity_uuid:
         newrels = []
         for dm, rel in rels:
-            if rel.reference_attribute()["datamodel_uuid"] == datamodel_uuid:
+            if rel.reference_attribute()["entity_uuid"] == entity_uuid:
                 newrels.append((dm, rel))
         rels = newrels
 
@@ -69,7 +69,7 @@ def relationship_search(context, request):
     return _relationship_search(context, request)
 
 
-@App.json(model=DataModelContentModelUI, name="backrelationship-search.json")
+@App.json(model=EntityContentModelUI, name="backrelationship-search.json")
 def relationship_content_search(context, request):
     brel_uuid = request.GET.get("backrelationship_uuid", "").strip()
     if not brel_uuid:

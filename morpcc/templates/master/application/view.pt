@@ -36,15 +36,15 @@
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
 
-                    <tal:repeat repeat="datamodel datamodels">
+                    <tal:repeat repeat="entity entities">
                         <div class="col-md-2 col-sm-3 col-xs-4" tal:define="card_icon string:database;
-                                card_icon_link request.link(datamodel.ui(), 'records')">
+                                card_icon_link request.link(entity.ui(), 'records')">
                             <metal:card use-macro="load_template('master/card.pt').macros.card">
                                 <metal:body fill-slot="card_content">
                                     <h4 style="text-align:center"><a
-                                            href="${request.link(datamodel.ui(), 'records')}">${datamodel['title']}</a>
+                                            href="${request.link(entity.ui(), 'records')}">${entity['title']}</a>
                                     </h4>
-                                    <p tal:content="datamodel['description']"></p>
+                                    <p tal:content="entity['description']"></p>
                                 </metal:body>
                             </metal:card>
                         </div>
