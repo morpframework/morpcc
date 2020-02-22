@@ -2,8 +2,11 @@ import typing
 from dataclasses import dataclass, field
 
 import morpfw
-from morpcc.deform.referencewidget import ReferenceWidget
-from morpcc.deform.vocabularywidget import VocabularyWidget
+
+from ..deform.referencewidget import ReferenceWidget
+from ..deform.vocabularywidget import VocabularyWidget
+from ..validator.reference import ReferenceValidator
+from ..validator.vocabulary import VocabularyValidator
 
 
 @dataclass
@@ -13,6 +16,7 @@ class ApplicationBehaviorAssignmentSchema(morpfw.Schema):
         default=None,
         metadata={
             "required": True,
+            "validators": [VocabularyValidator("morpcc.application_behaviors")],
             "deform.widget": VocabularyWidget("morpcc.application_behaviors"),
         },
     )
@@ -21,6 +25,7 @@ class ApplicationBehaviorAssignmentSchema(morpfw.Schema):
         metadata={
             "format": "uuid",
             "required": True,
+            "validators": [ReferenceValidator("morpcc.application", "uuid")],
             "deform.widget": ReferenceWidget("morpcc.application", "title", "uuid"),
         },
     )

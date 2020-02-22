@@ -2,10 +2,11 @@ import typing
 from dataclasses import dataclass, field
 
 import morpfw
-from morpcc.deform.referencewidget import ReferenceWidget
 from morpfw.validator.field import valid_identifier
 
 from ..attribute.form_validator import unique_attribute
+from ..deform.referencewidget import ReferenceWidget
+from ..validator.reference import ReferenceValidator
 
 
 def relationship_search_url(widget, context, request):
@@ -35,6 +36,7 @@ class BackRelationshipSchema(morpfw.Schema):
             "required": True,
             "editable": False,
             "format": "uuid",
+            "validators": [ReferenceValidator("morpcc.entity", "uuid")],
             "deform.widget": ReferenceWidget("morpcc.entity", "title", "uuid"),
         },
     )
@@ -45,6 +47,7 @@ class BackRelationshipSchema(morpfw.Schema):
             "format": "uuid",
             "required": True,
             "editable": False,
+            "validators": [ReferenceValidator("morpcc.relationship", "uuid")],
             "deform.widget": ReferenceWidget(
                 "morpcc.relationship",
                 "title",

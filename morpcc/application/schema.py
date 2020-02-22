@@ -9,6 +9,7 @@ from deform.widget import TextAreaWidget
 from morpfw.validator.field import valid_identifier
 
 from ..deform.vocabularywidget import VocabularyWidget
+from ..validator.vocabulary import VocabularyValidator
 
 
 @dataclass
@@ -26,7 +27,11 @@ class ApplicationSchema(morpfw.Schema):
 
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
     icon: typing.Optional[str] = field(
-        default=None, metadata={"deform.widget": VocabularyWidget("morpcc.fa-icons")}
+        default=None,
+        metadata={
+            "validators": [VocabularyValidator("morpcc.fa-icons")],
+            "deform.widget": VocabularyWidget("morpcc.fa-icons"),
+        },
     )
 
     __unique_constraint__ = ["name"]

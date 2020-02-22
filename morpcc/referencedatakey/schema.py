@@ -2,7 +2,10 @@ import typing
 from dataclasses import dataclass, field
 
 import morpfw
-from morpcc.deform.referencewidget import ReferenceWidget
+from morpfw.validator.field import valid_identifier
+
+from ..deform.referencewidget import ReferenceWidget
+from ..validator.reference import ReferenceValidator
 
 
 @dataclass
@@ -12,17 +15,19 @@ class ReferenceDataKeySchema(morpfw.Schema):
         default=None,
         metadata={
             "editable": False,
-            "required": True
-        }
+            "validators": [valid_identifier],
+            "required": True,
+        },
     )
     description: typing.Optional[str] = None
     referencedata_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
-            "format":"uuid",
+            "format": "uuid",
             "editable": False,
             "required": True,
-            "deform.widget": ReferenceWidget("morpcc.referencedata", "title", "uuid")
+            "validators": [ReferenceValidator("morpcc.referencedata", "uuid")],
+            "deform.widget": ReferenceWidget("morpcc.referencedata", "title", "uuid"),
         },
     )
 

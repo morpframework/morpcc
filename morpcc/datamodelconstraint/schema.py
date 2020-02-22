@@ -6,8 +6,11 @@ import morpfw
 
 #
 from deform.widget import TextAreaWidget
-from morpcc.deform.referencewidget import ReferenceWidget
-from morpcc.deform.vocabularywidget import VocabularyWidget
+
+from ..deform.referencewidget import ReferenceWidget
+from ..deform.vocabularywidget import VocabularyWidget
+from ..validator.reference import ReferenceValidator
+from ..validator.vocabulary import VocabularyValidator
 
 
 @dataclass
@@ -18,6 +21,7 @@ class EntityConstraintSchema(morpfw.Schema):
         default=None,
         metadata={
             "required": True,
+            "validators": [VocabularyValidator("morpcc.entityvalidators")],
             "deform.widget": VocabularyWidget("morpcc.entityvalidators"),
         },
     )
@@ -29,6 +33,7 @@ class EntityConstraintSchema(morpfw.Schema):
         metadata={
             "format": "uuid",
             "required": True,
-            "deform.widget": ReferenceWidget("morpcc.entity"),
+            "validators": [ReferenceValidator("morpcc.entity", "uuid")],
+            "deform.widget": ReferenceWidget("morpcc.entity", "title", "uuid"),
         },
     )

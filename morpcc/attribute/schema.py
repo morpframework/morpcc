@@ -3,9 +3,11 @@ from dataclasses import dataclass, field
 
 import morpfw
 from deform.widget import SelectWidget
-from morpcc.deform.referencewidget import ReferenceWidget
 from morpfw.validator.field import valid_identifier
 
+from ..deform.referencewidget import ReferenceWidget
+from ..validator.reference import ReferenceValidator
+from ..validator.vocabulary import VocabularyValidator
 from .form_validator import required_if_primary_key, unique_attribute
 
 ACCEPTED_TYPES = (
@@ -17,6 +19,11 @@ ACCEPTED_TYPES = (
     ("date", "Date"),
     ("datetime", "DateTime"),
 )
+
+
+def valid_type(request, schema, field, value, mode=None):
+    if value not in [k for k, v in ACCEPTED_TYPES]:
+        return "Invalid type"
 
 
 @dataclass
@@ -34,6 +41,7 @@ class AttributeSchema(morpfw.Schema):
         default=None,
         metadata={
             "required": True,
+            "validators": [valid_type],
             "deform.widget": SelectWidget(values=ACCEPTED_TYPES),
         },
     )
@@ -47,6 +55,7 @@ class AttributeSchema(morpfw.Schema):
             "format": "uuid",
             "required": True,
             "editable": False,
+            "validators": [ReferenceValidator("morpcc.entity", "uuid")],
             "deform.widget": ReferenceWidget("morpcc.entity", "title", "uuid"),
         },
     )

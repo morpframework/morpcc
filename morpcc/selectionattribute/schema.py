@@ -7,7 +7,8 @@ from morpcc.deform.referencewidget import ReferenceWidget
 from morpfw.validator.field import valid_identifier
 
 from ..attribute.form_validator import required_if_primary_key, unique_attribute
-from ..referencedataproperty.schema import PROPERTY_TYPES
+from ..referencedataproperty.schema import PROPERTY_TYPES, valid_property_types
+from ..validator.reference import ReferenceValidator
 
 
 @dataclass
@@ -30,11 +31,17 @@ class SelectionAttributeSchema(morpfw.Schema):
             "format": "uuid",
             "required": True,
             "editable": False,
+            "validators": [ReferenceValidator("morpcc.referencedata", "name")],
             "deform.widget": ReferenceWidget("morpcc.referencedata", "title", "name"),
         },
     )
     referencedata_property: typing.Optional[str] = field(
-        default=None, metadata={"deform.widget": SelectWidget(values=PROPERTY_TYPES)}
+        default=None,
+        metadata={
+            "required": True,
+            "validators": [valid_property_types],
+            "deform.widget": SelectWidget(values=PROPERTY_TYPES),
+        },
     )
     required: typing.Optional[bool] = False
     primary_key: typing.Optional[bool] = False
@@ -44,6 +51,7 @@ class SelectionAttributeSchema(morpfw.Schema):
             "format": "uuid",
             "required": True,
             "editable": False,
+            "validators": [ReferenceValidator("morpcc.entity", "uuid")],
             "deform.widget": ReferenceWidget("morpcc.entity", "title", "uuid"),
         },
     )

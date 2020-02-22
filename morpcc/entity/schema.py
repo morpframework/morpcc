@@ -2,9 +2,11 @@ import typing
 from dataclasses import dataclass, field
 
 import morpfw
-from morpcc.deform.referencewidget import ReferenceWidget
 from morpfw.crud.field import Field
 from morpfw.validator.field import valid_identifier
+
+from ..deform.referencewidget import ReferenceWidget
+from ..validator.reference import ReferenceValidator
 
 
 @dataclass
@@ -26,6 +28,7 @@ class EntitySchema(morpfw.Schema):
             "format": "uuid",
             "required": True,
             "editable": False,
+            "validators": [ReferenceValidator("morpcc.application", "uuid")],
             "deform.widget": ReferenceWidget("morpcc.application", "title", "uuid"),
         },
     )

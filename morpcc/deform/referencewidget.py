@@ -3,6 +3,7 @@ from deform.compat import string_types
 from colander import null
 from colander import Invalid
 from morpfw.authn.pas.user.path import get_user_collection
+import rulez
 from ..users.model import UserModelUI
 from ..users.path import get_user_collection_ui
 
@@ -59,8 +60,11 @@ class ReferenceWidget(SelectWidget):
         )
         if not (identifier or "").strip():
             return None
-        m = typeinfo["model_ui_factory"](request, identifier)
-        return m
+        col = typeinfo["collection_ui_factory"](request)
+        models = col.search(rulez.field[self.value_field] == identifier)
+        if models:
+            return models[0]
+        return None
 
     def get_resource_term(self, request, identifier):
         m = self.get_resource(request, identifier)
