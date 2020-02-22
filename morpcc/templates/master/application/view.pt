@@ -26,7 +26,7 @@
                     </div>
                 </div>
             </div>
-            <h2 metal:fill-slot="panel-title">Data Models</h2>
+            <h2 metal:fill-slot="panel-title">Entities</h2>
             <a id="upgrade-schema-btn" tal:attributes="style '' if need_update else 'display:none'"
                 href="${request.link(context,'+schema-upgrade')}">
                 <button class="btn btn-danger">
