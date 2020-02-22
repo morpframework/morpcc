@@ -8,12 +8,13 @@ def unique_attribute(context, request, data, mode=None):
     get_typeinfo = request.app.config.type_registry.get_typeinfo
 
     attrinfo = get_typeinfo("morpcc.attribute", request)
+    selattrinfo = get_typeinfo("morpcc.selectionattribute", request)
     relinfo = get_typeinfo("morpcc.relationship", request)
     brelinfo = get_typeinfo("morpcc.backrelationship", request)
 
     message = "Attribute already exists"
 
-    for info in [attrinfo, relinfo, brelinfo]:
+    for info in [attrinfo, selattrinfo, relinfo, brelinfo]:
         col = info["collection_factory"](request)
         if col.search(
             rulez.and_(

@@ -10,8 +10,12 @@ from pygments.formatters import HtmlFormatter
 from pygments.lexers import PythonLexer
 
 from ..app import App
-from .modelui import (EntityCollectionUI, EntityContentCollectionUI,
-                      EntityContentModelUI, EntityModelUI)
+from .modelui import (
+    EntityCollectionUI,
+    EntityContentCollectionUI,
+    EntityContentModelUI,
+    EntityModelUI,
+)
 
 
 @App.html(
@@ -90,7 +94,7 @@ def content_view(context, request):
             reldata = default_view(relmodelui, request)
             reldata["title"] = rel["title"]
             reldata["context"] = relmodelui
-        result["relationships"].append(reldata)
+            result["relationships"].append(reldata)
     result["backrelationships"] = []
     for br, brel in sorted(
         context.model.backrelationships().items(), key=lambda x: x[0]

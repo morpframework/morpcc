@@ -5,6 +5,10 @@ import morpfw
 from deform.widget import SelectWidget
 from morpcc.deform.referencewidget import ReferenceWidget
 
+PROPERTY_TYPES=[
+    ('label', 'Label'),
+    ('description', 'Description')
+]
 
 @dataclass
 class ReferenceDataPropertySchema(morpfw.Schema):
@@ -14,7 +18,7 @@ class ReferenceDataPropertySchema(morpfw.Schema):
         metadata={
             "required": True,
             "deform.widget": SelectWidget(
-                values=[("value", "Value"), ("label", "Label")]
+                values=PROPERTY_TYPES
             ),
         },
     )
