@@ -56,3 +56,7 @@ body.modal-window {
 table.table.collapsed td.child ul {
     width:100%;
 }
+
+.select2-container {
+    width: 100% !important;
+}
