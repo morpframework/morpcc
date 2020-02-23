@@ -73,11 +73,13 @@ class EntityModel(morpfw.Model):
         attrs = []
         primary_key = []
         for k, attr in self.attributes().items():
-            metadata = {
+            attrmeta = {
                 "required": attr["required"],
                 "title": attr["title"],
                 "description": attr["description"],
             }
+            metadata = attr.field_metadata()
+            metadata.update(attrmeta)
             attrs.append(
                 (attr["name"], attr.datatype(), field(default=None, metadata=metadata))
             )

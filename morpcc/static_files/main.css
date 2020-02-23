@@ -43,3 +43,16 @@ body.modal-window {
     overflow-x:hidden;
     height: 90%;
 }
+
+.html-scrollable {
+    max-height: 200px;
+    overflow: auto;
+    width:100%;
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 5px;
+}
+
+.table .html-scrollable {
+    max-width:200px;
+}

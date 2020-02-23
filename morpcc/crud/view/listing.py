@@ -9,6 +9,7 @@ import morepath
 import rulez
 from boolean.boolean import ParseError
 from morpfw.crud import permission as crudperms
+from morpfw.crud.schemaconverter.dataclass2colander import dataclass_to_colander
 
 from ...app import App
 from ...permission import ViewHome
@@ -175,17 +176,16 @@ def datatable_search(context, request, additional_filters=None):
     rows = []
     for o in objs:
         row = []
-        jsonobj = o.data.as_json()
+        form = deform.Form(dataclass_to_colander(collection.schema)())
         for c in data["columns"]:
             if c["name"].startswith("structure:"):
                 row.append(context.get_structure_column(o, request, c["name"]))
             else:
-                if jsonobj.get(c["name"], None) is None:
-                    row.append("")
-                elif jsonobj[c["name"]] is 0:
-                    row.append(str(jsonobj[c["name"]]))
-                else:
-                    row.append(html.escape(str(jsonobj[c["name"]] or "")))
+                field = form[c["name"]]
+                value = o.data[c["name"]]
+                row.append(
+                    field.render(value, readonly=True, request=request, context=context)
+                )
         rows.append(row)
     return {
         "draw": data["draw"],

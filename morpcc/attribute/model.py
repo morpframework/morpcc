@@ -1,10 +1,14 @@
-import morpfw
-from .schema import AttributeSchema
-from .schema import ACCEPTED_TYPES
 from datetime import date, datetime
+
+import morpfw
+from deform.widget import RichTextWidget, TextAreaWidget
+
+from .schema import ACCEPTED_TYPES, AttributeSchema
 
 DATATYPE_MAPPING = {
     "string": {"type": str, "label": "String"},
+    "text": {"type": str, "label": "Text"},
+    "richtext": {"type": str, "label": "Rich Text"},
     "integer": {"type": int, "label": "Integer"},
     "biginteger": {"type": int, "label": "Big Integer"},
     "float": {"type": float, "label": "Float"},
@@ -20,6 +24,13 @@ class AttributeModel(morpfw.Model):
     def datatype(self):
         key = self["type"]
         return DATATYPE_MAPPING[key]["type"]
+
+    def field_metadata(self):
+        if self["type"] == "text":
+            return {"format": "text", "deform.widget": TextAreaWidget()}
+        if self["type"] == "richtext":
+            return {"format": "text", "deform.widget": RichTextWidget()}
+        return {}
 
     def entity(self):
         typeinfo = self.request.app.config.type_registry.get_typeinfo(

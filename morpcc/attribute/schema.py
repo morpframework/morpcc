@@ -12,6 +12,8 @@ from .form_validator import required_if_primary_key, unique_attribute
 
 ACCEPTED_TYPES = (
     ("string", "String"),
+    ("text", "Text"),
+    ("richtext", "Rich Text"),
     ("integer", "Integer"),
     ("biginteger", "Big Integer"),
     ("float", "Float"),
