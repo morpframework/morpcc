@@ -35,5 +35,9 @@ def site_settings(context, request):
             'title': 'Manage Indexes',
             'icon': 'search',
             'href': request.relative_url('/index/+listing')
+        }, {
+            'title': 'Manage Data Dictionary',
+            'icon': 'book',
+            'href': request.relative_url('/dictionaryentity/+listing')
         }]
     }
