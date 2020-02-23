@@ -81,38 +81,6 @@
                 </div>
             </div>
 
-            <div class='row'>
-                <div class="col-md-12">
-                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
-
-                        <h2 metal:fill-slot="panel-title">Selection Attributes</h2>
-                        <div metal:fill-slot="panel-content">
-                            <table id="selattribute-listing"
-                                class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
-                                width="100%">
-                                <thead>
-                                    <tr>
-                                        <th>Attribute</th>
-                                        <th>Title</th>
-                                        <th>Description</th>
-                                        <th>Reference Data</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-
-
-                            <button id="selattribute-add" class="btn btn-default modal-link"
-                                data-url="${request.relative_url('/selectionattribute/+modal-create?entity_uuid=' + context.model.uuid)}">
-                                Add
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
 
             <div class='row'>
                 <div class="col-md-12">

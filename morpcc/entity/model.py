@@ -15,7 +15,6 @@ from ..deform.refdatawidget import ReferenceDataWidget
 from ..deform.referencewidget import ReferenceWidget
 from ..relationship.path import get_collection as get_relationship_collection
 from ..relationship.widget import EntityContentReferenceWidget
-from ..selectionattribute.path import get_collection as get_selattribute_collection
 from .modelui import (
     EntityCollectionUI,
     EntityContentCollectionUI,
@@ -86,21 +85,6 @@ class EntityModel(morpfw.Model):
             if attr["primary_key"]:
                 primary_key.append(attr["name"])
 
-        for k, attr in self.selection_attributes().items():
-            metadata = {
-                "required": attr["required"],
-                "title": attr["title"],
-                "description": attr["description"],
-                "deform.widget": ReferenceDataWidget(
-                    attr["referencedata_name"], attr["referencedata_property"]
-                ),
-            }
-            attrs.append(
-                (attr["name"], attr.datatype(), field(default=None, metadata=metadata))
-            )
-            if attr["primary_key"]:
-                primary_key.append(attr["name"])
-
         for r, rel in self.relationships().items():
             refsearch = rel.reference_search_attribute()
             ref = rel.reference_attribute()
@@ -154,22 +138,11 @@ class EntityModel(morpfw.Model):
 
         return result
 
-    def selection_attributes(self):
-        attrcol = get_selattribute_collection(self.request)
-        attrs = attrcol.search(rulez.field["entity_uuid"] == self.uuid)
-        result = {}
-
-        for attr in attrs:
-            result[attr["name"]] = attr
-
-        return result
-
     def effective_attributes(self):
 
         result = {}
 
         attrs = self.attributes()
-        attrs.update(self.selection_attributes())
 
         for behavior in self.behaviors():
             for n, attr in behavior.schema.__dataclass_fields__.items():

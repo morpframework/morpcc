@@ -8,7 +8,11 @@ from morpfw.validator.field import valid_identifier
 from ..deform.referencewidget import ReferenceWidget
 from ..validator.reference import ReferenceValidator
 from ..validator.vocabulary import VocabularyValidator
-from .form_validator import required_if_primary_key, unique_attribute
+from .form_validator import (
+    required_if_primary_key,
+    unique_attribute,
+    valid_dictionary_element,
+)
 
 ACCEPTED_TYPES = (
     ("string", "String"),
@@ -43,6 +47,7 @@ class AttributeSchema(morpfw.Schema):
         default=None,
         metadata={
             "required": True,
+            "editable": False,
             "validators": [valid_type],
             "deform.widget": SelectWidget(values=ACCEPTED_TYPES),
         },
@@ -61,7 +66,21 @@ class AttributeSchema(morpfw.Schema):
             "deform.widget": ReferenceWidget("morpcc.entity", "title", "uuid"),
         },
     )
-
+    dictionaryelement_uuid: typing.Optional[str] = field(
+        default=None,
+        metadata={
+            "format": "uuid",
+            "required": False,
+            "validator": [ReferenceValidator("morpcc.dictionaryelement", "uuid")],
+            "deform.widget": ReferenceWidget(
+                "morpcc.dictionaryelement", "title", "uuid"
+            ),
+        },
+    )
     __unique_constraint__ = ["entity_uuid", "name"]
 
-    __validators__ = [unique_attribute, required_if_primary_key]
+    __validators__ = [
+        unique_attribute,
+        required_if_primary_key,
+        valid_dictionary_element,
+    ]

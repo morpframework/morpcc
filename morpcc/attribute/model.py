@@ -1,8 +1,11 @@
 from datetime import date, datetime
 
 import morpfw
-from deform.widget import RichTextWidget, TextAreaWidget
+from deform.widget import TextAreaWidget
 
+from ..deform.refdatawidget import ReferenceDataWidget
+from ..deform.richtextwidget import RichTextWidget
+from ..preparer.html import HTMLSanitizer
 from .schema import ACCEPTED_TYPES, AttributeSchema
 
 DATATYPE_MAPPING = {
@@ -26,10 +29,24 @@ class AttributeModel(morpfw.Model):
         return DATATYPE_MAPPING[key]["type"]
 
     def field_metadata(self):
+
+        if self["type"] == "string":
+            de = self.dictionaryelement()
+            if de and de["referencedata_name"]:
+                return {
+                    "deform.widget": ReferenceDataWidget(
+                        de["referencedata_name"], de["referencedata_property"]
+                    )
+                }
         if self["type"] == "text":
             return {"format": "text", "deform.widget": TextAreaWidget()}
         if self["type"] == "richtext":
-            return {"format": "text", "deform.widget": RichTextWidget()}
+            return {
+                "format": "text",
+                "preparers": [HTMLSanitizer()],
+                "deform.widget": RichTextWidget(),
+            }
+
         return {}
 
     def entity(self):
@@ -39,6 +56,15 @@ class AttributeModel(morpfw.Model):
 
         col = typeinfo["collection_factory"](self.request)
         dm = col.get(self["entity_uuid"])
+        return dm
+
+    def dictionaryelement(self):
+        typeinfo = self.request.app.config.type_registry.get_typeinfo(
+            name="morpcc.dictionaryelement", request=self.request
+        )
+
+        col = typeinfo["collection_factory"](self.request)
+        dm = col.get(self["dictionaryelement_uuid"])
         return dm
 
 

@@ -1,9 +1,9 @@
-from deform.widget import Widget, SelectWidget
-from deform.compat import string_types
-from colander import null
-from colander import Invalid
-from morpfw.authn.pas.user.path import get_user_collection
 import rulez
+from colander import Invalid, null
+from deform.compat import string_types
+from deform.widget import SelectWidget, Widget
+from morpfw.authn.pas.user.path import get_user_collection
+
 from ..users.model import UserModelUI
 from ..users.path import get_user_collection_ui
 

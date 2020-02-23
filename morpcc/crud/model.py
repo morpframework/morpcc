@@ -1,20 +1,36 @@
 import html
 
+import morpfw
+
 
 class ModelUI(object):
 
     view_include_fields: list = []
     view_exclude_fields: list = [
-        'id', 'uuid', 'creator', 'created', 'modified', 'state', 'deleted',
-        'xattrs', 'blobs'
+        "id",
+        "uuid",
+        "creator",
+        "created",
+        "modified",
+        "state",
+        "deleted",
+        "xattrs",
+        "blobs",
     ]
     edit_include_fields: list = []
     edit_exclude_fields: list = [
-        'id', 'uuid', 'creator', 'created', 'modified', 'state', 'deleted',
-        'xattrs', 'blobs'
+        "id",
+        "uuid",
+        "creator",
+        "created",
+        "modified",
+        "state",
+        "deleted",
+        "xattrs",
+        "blobs",
     ]
 
-    default_view = 'view'
+    default_view = "view"
 
     @property
     def identifier(self):
@@ -28,8 +44,13 @@ class ModelUI(object):
     def transitions(self):
         sm = self.model.statemachine()
         if sm:
-            return list([i for i in sm._machine.get_triggers(
-                sm.state) if not i.startswith('to_')])
+            return list(
+                [
+                    i
+                    for i in sm._machine.get_triggers(sm.state)
+                    if not i.startswith("to_")
+                ]
+            )
         return []
 
 
@@ -39,11 +60,18 @@ class CollectionUI(object):
 
     create_include_fields: list = []
     create_exclude_fields: list = [
-        'id', 'uuid', 'creator', 'created', 'modified', 'state', 'deleted',
-        'xattrs', 'blobs'
+        "id",
+        "uuid",
+        "creator",
+        "created",
+        "modified",
+        "state",
+        "deleted",
+        "xattrs",
+        "blobs",
     ]
 
-    default_view = 'listing'
+    default_view = "listing"
 
     @property
     def page_title(self):
@@ -51,24 +79,29 @@ class CollectionUI(object):
 
     @property
     def listing_title(self):
-        return 'Contents'
+        return "Contents"
 
-    columns = [
-        {'title': 'Type', 'name': 'structure:type'},
-        {'title': 'Object', 'name': 'structure:object_string'},
-        {'title': 'UUID', 'name': 'uuid'},
-        {'title': 'Created', 'name': 'created'},
-        {'title': 'Actions', 'name': 'structure:buttons'},
-    ]
+    @property
+    def columns(self):
+        columns = []
+        for n, field in self.collection.schema.__dataclass_fields__.items():
+            if n in morpfw.Schema.__dataclass_fields__.keys():
+                continue
+            title = field.metadata.get("title", n)
+            columns.append({"title": title, "name": n})
+
+        columns.append({"title": "Actions", "name": "structure:buttons"})
+        return columns
 
     def __init__(self, request, collection):
         self.request = request
         self.collection = collection
 
     def get_structure_column(self, obj, request, column_type):
-        column_type = column_type.replace('structure:', '')
+        column_type = column_type.replace("structure:", "")
         coldata = request.app.get_structure_column(
-            model=obj, request=request, name=column_type)
+            model=obj, request=request, name=column_type
+        )
         return coldata
 
     def search(self, query=None, offset=0, limit=None, order_by=None, secure=False):

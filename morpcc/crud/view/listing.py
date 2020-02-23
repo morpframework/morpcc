@@ -183,6 +183,8 @@ def datatable_search(context, request, additional_filters=None):
             else:
                 field = form[c["name"]]
                 value = o.data[c["name"]]
+                if value is None:
+                    value = colander.null
                 row.append(
                     field.render(value, readonly=True, request=request, context=context)
                 )
