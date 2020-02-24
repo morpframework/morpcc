@@ -1,11 +1,13 @@
+import html
+
+import deform
 import morepath
 import morpfw
-import html
-import deform
 from morpfw.crud import permission as crudperms
-from ..model import CollectionUI, ModelUI
+
 from ...app import App
 from ...util import dataclass_to_colander
+from ..model import CollectionUI, ModelUI
 
 
 @App.view(model=CollectionUI)
@@ -34,16 +36,14 @@ def view(context, request):
 
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
-        xattrformschema = dataclass_to_colander(xattrprovider.schema, 
-                request=request)
+        xattrformschema = dataclass_to_colander(xattrprovider.schema, request=request)
     else:
         xattrformschema = None
     data = context.model.data.as_dict()
     sm = context.model.statemachine()
 
     metadataschema = dataclass_to_colander(
-        morpfw.Schema, exclude_fields=["blobs", "xattrs"],
-        request=request
+        morpfw.Schema, exclude_fields=["blobs", "xattrs"], request=request
     )
     if sm:
         triggers = [
@@ -62,6 +62,24 @@ def view(context, request):
         "readonly": True,
         "transitions": triggers,
     }
+
+
+@App.html(
+    model=ModelUI, name="preview", permission=crudperms.View,
+)
+def preview(context, request):
+    formschema = dataclass_to_colander(
+        context.model.schema,
+        request=request,
+        include_fields=context.view_include_fields,
+        exclude_fields=context.view_exclude_fields,
+    )
+
+    form = deform.Form(formschema())
+    form_data = context.model.data.as_dict()
+    return form.render(
+        appstruct=form_data, readonly=True, request=request, context=context
+    )
 
 
 @App.html(

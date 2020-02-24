@@ -89,11 +89,6 @@ class IndexCollection(morpfw.Collection):
             ("description", typing.Optional[str], field(default=None)),
             ("index_resolver", typing.Optional[str], field(default=None)),
             (
-                "preview",
-                typing.Optional[str],
-                field(default=None, metadata={"format": "text"}),
-            ),
-            (
                 "application_uuid",
                 typing.Optional[str],
                 field(default=None, metadata={"format": "uuid"}),

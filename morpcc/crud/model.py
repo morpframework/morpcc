@@ -54,6 +54,7 @@ class ModelUI(object):
         return []
 
 
+
 class CollectionUI(object):
 
     modelui_class = ModelUI
@@ -113,3 +114,5 @@ class CollectionUI(object):
         if obj:
             return self.modelui_class(self.request, obj, self)
         return None
+
+

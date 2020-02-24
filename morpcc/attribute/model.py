@@ -42,7 +42,7 @@ class AttributeModel(morpfw.Model):
             return {"format": "text", "deform.widget": TextAreaWidget()}
         if self["type"] == "richtext":
             return {
-                "format": "text",
+                "format": "text/html",
                 "preparers": [HTMLSanitizer()],
                 "deform.widget": RichTextWidget(),
             }

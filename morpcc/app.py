@@ -13,11 +13,10 @@ from morpfw.app import DBSessionRequest
 from morpfw.authn.pas.policy import SQLStorageAuthApp, SQLStorageAuthnPolicy
 from morpfw.authz.pas import DefaultAuthzPolicy
 from morpfw.main import create_app
+from webob.exc import HTTPException
 
 from . import directive
 from .authn import IdentityPolicy
-
-
 
 
 class WebAppRequest(DBSessionRequest):
@@ -54,8 +53,7 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     indexer = dectate.directive(directive.IndexerAction)
     indexresolver = dectate.directive(directive.IndexResolverAction)
     behavior = dectate.directive(directive.BehaviorAction)
-    application_behavior = dectate.directive(
-            directive.ApplicationBehaviorAction)
+    application_behavior = dectate.directive(directive.ApplicationBehaviorAction)
 
     @reg.dispatch_method(reg.match_instance("model"), reg.match_key("name"))
     def get_indexer(self, model, name):
@@ -98,6 +96,15 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     def get_index_resolver(self, name):
         raise NotImplementedError
 
+    def render_view(self, context, request, name=""):
+        lookup = self.get_view.by_predicates(model=context.__class__, name=name)
+        if lookup and lookup.component:
+            try:
+                return lookup.component(obj=context, request=request, app=self)
+            except HTTPException as e:
+                return None
+        return None
+
 
 class AuthnPolicy(SQLStorageAuthnPolicy):
     def get_identity_policy(self, settings):
@@ -134,9 +141,11 @@ def create_morpcc_app(settings, scan=True, **kwargs):
         settings["beaker_session"].get("session.type", None) is None
         and settings["beaker_session"].get("session.url", None) is None
     ):
-        settings["beaker_session"]["session.type"] = (
-            settings['configuration'].get("morpcc.beaker.session.type"))
-        settings["beaker_session"]["session.url"] = (
-            settings["configuration"].get("morpcc.beaker.session.url"))
+        settings["beaker_session"]["session.type"] = settings["configuration"].get(
+            "morpcc.beaker.session.type"
+        )
+        settings["beaker_session"]["session.url"] = settings["configuration"].get(
+            "morpcc.beaker.session.url"
+        )
 
     return BeakerMiddleware(application, settings["beaker_session"])

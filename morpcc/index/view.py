@@ -65,11 +65,15 @@ def _search(context, request):
         obj = entry.get_object()
         if obj is None:
             continue
+        uiobj = obj.ui()
+        preview = request.app.render_view(uiobj, request, "preview")
+        if preview is None:
+            continue
         r = {
             "title": entry["title"],
             "description": entry["description"],
-            "preview": entry["preview"],
-            "url": request.link(obj.ui()),
+            "preview": preview.body,
+            "url": request.link(uiobj),
         }
         res.append(r)
     return {"results": res}
