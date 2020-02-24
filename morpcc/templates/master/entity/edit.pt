@@ -230,7 +230,7 @@
                     columns: [
                         { 'name': 'name' },
                         { 'name': 'title' },
-                        { 'name': 'relationship_uuid' },
+                        { 'name': 'reference_relationship_uuid' },
                         { 'name': 'structure:buttons' }
                     ]
                 });
