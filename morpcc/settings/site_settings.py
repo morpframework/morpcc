@@ -32,6 +32,10 @@ def site_settings(context, request):
             'icon': 'cubes',
             'href': request.relative_url('/application/+listing')
         }, {
+            'title': 'Manage API Endpoints',
+            'icon': 'code',
+            'href': request.relative_url('/endpoint/+listing')
+        }, {
             'title': 'Manage Indexes',
             'icon': 'search',
             'href': request.relative_url('/index/+listing')

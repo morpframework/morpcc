@@ -27,5 +27,6 @@ def get_typeinfo(request):
         'collection_ui_factory': get_collection_ui,
         'model_ui': EndpointModelUI,
         'model_ui_factory': get_model_ui,
+        'internal': True,
         # 
     }
