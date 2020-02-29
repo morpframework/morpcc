@@ -71,4 +71,4 @@ class RestrictedRequest(object):
         self.body = request.body
         self.headers = request.headers
         self.method = request.method
-        self.json = request.json
+        self.json = lambda: request.json
