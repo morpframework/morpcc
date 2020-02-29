@@ -20,7 +20,8 @@
          editAreaLoader.init({
             id: '${oid}',
             syntax: '${syntax}',
-            start_highlight: true
+            start_highlight: true,
+            replace_tab_by_spaces: 4
          });
       })
    })(jQuery);
