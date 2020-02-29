@@ -39,6 +39,16 @@ pre.agreement-text {
     overflow:auto;
 }
 
+textarea.code {
+    font-family: "Droid Sans Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+    width: 100%;
+    min-height: 400px;
+}
+
+div.code-display .highlight pre {
+    width: 100%;
+}
+
 body.modal-window {
     overflow-x:hidden;
     height: 90%;
@@ -59,4 +69,17 @@ table.table.collapsed td.child ul {
 
 .select2-container {
     width: 100% !important;
+}
+
+#iframe-modal-spinner {
+    text-align:center;
+    font-size: 60px;
+}
+
+div.dataTables_processing {
+    height:55px;
+}
+
+div.dataTables_processing .fa-spin {
+    font-size: 30px;
 }

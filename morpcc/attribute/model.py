@@ -6,6 +6,7 @@ from deform.widget import TextAreaWidget
 from ..deform.refdatawidget import ReferenceDataWidget
 from ..deform.richtextwidget import RichTextWidget
 from ..preparer.html import HTMLSanitizer
+from ..validator.refdata import ReferenceDataValidator
 from .schema import ACCEPTED_TYPES, AttributeSchema
 
 DATATYPE_MAPPING = {
@@ -34,9 +35,14 @@ class AttributeModel(morpfw.Model):
             de = self.dictionaryelement()
             if de and de["referencedata_name"]:
                 return {
+                    "validators": [
+                        ReferenceDataValidator(
+                            de["referencedata_name"], de["referencedata_property"]
+                        )
+                    ],
                     "deform.widget": ReferenceDataWidget(
                         de["referencedata_name"], de["referencedata_property"]
-                    )
+                    ),
                 }
         if self["type"] == "text":
             return {"format": "text", "deform.widget": TextAreaWidget()}

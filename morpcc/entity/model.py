@@ -14,7 +14,9 @@ from ..behaviorassignment.path import (
 from ..deform.refdatawidget import ReferenceDataWidget
 from ..deform.referencewidget import ReferenceWidget
 from ..relationship.path import get_collection as get_relationship_collection
+from ..relationship.validator import EntityReferenceValidator
 from ..relationship.widget import EntityContentReferenceWidget
+from ..validator.reference import ReferenceValidator
 from .modelui import (
     EntityCollectionUI,
     EntityContentCollectionUI,
@@ -103,6 +105,9 @@ class EntityModel(morpfw.Model):
                 "required": rel["required"],
                 "title": rel["title"],
                 "description": rel["description"],
+                "validators": [
+                    EntityReferenceValidator(entity=dm, attribute=ref_field)
+                ],
                 "deform.widget": EntityContentReferenceWidget(
                     entity=dm, term_field=refsearch_field, value_field=ref_field
                 ),

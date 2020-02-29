@@ -61,7 +61,7 @@
     <!--    <link href="/__static__/deform/tinymce/skins/lightgray/content.min.css" rel="stylesheet">
     <link href="/__static__/deform/tinymce/skins/lightgray/content.inline.min.css" rel="stylesheet">-->
     <link href="/__static__/deform/tinymce/skins/lightgray/skin.ie7.min.css" rel="stylesheet">
-
+       <link href="/__static__/morpcc/pygments-css/default.css" rel="stylesheet">
     <link href="/__static__/morpcc/main.css" rel="stylesheet">
 
 
@@ -179,6 +179,7 @@
                 aria-hidden="true">&times;</span></button>
           </div>
           <div class="modal-body">
+             <div id="iframe-modal-spinner"><i class="fa fa-spin fa-spinner"></i></div>
             <iframe style="border:0;width:100%;height:500px;"></iframe>
           </div>
         </div><!-- /.modal-content -->
@@ -255,6 +256,11 @@
     <script src="/__static__/morpcc/gentelella/vendors/jszip/dist/jszip.min.js"></script>
     <script src="/__static__/morpcc/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
     <script src="/__static__/morpcc/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
+    
+    <!-- editarea -->
+
+    <script src="/__static__/morpcc/editarea/edit_area/edit_area_full.js">
+    </script>
 
 
     <!-- deform -->

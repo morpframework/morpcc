@@ -9,7 +9,7 @@ class ReferenceValidator(object):
     def __call__(self, request, schema, field, value, mode=None):
         resource = self.get_resource(request, value)
         if not resource:
-            return "Invalid reference : {}".format(identifier)
+            return "Invalid reference : {}".format(value)
 
     def get_resource(self, request, identifier):
         typeinfo = request.app.config.type_registry.get_typeinfo(
