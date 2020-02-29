@@ -2,6 +2,7 @@ import morpfw
 import morpfw.sql
 import sqlalchemy as sa
 import sqlalchemy_jsonfield as sajson
+
 from .model import BackRelationshipModel
 
 
@@ -14,6 +15,7 @@ class BackRelationship(morpfw.sql.Base):
     description = sa.Column(sa.Text())
     entity_uuid = sa.Column(morpfw.sql.GUID)
     reference_relationship_uuid = sa.Column(morpfw.sql.GUID)
+    single_relation = sa.Column(sa.Boolean())
 
 
 class BackRelationshipStorage(morpfw.SQLStorage):

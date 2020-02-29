@@ -33,7 +33,8 @@
             </div>
             <div class="row" tal:repeat="brel backrelationships">
                 <div class="col-xs-12 col-md-12 col-lg-12">
-                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+                    <div tal:condition="not:brel['single_relation']"
+                        metal:use-macro="load_template('master/panel.pt').macros.panel">
                         <h2 metal:fill-slot="panel-title">${ brel['title'] }</h2>
                         <div metal:fill-slot="panel-content">
                             <table id="table-${ brel['uuid'] }"
@@ -47,6 +48,15 @@
                                 <tbody>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div tal:condition="brel['single_relation'] and brel['content']"
+                        metal:use-macro="load_template('master/panel.pt').macros.panel">
+                        <h2 metal:fill-slot="panel-title">${brel['title']}</h2>
+                        <div metal:fill-slot="panel-content">
+                            <div
+                                tal:replace="structure:brel['form'].render(brel['form_data'], request=request, context=context, readonly=True)">
+                            </div>
                         </div>
                     </div>
                 </div>
