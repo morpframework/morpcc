@@ -37,9 +37,9 @@
                      <div class="x_content">
                         <a class="search-result-link" href="#">
                            <h4 class="search-result-title"></h4>
-                           <p class="search-result-description"></p>
-                           <div class="search-result-preview"></div>
                         </a>
+                        <p class="search-result-description"></p>
+                        <div class="search-result-preview"></div>
                      </div>
                   </div>
                </div>
