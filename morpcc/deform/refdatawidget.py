@@ -44,7 +44,7 @@ class ReferenceDataWidget(SelectWidget):
         )
 
         if not keys:
-            return ""
+            return identifier
 
         key = keys[0]
 
@@ -52,7 +52,7 @@ class ReferenceDataWidget(SelectWidget):
         props = propcol.search(
             rulez.and_(
                 rulez.field["referencedatakey_uuid"] == key.uuid,
-                rulez.field["property"] == self.referencedata_property,
+                rulez.field["name"] == self.referencedata_property,
             )
         )
 

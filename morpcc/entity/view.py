@@ -110,7 +110,7 @@ def content_view(context, request):
         breldata = {
             "uuid": brel["uuid"],
             "title": brel["title"],
-            "single_relation": brel['single_relation'] or False,
+            "single_relation": brel["single_relation"] or False,
             "datatable_url": request.link(
                 context,
                 "backrelationship-search.json?backrelationship_uuid={}".format(
@@ -122,17 +122,17 @@ def content_view(context, request):
             "content": brel.resolve_relationship(context.model),
         }
 
-        if brel['single_relation']:
-            if breldata['content']:
-                item = breldata['content'][0]
+        if brel["single_relation"]:
+            if breldata["content"]:
+                item = breldata["content"][0]
                 itemui = item.ui()
                 formschema = dataclass_to_colander(
-                       item.schema,
-                        request=request,
-                        include_fields=itemui.view_include_fields,
+                    item.schema,
+                    request=request,
+                    include_fields=itemui.view_include_fields,
                     exclude_fields=itemui.view_exclude_fields,
                 )
-                breldata['form'] = deform.Form(formschema())
-                breldata['form_data'] = item.as_dict()
+                breldata["form"] = deform.Form(formschema())
+                breldata["form_data"] = item.as_dict()
         result["backrelationships"].append(breldata)
     return result

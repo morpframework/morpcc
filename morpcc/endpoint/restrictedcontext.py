@@ -5,6 +5,11 @@ from ..entity.path import get_collection as get_entity_col
 class RestrictedEntityContent(object):
     def __init__(self, context):
         self.data = context.data
+
+        def update(data, deserialize=True):
+            return context.update(data, deserialize=deserialize)
+
+        self.update = update
         self.save = context.save
         self.as_json = lambda: context.as_json()
 
@@ -16,6 +21,12 @@ class RestrictedEntityContent(object):
 
     def __setitem__(self, key, value):
         self.data[key] = value
+
+    def keys(self):
+        return self.data.keys()
+
+    def values(self):
+        return self.data.values()
 
 
 class RestrictedEntityContentCollection(object):
@@ -46,6 +57,12 @@ class RestrictedApplication(object):
     def __getitem__(self, key):
         return self.entities[key]
 
+    def keys(self):
+        return self.entities.keys()
+
+    def values(self):
+        return self.entities.values()
+
 
 class RestrictedContext(object):
     def __init__(self, context, request):
@@ -61,6 +78,12 @@ class RestrictedContext(object):
 
     def __getitem__(self, key):
         return self.apps[key]
+
+    def keys(self):
+        return self.apps.keys()
+
+    def values(self):
+        return self.apps.values()
 
 
 class RestrictedRequest(object):

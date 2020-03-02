@@ -1,3 +1,5 @@
+import re
+
 import rulez
 
 from ..referencedata.path import get_collection as get_refdata_collection

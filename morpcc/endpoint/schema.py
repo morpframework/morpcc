@@ -19,7 +19,8 @@ class EndpointSchema(morpfw.Schema):
         },
     )
 
-    title: typing.Optional[str] = None
+    title: typing.Optional[str] = field(default=None, 
+                                        metadata={"required": True})
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
 
     code: typing.Optional[str] = field(

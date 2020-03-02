@@ -161,7 +161,7 @@
                         processing: true,
                         ajax: url,
                         columns: [
-                            { 'name': 'property' },
+                            { 'name': 'name' },
                             { 'name': 'value' },
                             { 'name': 'structure:buttons' }
                         ]

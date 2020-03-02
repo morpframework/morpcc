@@ -72,7 +72,7 @@ def _search(context, request):
         r = {
             "title": entry["title"],
             "description": entry["description"],
-            "preview": preview.body,
+            "preview": preview.body.decode("utf-8"),
             "url": request.link(uiobj),
         }
         res.append(r)
@@ -93,7 +93,11 @@ def search_json(context, request):
     permission=mccperm.SiteSearch,
 )
 def search(context, request):
-    return _search(context, request)
+    return {
+        "search_url": request.link(
+            context, "+search.json?{}".format(request.query_string)
+        )
+    }
 
 
 @App.html(

@@ -34,7 +34,7 @@ def export(context, request):
             kdata = {"name": k["name"], "description": k["description"], "values": {}}
 
             for v in k.referencedatavalues():
-                kdata["values"][v["property"]] = v["value"]
+                kdata["values"][v["name"]] = v["value"]
 
             result[m["name"]]["keys"][k["name"]] = kdata
 
@@ -75,7 +75,7 @@ def vocabulary_search(context, request):
         props = prop_col.search(
             rulez.and_(
                 rulez.field["referencedatakey_uuid"] == key.uuid,
-                rulez.field["property"] == refdata_property,
+                rulez.field["name"] == refdata_property,
                 {"field": "value", "operator": "~", "value": term},
             )
         )

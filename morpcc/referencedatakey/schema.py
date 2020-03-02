@@ -6,6 +6,7 @@ from morpfw.validator.field import valid_identifier
 
 from ..deform.referencewidget import ReferenceWidget
 from ..validator.reference import ReferenceValidator
+from ..validator.field import valid_refdatakey
 
 
 @dataclass
@@ -15,7 +16,7 @@ class ReferenceDataKeySchema(morpfw.Schema):
         default=None,
         metadata={
             "editable": False,
-            "validators": [valid_identifier],
+            "validators": [valid_refdatakey],
             "required": True,
         },
     )

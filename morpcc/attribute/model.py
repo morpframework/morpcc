@@ -34,16 +34,18 @@ class AttributeModel(morpfw.Model):
         if self["type"] == "string":
             de = self.dictionaryelement()
             if de and de["referencedata_name"]:
-                return {
-                    "validators": [
+                metadata = {
+                    "deform.widget": ReferenceDataWidget(
+                        de["referencedata_name"], de["referencedata_property"]
+                    )
+                }
+                if not self["allow_invalid"]:
+                    metadata["validators"] = [
                         ReferenceDataValidator(
                             de["referencedata_name"], de["referencedata_property"]
                         )
-                    ],
-                    "deform.widget": ReferenceDataWidget(
-                        de["referencedata_name"], de["referencedata_property"]
-                    ),
-                }
+                    ]
+                return metadata
         if self["type"] == "text":
             return {"format": "text", "deform.widget": TextAreaWidget()}
         if self["type"] == "richtext":

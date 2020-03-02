@@ -18,7 +18,7 @@ def valid_property_types(request, schema, field, value, mode=None):
 @dataclass
 class ReferenceDataPropertySchema(morpfw.Schema):
 
-    property: typing.Optional[str] = field(
+    name: typing.Optional[str] = field(
         default=None,
         metadata={
             "required": True,
@@ -39,4 +39,4 @@ class ReferenceDataPropertySchema(morpfw.Schema):
         },
     )
 
-    __unique_constraint__ = ["referencedatakey_uuid", "property"]
+    __unique_constraint__ = ["referencedatakey_uuid", "name"]

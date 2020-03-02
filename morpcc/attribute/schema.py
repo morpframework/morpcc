@@ -77,6 +77,13 @@ class AttributeSchema(morpfw.Schema):
             ),
         },
     )
+    allow_invalid: typing.Optional[bool] = field(
+        default=False,
+        metadata={
+            "title": "Allow invalid values",
+            "description": "Allow values that are considered invalid by data dictionary",
+        },
+    )
     __unique_constraint__ = ["entity_uuid", "name"]
 
     __validators__ = [
