@@ -60,7 +60,7 @@ def _search(context, request):
     search = prov.parse_query(request.GET.get("q", None))
     res = []
     if search is None:
-        return {"results": []}
+        return {"results": [], "count": 0}
     for entry in prov.search(search, limit=50):
         obj = entry.get_object()
         if obj is None:
@@ -76,8 +76,7 @@ def _search(context, request):
             "url": request.link(uiobj),
         }
         res.append(r)
-    return {"results": res,
-            "count": len(res)}
+    return {"results": res, "count": len(res)}
 
 
 @App.json(

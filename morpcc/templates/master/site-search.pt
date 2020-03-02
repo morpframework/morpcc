@@ -55,7 +55,7 @@
                   $('#search-results').html('<p style="text-align:center"><i class="fa fa-spin fa-spinner" style="font-size:50px"></i></p>');
                   $.ajax(search_url).success(function (data) {
                      $('#search-results').html('');
-                     if (data['results'].length == 0) {
+                     if (data['count'] == 0) {
                         $('#search-results').html('<p>No results found</p>');
                         return
                      }
