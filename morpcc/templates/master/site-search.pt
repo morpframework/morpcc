@@ -71,6 +71,9 @@
                         $('.search-result-preview', block).html(res['preview']);
                         $('#search-results').append(block.html());
                      });
+                     if (data['count'] >= 50) {
+                        $('#search-results').append('<p>Showing only the first 50 results</p>');
+                     }
                   })
                }
 

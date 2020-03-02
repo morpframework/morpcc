@@ -61,7 +61,7 @@ def _search(context, request):
     res = []
     if search is None:
         return {"results": []}
-    for entry in prov.search(search):
+    for entry in prov.search(search, limit=50):
         obj = entry.get_object()
         if obj is None:
             continue
@@ -76,7 +76,8 @@ def _search(context, request):
             "url": request.link(uiobj),
         }
         res.append(r)
-    return {"results": res}
+    return {"results": res,
+            "count": len(res)}
 
 
 @App.json(
