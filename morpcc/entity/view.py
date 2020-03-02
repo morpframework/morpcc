@@ -108,6 +108,7 @@ def content_view(context, request):
             columns.append(colname)
             column_options.append({"name": colname, "orderable": True})
         breldata = {
+            "name": brel["name"],
             "uuid": brel["uuid"],
             "title": brel["title"],
             "single_relation": brel["single_relation"] or False,
@@ -135,4 +136,6 @@ def content_view(context, request):
                 breldata["form"] = deform.Form(formschema())
                 breldata["form_data"] = item.as_dict()
         result["backrelationships"].append(breldata)
+    result['backrelationships'] = sorted(result['backrelationships'], 
+            key=lambda x: (0 if x['single_relation'] else 1, x['name']))
     return result
