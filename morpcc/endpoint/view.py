@@ -23,30 +23,30 @@ def default_inplacevar(op, x, y):
     raise Exception("{} operator is not allowed".format(op))
 
 
-def strip_unsafe_prefix(path):
-    here_dir = os.path.dirname(__file__)
-    path = path.replace(here_dir, "")
-    if ".egg" in path:
-        eggindex = path.find(".egg")
-        path = '"' + path[eggindex + 5 :]
-    return path
+BYTECODE_CACHE = {}
 
 
 def _handle(context, request):
     code = context["code"]
-    try:
-        bytecode = compile_restricted(
-            code, filename="<include code {}>".format(context["name"]), mode="exec"
-        )
-    except Exception:
+    cache = BYTECODE_CACHE.get(context.uuid, None)
+    if cache is None or cache["modified"] < context["modified"]:
+        try:
+            bytecode = compile_restricted(
+                code, filename="<include code {}>".format(context["name"]), mode="exec"
+            )
+        except Exception:
 
-        @request.after
-        def set_code(response):
-            response.status_code = 500
+            @request.after
+            def set_code(response):
+                response.status_code = 500
 
-        tb = strip_unsafe_prefix(traceback.format_exc()).split("\n")
-        return {"status": "error", "traceback": tb}
+            tb = traceback.format_exc().split("\n")
+            return {"status": "error", "traceback": tb}
 
+        cache = {"bytecode": bytecode, "modified": context["modified"]}
+        BYTECODE_CACHE[context.uuid] = cache
+
+    bytecode = cache["bytecode"]
     loc = {}
     glob = safe_globals.copy()
     glob["dir"] = dir
@@ -70,7 +70,7 @@ def _handle(context, request):
         def set_code(response):
             response.status_code = 500
 
-        tb = strip_unsafe_prefix(traceback.format_exc()).split("\n")
+        tb = traceback.format_exc().split("\n")
         return {"status": "error", "traceback": tb}
 
 
