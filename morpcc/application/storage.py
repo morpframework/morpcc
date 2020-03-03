@@ -10,7 +10,7 @@ class Application(morpfw.sql.Base):
 
     __tablename__ = "morpcc_application"
 
-    name = sa.Column(sa.String(length=1024))
+    name = sa.Column(sa.String(length=1024), index=True)
     title = sa.Column(sa.String(length=1024))
     description = sa.Column(sa.Text())
     icon = sa.Column(sa.String(length=1024))

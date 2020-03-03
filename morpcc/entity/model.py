@@ -1,3 +1,4 @@
+import copy
 import typing
 from dataclasses import field, make_dataclass
 
@@ -70,15 +71,22 @@ class EntityModel(morpfw.Model):
         return EntityModelUI(self.request, self, self.collection.ui())
 
     def dataclass(self):
-
         attrs = []
         primary_key = []
+        brels = [
+            b["reference_relationship_uuid"] for b in self.backrelationships().values()
+        ]
+
         for k, attr in self.attributes().items():
             attrmeta = {
                 "required": attr["required"],
                 "title": attr["title"],
                 "description": attr["description"],
             }
+            if attr["primary_key"]:
+                attrmeta["index"] = True
+            if attr.uuid in brels:
+                attrmeta["index"] = True
             metadata = attr.field_metadata()
             metadata.update(attrmeta)
             attrs.append(
@@ -108,6 +116,7 @@ class EntityModel(morpfw.Model):
                 "validators": [
                     EntityReferenceValidator(entity=dm, attribute=ref_field)
                 ],
+                "index": True,
                 "deform.widget": EntityContentReferenceWidget(
                     entity=dm, term_field=refsearch_field, value_field=ref_field
                 ),
@@ -131,6 +140,7 @@ class EntityModel(morpfw.Model):
         dc = make_dataclass(name, fields=attrs, bases=tuple(bases))
         if primary_key:
             dc.__unique_constraint__ = tuple(primary_key)
+
         return dc
 
     def attributes(self):

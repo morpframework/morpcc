@@ -10,8 +10,8 @@ class DictionaryElement(morpfw.sql.Base):
 
     __tablename__ = "morpcc_dictionaryelement"
 
-    dictionaryentity_uuid = sa.Column(morpfw.sql.GUID())
-    name = sa.Column(sa.String(length=1024))
+    dictionaryentity_uuid = sa.Column(morpfw.sql.GUID(), index=True)
+    name = sa.Column(sa.String(length=1024), index=True)
     type = sa.Column(sa.String(length=1024))
     title = sa.Column(sa.String(length=1024))
     description = sa.Column(sa.Text())

@@ -2,6 +2,7 @@ import morpfw
 import morpfw.sql
 import sqlalchemy as sa
 import sqlalchemy_jsonfield as sajson
+
 from .model import EntityConstraintModel
 
 
@@ -12,7 +13,7 @@ class EntityConstraint(morpfw.sql.Base):
     title = sa.Column(sa.String(length=1024))
     validator = sa.Column(sa.String(length=1024))
     parameters = sa.Column(sa.Text())
-    entity_uuid = sa.Column(morpfw.sql.GUID())
+    entity_uuid = sa.Column(morpfw.sql.GUID(), index=True)
 
 
 class EntityConstraintStorage(morpfw.SQLStorage):
