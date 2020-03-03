@@ -11,17 +11,18 @@ class EntityContentReferenceWidget(SelectWidget):
     values = ()
     multiple = False
 
-    def __init__(self, entity, term_field, value_field, **kwargs):
-        self.entity = entity
+    def __init__(self, entity_uuid, term_field, value_field, **kwargs):
+        self.entity_uuid = entity_uuid
         self.term_field = term_field
         self.value_field = value_field
         super().__init__(**kwargs)
 
     def get_resource_search_url(self, context, request):
         from ..entity.modelui import EntityModelUI, EntityCollectionUI
-
-        colui = EntityCollectionUI(request, self.entity.collection)
-        mui = EntityModelUI(request, self.entity, colui)
+        from ..entity.path import get_model as get_entity
+        entity = get_entity(request, self.entity_uuid)
+        colui = EntityCollectionUI(request, entity.collection)
+        mui = EntityModelUI(request, entity, colui)
         baselink = request.link(mui, "+term-search")
 
         return baselink + "?term_field=%s&value_field=%s" % (
@@ -37,8 +38,11 @@ class EntityContentReferenceWidget(SelectWidget):
 
     def get_resource(self, request, identifier):
         from ..entity.path import _get_model_content_collection_ui
+        from ..entity.path import get_model as get_entity
 
-        col = _get_model_content_collection_ui(self.entity, request)
+        entity = get_entity(request, self.entity_uuid)
+
+        col = _get_model_content_collection_ui(entity, request)
         res = col.search(rulez.field[self.value_field] == identifier)
         if res:
             return res[0]

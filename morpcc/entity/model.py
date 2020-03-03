@@ -64,6 +64,9 @@ class EntityContentModel(morpfw.Model):
         return self.collection.__parent__
 
 
+ENTITY_DATACLASS_CACHE = {}
+
+
 class EntityModel(morpfw.Model):
     schema = EntitySchema
 
@@ -71,6 +74,10 @@ class EntityModel(morpfw.Model):
         return EntityModelUI(self.request, self, self.collection.ui())
 
     def dataclass(self):
+        cache = ENTITY_DATACLASS_CACHE.get(self.uuid, None)
+        if cache and not (self["modified"] > cache["modified"]):
+            return cache["dataclass"]
+
         attrs = []
         primary_key = []
         brels = [
@@ -114,11 +121,13 @@ class EntityModel(morpfw.Model):
                 "title": rel["title"],
                 "description": rel["description"],
                 "validators": [
-                    EntityReferenceValidator(entity=dm, attribute=ref_field)
+                    EntityReferenceValidator(entity_uuid=dm.uuid, attribute=ref_field)
                 ],
                 "index": True,
                 "deform.widget": EntityContentReferenceWidget(
-                    entity=dm, term_field=refsearch_field, value_field=ref_field
+                    entity_uuid=dm.uuid,
+                    term_field=refsearch_field,
+                    value_field=ref_field,
                 ),
             }
 
@@ -140,7 +149,10 @@ class EntityModel(morpfw.Model):
         dc = make_dataclass(name, fields=attrs, bases=tuple(bases))
         if primary_key:
             dc.__unique_constraint__ = tuple(primary_key)
-
+        ENTITY_DATACLASS_CACHE[self.uuid] = {
+            "dataclass": dc,
+            "modified": self["modified"],
+        }
         return dc
 
     def attributes(self):
