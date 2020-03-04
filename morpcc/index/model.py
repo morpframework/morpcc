@@ -91,27 +91,28 @@ class IndexCollection(morpfw.Collection):
             (
                 "application_uuid",
                 typing.Optional[str],
-                field(default=None, metadata={"format": "uuid"}),
+                field(default=None, metadata={"format": "uuid", "index": True}),
             ),
             (
                 "entity_uuid",
                 typing.Optional[str],
-                field(default=None, metadata={"format": "uuid"}),
+                field(default=None, metadata={"format": "uuid", "index": True}),
             ),
             (
                 "entity_content_uuid",
                 typing.Optional[str],
-                field(default=None, metadata={"format": "uuid"}),
+                field(default=None, metadata={"format": "uuid", "index": True}),
             ),
             (
                 "searchabletext",
                 typing.Optional[str],
-                field(default=None, metadata={"format": "fulltextindex"}),
+                field(default=None, metadata={"format": "fulltextindex",
+                    "index": True}),
             ),
         ]
 
         for idx in self.search():
-            metadata = {}
+            metadata = {'index': True}
             if idx["type"] == "fulltextindex":
                 metadata["format"] = "fulltextindex"
 

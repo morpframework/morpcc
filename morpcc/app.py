@@ -54,6 +54,7 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     indexresolver = dectate.directive(directive.IndexResolverAction)
     behavior = dectate.directive(directive.BehaviorAction)
     application_behavior = dectate.directive(directive.ApplicationBehaviorAction)
+    default_factory = dectate.directive(directive.DefaultFactoryAction)
 
     @reg.dispatch_method(reg.match_instance("model"), reg.match_key("name"))
     def get_indexer(self, model, name):
@@ -90,6 +91,10 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
 
     @reg.dispatch_method(reg.match_key("name"))
     def get_application_behavior_factory(self, name):
+        raise NotImplementedError
+
+    @reg.dispatch_method(reg.match_key("name"))
+    def get_default_factory(self, name):
         raise NotImplementedError
 
     @reg.dispatch_method(reg.match_key("name"))

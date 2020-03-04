@@ -6,6 +6,7 @@ from deform.widget import SelectWidget
 from morpfw.validator.field import valid_identifier
 
 from ..deform.referencewidget import ReferenceWidget
+from ..deform.vocabularywidget import VocabularyWidget
 from ..validator.reference import ReferenceValidator
 from ..validator.vocabulary import VocabularyValidator
 from .form_validator import (
@@ -56,6 +57,14 @@ class AttributeSchema(morpfw.Schema):
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
     required: typing.Optional[bool] = False
     primary_key: typing.Optional[bool] = False
+    default_factory: typing.Optional[str] = field(
+        default=None,
+        metadata={
+            "required": False,
+            "validators": [VocabularyValidator("morpcc.default_factories")],
+            "deform.widget": VocabularyWidget("morpcc.default_factories"),
+        },
+    )
     entity_uuid: typing.Optional[str] = field(
         default=None,
         metadata={

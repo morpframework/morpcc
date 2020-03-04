@@ -3,9 +3,10 @@ import morepath
 import reg
 from morepath.directive import SettingAction
 
-from .behaviorregistry import BehaviorRegistry
-from .applicationbehaviorregistry import ApplicationBehaviorRegistry
-from .portletregistry import PortletProviderRegistry, PortletRegistry
+from .registry.applicationbehavior import ApplicationBehaviorRegistry
+from .registry.behavior import BehaviorRegistry
+from .registry.default_factory import DefaultFactoryRegistry
+from .registry.portlet import PortletProviderRegistry, PortletRegistry
 
 PORTLET_FACTORY_IDS: dict = {}
 
@@ -128,10 +129,9 @@ class IndexerAction(dectate.Action):
 
     def perform(self, obj, app_class):
         app_class.get_indexer.register(
-            reg.methodify(obj),
-            model=self.model,
-            name=self.name,
+            reg.methodify(obj), model=self.model, name=self.name,
         )
+
 
 class BehaviorAction(dectate.Action):
 
@@ -148,7 +148,6 @@ class BehaviorAction(dectate.Action):
         return self.name
 
     def perform(self, obj, app_class, behavior_registry: BehaviorRegistry):
-
         def factory(name):
             return obj
 
@@ -167,17 +166,43 @@ class ApplicationBehaviorAction(dectate.Action):
     def __init__(self, name):
         self.name = name
 
-    def identifier(self, app_class, application_behavior_registry: ApplicationBehaviorRegistry):
+    def identifier(
+        self, app_class, application_behavior_registry: ApplicationBehaviorRegistry
+    ):
         return self.name
 
-    def perform(self, obj, app_class, application_behavior_registry: ApplicationBehaviorRegistry):
-
+    def perform(
+        self, obj, app_class, application_behavior_registry: ApplicationBehaviorRegistry
+    ):
         def factory(name):
             return obj
 
-        app_class.get_application_behavior_factory.register(reg.methodify(factory), name=self.name)
+        app_class.get_application_behavior_factory.register(
+            reg.methodify(factory), name=self.name
+        )
         application_behavior_registry.register_behavior(name=self.name)
 
+
+class DefaultFactoryAction(dectate.Action):
+
+    config = {"default_factory_registry": DefaultFactoryRegistry}
+
+    app_class_arg = True
+
+    depends = [SettingAction]
+
+    def __init__(self, name):
+        self.name = name
+
+    def identifier(self, app_class, default_factory_registry: DefaultFactoryRegistry):
+        return self.name
+
+    def perform(self, obj, app_class, default_factory_registry: DefaultFactoryRegistry):
+        def factory(name):
+            return obj
+
+        app_class.get_default_factory.register(reg.methodify(factory), name=self.name)
+        default_factory_registry.register(name=self.name)
 
 
 class IndexResolverAction(dectate.Action):
@@ -194,6 +219,4 @@ class IndexResolverAction(dectate.Action):
         def factory(name):
             return obj
 
-        app_class.get_index_resolver.register(
-            reg.methodify(factory), name=self.name
-        )
+        app_class.get_index_resolver.register(reg.methodify(factory), name=self.name)

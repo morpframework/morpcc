@@ -30,15 +30,21 @@ class AttributeModel(morpfw.Model):
         return DATATYPE_MAPPING[key]["type"]
 
     def field_metadata(self):
+        metadata = {}
+
+        if self["default_factory"]:
+            factory_name = self["default_factory"]
+            factory = self.request.app.config.default_factory_registry.get(
+                factory_name, self.request
+            )
+            metadata["default_factory"] = factory
 
         if self["type"] == "string":
             de = self.dictionaryelement()
             if de and de["referencedata_name"]:
-                metadata = {
-                    "deform.widget": ReferenceDataWidget(
-                        de["referencedata_name"], de["referencedata_property"]
-                    )
-                }
+                metadata["deform.widget"] = ReferenceDataWidget(
+                    de["referencedata_name"], de["referencedata_property"]
+                )
                 if not self["allow_invalid"]:
                     metadata["validators"] = [
                         ReferenceDataValidator(
@@ -47,15 +53,19 @@ class AttributeModel(morpfw.Model):
                     ]
                 return metadata
         if self["type"] == "text":
-            return {"format": "text", "deform.widget": TextAreaWidget()}
+            metadata.update({"format": "text", "deform.widget": TextAreaWidget()})
+            return metadata
         if self["type"] == "richtext":
-            return {
-                "format": "text/html",
-                "preparers": [HTMLSanitizer()],
-                "deform.widget": RichTextWidget(),
-            }
+            metadata.update(
+                {
+                    "format": "text/html",
+                    "preparers": [HTMLSanitizer()],
+                    "deform.widget": RichTextWidget(),
+                }
+            )
+            return metadata
 
-        return {}
+        return metadata
 
     def entity(self):
         typeinfo = self.request.app.config.type_registry.get_typeinfo(

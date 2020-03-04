@@ -16,6 +16,12 @@ def application_behaviors(request, name):
     return [{"value": n, "label": n} for n in registry.behaviors]
 
 
+@App.vocabulary("morpcc.default_factories")
+def default_factories(request, name):
+    registry = request.app.config.default_factory_registry
+    return [{"value": n, "label": n} for n in registry.names]
+
+
 CACHED = {}
 
 

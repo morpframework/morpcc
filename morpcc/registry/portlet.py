@@ -1,19 +1,19 @@
-from morepath.toposort import toposorted, Info
-from .util import permits
+from morepath.toposort import Info, toposorted
+
+from ..util import permits
 
 
 class PortletRegistry(object):
-
     def __init__(self):
         self._portlets = {}
         self._portlet_options = {}
 
     def register(self, portlet_factory, name, template, permission):
         self._portlets[name] = {
-            'factory': portlet_factory,
-            'template': template,
-            'name': name,
-            'permission': permission
+            "factory": portlet_factory,
+            "template": template,
+            "name": name,
+            "permission": permission,
         }
 
     def get_portlet(self, name):
@@ -22,15 +22,14 @@ class PortletRegistry(object):
 
 
 class PortletProviderRegistry(object):
-
     def __init__(self):
         self._providers = {}
 
     def register(self, provider_factory, name, permission):
         self._providers[name] = {
-            'factory': provider_factory,
-            'permission': permission,
-            'name': name
+            "factory": provider_factory,
+            "permission": permission,
+            "name": name,
         }
 
     def get_provider(self, name):
@@ -42,7 +41,6 @@ class PortletProviderRegistry(object):
 
 
 class Portlet(object):
-
     def __init__(self, name, factory, template, permission):
         self.name = name
         self.factory = factory
@@ -56,7 +54,7 @@ class Portlet(object):
             return permits(request, context, permission)
 
         if self.permission and not permits(request, context, self.permission):
-            return ''
+            return ""
 
         if self.template is None:
             assert isinstance(portletdata, str)
@@ -64,19 +62,18 @@ class Portlet(object):
         else:
             template = load_template(self.template)
             data = {
-                'permits': _permits,
-                'app': request.app,
-                'settings': request.app.settings,
-                'request': request,
-                'context': context,
-                'load_template': load_template
+                "permits": _permits,
+                "app": request.app,
+                "settings": request.app.settings,
+                "request": request,
+                "context": context,
+                "load_template": load_template,
             }
             data.update(portletdata)
             return template.render(**data)
 
 
 class PortletProvider(object):
-
     def __init__(self, factory, permission, name):
         self.name = name
         self.factory = factory
@@ -85,7 +82,7 @@ class PortletProvider(object):
     def render(self, context, request, load_template):
 
         if self.permission and not permits(request, context, self.permission):
-            return ''
+            return ""
 
         portletnames = self.factory(context, request)
 
@@ -99,4 +96,4 @@ class PortletProvider(object):
         for portlet in portlets:
             result.append(portlet.render(context, request, load_template))
 
-        return '\n'.join(result)
+        return "\n".join(result)
