@@ -7,7 +7,6 @@ from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
 from sqlalchemy import DDL, MetaData
 
 from ..applicationbehaviorassignment.path import get_collection as get_aba_collection
-from ..entity.model import EntityContentModel
 from ..entity.path import get_collection as get_dm_collection
 from ..index.model import IndexContentCollection, IndexContentModel
 from ..index.path import get_collection as get_index_collection
@@ -70,7 +69,8 @@ class ApplicationModel(morpfw.Model):
         idxcol = col.content_collection()
         existing = idxcol.search(
             rulez.and_(
-                rulez.field["application_uuid"] == model.entity().application().uuid,
+                rulez.field["application_uuid"]
+                == model.collection.__application__.uuid,
                 rulez.field["entity_uuid"] == model.entity().uuid,
                 rulez.field["entity_content_uuid"] == model.uuid,
             )

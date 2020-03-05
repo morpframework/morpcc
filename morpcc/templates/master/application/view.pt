@@ -37,14 +37,14 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
 
                     <tal:repeat repeat="entity entities">
-                        <div class="col-md-2 col-sm-3 col-xs-4" tal:define="card_icon entity['icon'] or 'database';
-                                card_icon_link request.link(entity.ui(), 'records')">
+                        <div class="col-md-2 col-sm-3 col-xs-4" tal:define="card_icon entity.__parent__['icon'] or 'database';
+                                card_icon_link request.link(entity.ui())">
                             <metal:card use-macro="load_template('master/card.pt').macros.card">
                                 <metal:body fill-slot="card_content">
                                     <h4 style="text-align:center"><a
-                                            href="${request.link(entity.ui(), 'records')}">${entity['title']}</a>
+                                            href="${request.link(entity.ui())}">${entity.__parent__['title']}</a>
                                     </h4>
-                                    <p tal:content="entity['description']"></p>
+                                    <p tal:content="entity.__parent__['description']"></p>
                                 </metal:body>
                             </metal:card>
                         </div>

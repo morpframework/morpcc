@@ -108,7 +108,9 @@ class ApplicationDatabaseSyncAdapter(object):
         content_metadata = self.context.content_metadata()
         content_metadata.clear()
         dmcol = get_dm_collection(self.request)
-        for dm in dmcol.search(rulez.field["application_uuid"] == self.context["uuid"]):
+        for dm in dmcol.search(
+            rulez.field["schema_uuid"] == self.context["schema_uuid"]
+        ):
             dc = dm.dataclass()
             tbl = dataclass_to_pgsqla(dc, content_metadata)
         upgrade_ops = UpgradeOps([])
@@ -285,7 +287,7 @@ class ApplicationNavigator(object):
         self.entity_col = get_dm_collection(request)
         self.entities = {}
         for entity in self.entity_col.search(
-            rulez.field["application_uuid"] == self.application.uuid,
+            rulez.field["schema_uuid"] == self.application["schema_uuid"],
         ):
             self.entities[entity["name"]] = entity
 
@@ -305,7 +307,7 @@ class ApplicationNavigator(object):
             "name": name,
             "title": title,
             "icon": icon,
-            "application_uuid": self.application.uuid,
+            "schema_uuid": self.application["schema_uuid"],
         }
         entity = self.entity_col.create(data, deserialize=False)
         if entity:

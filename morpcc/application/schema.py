@@ -8,7 +8,9 @@ import morpfw
 from deform.widget import TextAreaWidget
 from morpfw.validator.field import valid_identifier
 
+from ..deform.referencewidget import ReferenceWidget
 from ..deform.vocabularywidget import VocabularyWidget
+from ..validator.reference import ReferenceValidator
 from ..validator.vocabulary import VocabularyValidator
 
 
@@ -31,6 +33,15 @@ class ApplicationSchema(morpfw.Schema):
         metadata={
             "validators": [VocabularyValidator("morpcc.fa-icons")],
             "deform.widget": VocabularyWidget("morpcc.fa-icons"),
+        },
+    )
+    schema_uuid: typing.Optional[str] = field(
+        default=None,
+        metadata={
+            "format": "uuid",
+            "required": True,
+            "validators": [ReferenceValidator("morpcc.schema", "uuid")],
+            "deform.widget": ReferenceWidget("morpcc.schema", "title", "uuid"),
         },
     )
 

@@ -15,7 +15,7 @@ class Entity(morpfw.sql.Base):
     title = sa.Column(sa.String(length=1024))
     description = sa.Column(sa.Text())
     icon = sa.Column(sa.String(length=1024))
-    application_uuid = sa.Column(morpfw.sql.GUID(), index=True)
+    schema_uuid = sa.Column(morpfw.sql.GUID(), index=True)
 
 
 class EntityStorage(morpfw.SQLStorage):

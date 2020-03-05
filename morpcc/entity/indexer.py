@@ -1,23 +1,25 @@
 import re
-import deform
-from morpfw.crud.schemaconverter.common import dataclass_get_type
-from morpfw.crud.schemaconverter.dataclass2colander import \
-    dataclass_to_colander
-
-from ..app import App
-from .model import EntityContentModel
-import nltk
 import string
 
-html_tag = re.compile('<.*?>')
+import deform
+import nltk
+from morpfw.crud.schemaconverter.common import dataclass_get_type
+from morpfw.crud.schemaconverter.dataclass2colander import dataclass_to_colander
+
+from ..app import App
+from ..entitycontent.model import EntityContentModel
+
+html_tag = re.compile("<.*?>")
+
 
 def remove_html_tags(text):
-    return re.sub(html_tag, '', text)
+    return re.sub(html_tag, "", text)
+
 
 @App.indexer(model=EntityContentModel, name="title")
 def title(context, name):
     entity = context.collection.__parent__
-    application = entity.application()
+    application = context.collection.__application__
 
     return "{} > {} > {}".format(application["title"], entity["title"], context.uuid)
 
@@ -39,25 +41,27 @@ def searchabletext(context, name):
     for name, attr in entity.dataclass().__dataclass_fields__.items():
         dctype = dataclass_get_type(attr)
         if dctype["type"] == str:
-            dformat = dctype['metadata'].get('format', None)
+            dformat = dctype["metadata"].get("format", None)
             if dformat == "uuid":
                 continue
 
             value = context[name]
 
-            if dformat == 'text/html':
-               value = remove_html_tags(value)
+            if dformat == "text/html":
+                value = remove_html_tags(value)
 
             if value:
                 text.append(value.lower())
     searchabletext = " ".join(text)
-    searchabletext = searchabletext.translate(str.maketrans("", "", string.punctuation)).lower()
+    searchabletext = searchabletext.translate(
+        str.maketrans("", "", string.punctuation)
+    ).lower()
     return searchabletext
 
 
 @App.indexer(model=EntityContentModel, name="application_uuid")
 def application_uuid(context, name):
-    return context.collection.__parent__.application().uuid
+    return context.collection.__application__.uuid
 
 
 @App.indexer(model=EntityContentModel, name="entity_uuid")

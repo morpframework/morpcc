@@ -11,13 +11,9 @@ from pygments.formatters import HtmlFormatter
 from pygments.lexers import PythonLexer
 
 from ..app import App
+from ..entitycontent.modelui import EntityContentCollectionUI, EntityContentModelUI
 from ..util import dataclass_to_colander
-from .modelui import (
-    EntityCollectionUI,
-    EntityContentCollectionUI,
-    EntityContentModelUI,
-    EntityModelUI,
-)
+from .modelui import EntityCollectionUI, EntityModelUI
 
 
 @App.html(
@@ -136,6 +132,8 @@ def content_view(context, request):
                 breldata["form"] = deform.Form(formschema())
                 breldata["form_data"] = item.as_dict()
         result["backrelationships"].append(breldata)
-    result['backrelationships'] = sorted(result['backrelationships'], 
-            key=lambda x: (0 if x['single_relation'] else 1, x['name']))
+    result["backrelationships"] = sorted(
+        result["backrelationships"],
+        key=lambda x: (0 if x["single_relation"] else 1, x["name"]),
+    )
     return result

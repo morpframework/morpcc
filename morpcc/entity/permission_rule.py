@@ -1,12 +1,8 @@
 from morpfw.crud import permission as crudperm
 
 from ..app import App
-from .model import (
-    EntityCollection,
-    EntityContentCollection,
-    EntityContentModel,
-    EntityModel,
-)
+from ..entitycontent.model import EntityContentCollection, EntityContentModel
+from .model import EntityCollection, EntityModel
 from .modelui import EntityCollectionUI, EntityModelUI
 
 

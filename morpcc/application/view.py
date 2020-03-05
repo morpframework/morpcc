@@ -10,6 +10,7 @@ from pygments.lexers import PythonLexer
 
 from ..app import App
 from ..entity.path import get_collection as get_dm_collection
+from ..entitycontent.model import content_collection_factory
 from ..index.path import get_collection as get_index_collection
 from .adapters import ApplicationDatabaseSyncAdapter
 from .model import ApplicationModel
@@ -26,8 +27,11 @@ def view(context, request):
     result = default_view(context, request)
     dmcol = get_dm_collection(request)
     dbsync = ApplicationDatabaseSyncAdapter(context.model, request)
-    entities = dmcol.search(rulez.field["application_uuid"] == context.model["uuid"])
-    result["entities"] = sorted(entities, key=lambda x: x["title"])
+    entities = dmcol.search(rulez.field["schema_uuid"] == context.model["schema_uuid"])
+    entities = [
+        content_collection_factory(entity, context.model) for entity in entities
+    ]
+    result["entities"] = sorted(entities, key=lambda x: x.__parent__["title"])
     result["need_update"] = dbsync.need_update
     return result
 

@@ -14,6 +14,7 @@ class Application(morpfw.sql.Base):
     title = sa.Column(sa.String(length=1024))
     description = sa.Column(sa.Text())
     icon = sa.Column(sa.String(length=1024))
+    schema_uuid = sa.Column(morpfw.sql.GUID())
 
 
 class ApplicationStorage(morpfw.SQLStorage):

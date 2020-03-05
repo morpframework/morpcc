@@ -2,7 +2,7 @@ import rulez
 from morpcc.crud.view.listing import datatable_search
 
 from ..app import App
-from ..entity.model import EntityContentModelUI
+from ..entitycontent.model import EntityContentModelUI
 from .modelui import BackRelationshipCollectionUI, BackRelationshipModelUI
 from .path import get_model as get_backrelationship
 

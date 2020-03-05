@@ -31,15 +31,15 @@ class EntitySchema(morpfw.Schema):
         },
     )
 
-    application_uuid: typing.Optional[str] = field(
+    schema_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
             "format": "uuid",
             "required": True,
             "editable": False,
-            "validators": [ReferenceValidator("morpcc.application", "uuid")],
-            "deform.widget": ReferenceWidget("morpcc.application", "title", "uuid"),
+            "validators": [ReferenceValidator("morpcc.schema", "uuid")],
+            "deform.widget": ReferenceWidget("morpcc.schema", "title", "uuid"),
         },
     )
 
-    __unique_constraint__ = ["application_uuid", "name"]
+    __unique_constraint__ = ["schema_uuid", "name"]
