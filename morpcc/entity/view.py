@@ -11,6 +11,7 @@ from pygments.formatters import HtmlFormatter
 from pygments.lexers import PythonLexer
 
 from ..app import App
+from ..entitycontent.model import content_collection_factory
 from ..entitycontent.modelui import EntityContentCollectionUI, EntityContentModelUI
 from ..util import dataclass_to_colander
 from .modelui import EntityCollectionUI, EntityModelUI
@@ -55,7 +56,7 @@ def view(context, request):
     return result
 
 
-@App.json(model=EntityModelUI, name="term-search", permission=crudperm.View)
+@App.json(model=EntityContentCollectionUI, name="term-search", permission=crudperm.View)
 def term_search(context, request):
     value_field = request.GET.get("value_field", "").strip()
     if not value_field:
@@ -67,7 +68,7 @@ def term_search(context, request):
     if not term:
         return {}
 
-    col = context.model.content_collection()
+    col = context.collection
     objs = col.search(query={"field": term_field, "operator": "~", "value": term})
     result = {"results": []}
     for obj in objs:

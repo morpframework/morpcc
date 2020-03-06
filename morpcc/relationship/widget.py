@@ -11,19 +11,22 @@ class EntityContentReferenceWidget(SelectWidget):
     values = ()
     multiple = False
 
-    def __init__(self, entity_uuid, term_field, value_field, **kwargs):
+    def __init__(
+        self, application_uuid, entity_uuid, term_field, value_field, **kwargs
+    ):
+        self.application_uuid = application_uuid
         self.entity_uuid = entity_uuid
         self.term_field = term_field
         self.value_field = value_field
         super().__init__(**kwargs)
 
     def get_resource_search_url(self, context, request):
-        from ..entity.modelui import EntityModelUI, EntityCollectionUI
-        from ..entity.path import get_model as get_entity
-        entity = get_entity(request, self.entity_uuid)
-        colui = EntityCollectionUI(request, entity.collection)
-        mui = EntityModelUI(request, entity, colui)
-        baselink = request.link(mui, "+term-search")
+        from ..entitycontent.path import get_content_collection
+
+        col = get_content_collection(
+            request, self.application_uuid, self.entity_uuid
+        ).ui()
+        baselink = request.link(col, "+term-search")
 
         return baselink + "?term_field=%s&value_field=%s" % (
             self.term_field,
@@ -37,12 +40,11 @@ class EntityContentReferenceWidget(SelectWidget):
         return request.link(m)
 
     def get_resource(self, request, identifier):
-        from ..entity.path import _get_model_content_collection_ui
-        from ..entity.path import get_model as get_entity
+        from ..entitycontent.path import get_content_collection
 
-        entity = get_entity(request, self.entity_uuid)
-
-        col = _get_model_content_collection_ui(entity, request)
+        col = get_content_collection(
+            request, self.application_uuid, self.entity_uuid
+        ).ui()
         res = col.search(rulez.field[self.value_field] == identifier)
         if res:
             return res[0]

@@ -1,6 +1,8 @@
 import morpfw
 from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
 
+from ..relationship.validator import EntityContentReferenceValidator
+from ..relationship.widget import EntityContentReferenceWidget
 from .modelui import EntityContentCollectionUI, EntityContentModelUI
 
 
@@ -12,10 +14,6 @@ class EntityContentCollection(morpfw.Collection):
 
     def ui(self):
         return EntityContentCollectionUI(self.request, self)
-
-    @property
-    def schema(self):
-        return self.__parent__.dataclass()
 
 
 class EntityContentModel(morpfw.Model):
@@ -60,8 +58,38 @@ def content_collection_factory(entity, application):
 
     ModelUI = type("ModelUI", tuple(modelui_markers), {})
 
-    class ContentCollectionUI(EntityContentCollectionUI):
+    # set relationship widgets and validators
+    field_widgets = {}
+    field_validators = {}
+    for relname, rel in entity.relationships().items():
+        refsearch = rel.reference_search_attribute()
+        ref = rel.reference_attribute()
+        ref_field = ref["name"]
+        if refsearch:
+            refsearch_field = refsearch["name"]
+        else:
+            refsearch_field = ref["name"]
 
+        field_validators.setdefault(relname, [])
+        field_validators[relname].append(
+            EntityContentReferenceValidator(
+                application_uuid=application.uuid,
+                entity_uuid=ref["entity_uuid"],
+                attribute=ref_field,
+            )
+        )
+
+        field_widgets[relname] = EntityContentReferenceWidget(
+            application_uuid=application.uuid,
+            entity_uuid=ref["entity_uuid"],
+            term_field=refsearch_field,
+            value_field=ref_field,
+        )
+
+    dc_schema = entity.dataclass(validators=field_validators, widgets=field_widgets)
+
+    class ContentCollectionUI(EntityContentCollectionUI):
+        schema = dc_schema
         modelui_class = ModelUI
 
     collectionui_markers.append(ContentCollectionUI)
@@ -69,8 +97,8 @@ def content_collection_factory(entity, application):
     CollectionUI = type("CollectionUI", tuple(collectionui_markers), {})
 
     class ContentModel(EntityContentModel):
-        schema = entity.dataclass()
 
+        schema = dc_schema
         __path_model__ = EntityContentModel
 
         def ui(self):
@@ -81,6 +109,8 @@ def content_collection_factory(entity, application):
     Model = type("Model", tuple(model_markers), {})
 
     class ContentCollection(EntityContentCollection):
+
+        schema = dc_schema
 
         __path_model__ = EntityContentCollection
 

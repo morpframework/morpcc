@@ -1,8 +1,9 @@
 import rulez
 
 
-class EntityReferenceValidator(object):
-    def __init__(self, entity_uuid, attribute):
+class EntityContentReferenceValidator(object):
+    def __init__(self, application_uuid, entity_uuid, attribute):
+        self.application_uuid = application_uuid
         self.entity_uuid = entity_uuid
         self.attribute = attribute
 
@@ -13,9 +14,9 @@ class EntityReferenceValidator(object):
 
     def get_resource(self, request, identifier):
         from ..entity.path import get_model as get_entity
+        from ..entitycontent.path import get_content_collection
 
-        entity = get_entity(request, self.entity_uuid)
-        col = entity.content_collection()
+        col = get_content_collection(request, self.application_uuid, self.entity_uuid)
         models = col.search(rulez.field[self.attribute] == identifier)
         if models:
             return models[0]

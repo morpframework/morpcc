@@ -1,4 +1,3 @@
-import copy
 import typing
 from dataclasses import field, make_dataclass
 
@@ -15,13 +14,9 @@ from ..behaviorassignment.path import (
 from ..deform.refdatawidget import ReferenceDataWidget
 from ..deform.referencewidget import ReferenceWidget
 from ..relationship.path import get_collection as get_relationship_collection
-from ..relationship.validator import EntityReferenceValidator
-from ..relationship.widget import EntityContentReferenceWidget
 from ..validator.reference import ReferenceValidator
 from .modelui import EntityCollectionUI, EntityModelUI
 from .schema import EntitySchema
-
-ENTITY_DATACLASS_CACHE = {}
 
 
 class EntityModel(morpfw.Model):
@@ -30,11 +25,9 @@ class EntityModel(morpfw.Model):
     def ui(self):
         return EntityModelUI(self.request, self, self.collection.ui())
 
-    def dataclass(self):
-        cache = ENTITY_DATACLASS_CACHE.get(self.uuid, None)
-        if cache and not (self["modified"] > cache["modified"]):
-            return cache["dataclass"]
-
+    def dataclass(self, validators=None, widgets=None):
+        validators = validators or {}
+        widgets = widgets or {}
         attrs = []
         primary_key = []
         brels = [
@@ -53,6 +46,12 @@ class EntityModel(morpfw.Model):
                 attrmeta["index"] = True
             metadata = attr.field_metadata()
             metadata.update(attrmeta)
+            name = attr["name"]
+            if validators.get(name, []):
+                metadata.setdefault("validators", [])
+                metadata["validators"] += validators[name]
+            if widgets.get(k, None):
+                metadata["deform.widget"] = widgets[name]
             attrs.append(
                 (attr["name"], attr.datatype(), field(default=None, metadata=metadata))
             )
@@ -62,12 +61,6 @@ class EntityModel(morpfw.Model):
         for r, rel in self.relationships().items():
             refsearch = rel.reference_search_attribute()
             ref = rel.reference_attribute()
-            ref_field = ref["name"]
-            if refsearch:
-                refsearch_field = refsearch["name"]
-            else:
-                refsearch_field = ref["name"]
-
             dm = ref.entity()
 
             if refsearch:
@@ -77,16 +70,16 @@ class EntityModel(morpfw.Model):
                 "required": rel["required"],
                 "title": rel["title"],
                 "description": rel["description"],
-                "validators": [
-                    EntityReferenceValidator(entity_uuid=dm.uuid, attribute=ref_field)
-                ],
+                "validators": [],
                 "index": True,
-                "deform.widget": EntityContentReferenceWidget(
-                    entity_uuid=dm.uuid,
-                    term_field=refsearch_field,
-                    value_field=ref_field,
-                ),
             }
+
+            name = rel["name"]
+            if validators.get(name, []):
+                metadata.setdefault("validators", [])
+                metadata["validators"] += validators[name]
+            if widgets.get(name, None):
+                metadata["deform.widget"] = widgets[name]
 
             attrs.append(
                 (rel["name"], rel.datatype(), field(default=None, metadata=metadata))
@@ -106,10 +99,6 @@ class EntityModel(morpfw.Model):
         dc = make_dataclass(name, fields=attrs, bases=tuple(bases))
         if primary_key:
             dc.__unique_constraint__ = tuple(primary_key)
-        ENTITY_DATACLASS_CACHE[self.uuid] = {
-            "dataclass": dc,
-            "modified": self["modified"],
-        }
         return dc
 
     def attributes(self):
