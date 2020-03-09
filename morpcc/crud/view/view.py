@@ -6,6 +6,7 @@ import morpfw
 from morpfw.crud import permission as crudperms
 
 from ...app import App
+from ...deform.referencewidget import ReferenceWidget
 from ...util import dataclass_to_colander
 from ..model import CollectionUI, ModelUI
 
@@ -45,6 +46,12 @@ def view(context, request):
     metadataschema = dataclass_to_colander(
         morpfw.Schema, exclude_fields=["blobs", "xattrs"], request=request
     )
+    # FIXME: widget override should be part of dataclass_to_colander
+    for f in metadataschema.__all_schema_nodes__:
+        if f.name == "creator":
+            f.widget = ReferenceWidget(
+                "morpfw.pas.user", term_field="username", value_field="uuid"
+            )
     if sm:
         triggers = [
             i for i in sm._machine.get_triggers(sm.state) if not i.startswith("to_")
