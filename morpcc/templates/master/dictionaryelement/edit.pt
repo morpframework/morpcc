@@ -3,7 +3,6 @@
 
 <metal:macro use-macro="load_template('master/page.pt').macros.master">
 
-
     <body>
         <span metal:fill-slot="page-title">
             Edit: ${context.model['title']}
@@ -41,7 +40,7 @@
 
 
                             <button id="validator-add" class="btn btn-default modal-link"
-                                data-url="${request.relative_url('/attributevalidatorassignment/+modal-create?attribute_uuid=' + context.model.uuid)}">
+                                data-url="${request.relative_url('/dictionaryelementvalidatorassignment/+modal-create?dictionaryelement_uuid=' + context.model.uuid)}">
                                 Add
                             </button>
                         </div>
@@ -49,13 +48,15 @@
                 </div>
             </div>
 
+
         </div>
         <div metal:fill-slot="footer_script_slot">
             <script>
+
                 $('#validator-listing').DataTable({
                     serverSide: true,
                     processing: true,
-                    ajax: "${request.relative_url('/attributevalidatorassignment/+datatable.json?filter=attribute_uuid%3D%3D' + context.model.uuid)}",
+                    ajax: "${request.relative_url('/dictionaryelementvalidatorassignment/+datatable.json?filter=dictionaryelement_uuid%3D%3D' + context.model.uuid)}",
                     columns: [
                         { 'name': 'attributevalidator_uuid' },
                         { 'name': 'structure:buttons' }

@@ -7,7 +7,7 @@
             Site Settings
         </metal:slot>
         <metal:slot metal:fill-slot="page-body">
-            <div class="container-fluid">
+            <div class="container-fluid site-settings">
                 <tal:loop repeat="mod setting_modules">
                     <div class="col-md-3 col-sm-4 col-xs-6" tal:define="card_icon mod['icon'];
                                 card_icon_link mod['href']">

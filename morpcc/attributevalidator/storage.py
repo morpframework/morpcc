@@ -10,10 +10,11 @@ class AttributeValidator(morpfw.sql.Base):
 
     __tablename__ = "morpcc_attributevalidator"
 
+    name = sa.Column(sa.String(length=1024), index=True)
     title = sa.Column(sa.String(length=1024))
-    validator = sa.Column(sa.String(length=1024))
-    parameters = sa.Column(sa.Text())
-    attribute_uuid = sa.Column(morpfw.sql.GUID(), index=True)
+    description = sa.Column(sa.Text())
+    notes = sa.Column(sa.Text())
+    code = sa.Column(sa.Text())
 
 
 class AttributeValidatorStorage(morpfw.SQLStorage):

@@ -14,7 +14,7 @@ class DictionaryEntitySchema(morpfw.Schema):
     name: typing.Optional[str] = field(
         default=None, metadata={"required": True, "validators": [valid_identifier]}
     )
-    title: typing.Optional[str] = None
+    title: typing.Optional[str] = field(default=None, metadata={"required": True})
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
     notes: typing.Optional[str] = field(
         default=None,

@@ -43,6 +43,16 @@ def site_settings(context, request):
                 "href": request.relative_url("/referencedata/+listing"),
             },
             {
+                "title": "Manage Attribute Validators",
+                "icon": "check-circle",
+                "href": request.relative_url("/attributevalidator/+listing"),
+            },
+            {
+                "title": "Manage Data Dictionary",
+                "icon": "book",
+                "href": request.relative_url("/dictionaryentity/+listing"),
+            },
+            {
                 "title": "Manage Applications",
                 "icon": "cubes",
                 "href": request.relative_url("/application/+listing"),
@@ -56,11 +66,6 @@ def site_settings(context, request):
                 "title": "Manage Indexes",
                 "icon": "search",
                 "href": request.relative_url("/index/+listing"),
-            },
-            {
-                "title": "Manage Data Dictionary",
-                "icon": "book",
-                "href": request.relative_url("/dictionaryentity/+listing"),
             },
         ]
     }

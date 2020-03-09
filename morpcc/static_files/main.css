@@ -16,6 +16,10 @@
     text-align: center
 }
 
+.site-settings .widget_card {
+    height: 170px;
+}
+
 
 ul.msg_list li.read {
     background-color: white;
