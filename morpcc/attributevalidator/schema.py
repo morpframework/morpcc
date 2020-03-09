@@ -1,10 +1,7 @@
-#
 import typing
 from dataclasses import dataclass, field
 
 import morpfw
-
-#
 from deform.widget import TextAreaWidget
 
 from ..deform.referencewidget import ReferenceWidget
@@ -14,26 +11,25 @@ from ..validator.vocabulary import VocabularyValidator
 
 
 @dataclass
-class EntityConstraintSchema(morpfw.Schema):
+class AttributeValidatorSchema(morpfw.Schema):
 
     title: typing.Optional[str] = None
     validator: typing.Optional[str] = field(
         default=None,
         metadata={
             "required": True,
-            "validators": [VocabularyValidator("morpcc.entityvalidators")],
-            "deform.widget": VocabularyWidget("morpcc.entityvalidators"),
+            "validators": [VocabularyValidator("morpcc.attributevalidators")],
+            "deform.widget": VocabularyWidget("morpcc.attributevalidators"),
         },
     )
-    parameters: typing.Optional[str] = field(
-        default=None, metadata={"deform.widget": TextAreaWidget()}
-    )
-    entity_uuid: typing.Optional[str] = field(
+    parameters: typing.Optional[str] = field(default=None, metadata={"format": "text"})
+    attribute_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
-            "format": "uuid",
             "required": True,
-            "validators": [ReferenceValidator("morpcc.entity", "uuid")],
-            "deform.widget": ReferenceWidget("morpcc.entity", "title", "uuid"),
+            "editable": False,
+            "format": "uuid",
+            "validators": [ReferenceValidator("morpcc.attribute", "uuid")],
+            "deform.widget": ReferenceWidget("morpcc.attribute", "title", "uuid"),
         },
     )

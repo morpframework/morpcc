@@ -3,12 +3,12 @@ import morpfw.sql
 import sqlalchemy as sa
 import sqlalchemy_jsonfield as sajson
 
-from .model import EntityConstraintModel
+from .model import EntityValidatorModel
 
 
-class EntityConstraint(morpfw.sql.Base):
+class EntityValidator(morpfw.sql.Base):
 
-    __tablename__ = "morpcc_entityconstraint"
+    __tablename__ = "morpcc_entityvalidator"
 
     title = sa.Column(sa.String(length=1024))
     validator = sa.Column(sa.String(length=1024))
@@ -16,6 +16,6 @@ class EntityConstraint(morpfw.sql.Base):
     entity_uuid = sa.Column(morpfw.sql.GUID(), index=True)
 
 
-class EntityConstraintStorage(morpfw.SQLStorage):
-    model = EntityConstraintModel
-    orm_model = EntityConstraint
+class EntityValidatorStorage(morpfw.SQLStorage):
+    model = EntityValidatorModel
+    orm_model = EntityValidator

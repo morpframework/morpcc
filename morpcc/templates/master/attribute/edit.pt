@@ -42,7 +42,7 @@
 
 
                             <button id="attribute-add" class="btn btn-default modal-link"
-                                data-url="${request.relative_url('/attributeconstraint/+modal-create?attribute_uuid=' + context.model.uuid)}">
+                                data-url="${request.relative_url('/attributevalidator/+modal-create?attribute_uuid=' + context.model.uuid)}">
                                 Add
                             </button>
                         </div>
@@ -56,7 +56,7 @@
                 $('#constraint-listing').DataTable({
                     serverSide: true,
                     processing: true,
-                    ajax: "${request.relative_url('/attributeconstraint/+datatable.json?filter=attribute_uuid%3D%3D' + context.model.uuid)}",
+                    ajax: "${request.relative_url('/attributevalidator/+datatable.json?filter=attribute_uuid%3D%3D' + context.model.uuid)}",
                     columns: [
                         { 'name': 'title' },
                         { 'name': 'validator' },

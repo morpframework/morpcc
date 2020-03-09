@@ -3,12 +3,12 @@ import morpfw.sql
 import sqlalchemy as sa
 import sqlalchemy_jsonfield as sajson
 
-from .model import AttributeConstraintModel
+from .model import AttributeValidatorModel
 
 
-class AttributeConstraint(morpfw.sql.Base):
+class AttributeValidator(morpfw.sql.Base):
 
-    __tablename__ = "morpcc_attributeconstraint"
+    __tablename__ = "morpcc_attributevalidator"
 
     title = sa.Column(sa.String(length=1024))
     validator = sa.Column(sa.String(length=1024))
@@ -16,6 +16,6 @@ class AttributeConstraint(morpfw.sql.Base):
     attribute_uuid = sa.Column(morpfw.sql.GUID(), index=True)
 
 
-class AttributeConstraintStorage(morpfw.SQLStorage):
-    model = AttributeConstraintModel
-    orm_model = AttributeConstraint
+class AttributeValidatorStorage(morpfw.SQLStorage):
+    model = AttributeValidatorModel
+    orm_model = AttributeValidator
