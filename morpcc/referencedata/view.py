@@ -5,7 +5,7 @@ from morpfw.crud import permission as crudperms
 from ..app import App
 from ..referencedatakey.path import get_collection as get_refdatakey_collection
 from ..referencedataproperty.path import get_collection as get_refdataprop_collection
-from .modelui import ReferenceDataCollectionUI, ReferenceEntityUI
+from .modelui import ReferenceDataCollectionUI, ReferenceDataModelUI
 from .path import get_collection as get_refdata_collection
 
 
@@ -24,21 +24,14 @@ def export(context, request):
     result = {}
     for refdata in context.collection.search():
 
-        m = refdata
-        result[m["name"]] = {
-            "name": m["name"],
-            "description": m["description"],
-            "keys": {},
-        }
-        for k in m.referencedatakeys():
-            kdata = {"name": k["name"], "description": k["description"], "values": {}}
-
-            for v in k.referencedatavalues():
-                kdata["values"][v["name"]] = v["value"]
-
-            result[m["name"]]["keys"][k["name"]] = kdata
+        result[refdata["name"]] = refdata.export()
 
     return result
+
+
+@App.json(model=ReferenceDataModelUI, name="export", permission=crudperms.Search)
+def export_model(context, request):
+    return context.model.export()
 
 
 @App.json(

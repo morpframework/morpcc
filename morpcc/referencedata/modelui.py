@@ -1,16 +1,15 @@
-from morpcc.crud.model import ModelUI, CollectionUI
+from morpcc.crud.model import CollectionUI, ModelUI
 
 
-class ReferenceEntityUI(ModelUI):
+class ReferenceDataModelUI(ModelUI):
     pass
 
 
 class ReferenceDataCollectionUI(CollectionUI):
-    modelui_class = ReferenceEntityUI
+    modelui_class = ReferenceDataModelUI
 
     columns = [
         {"title": "Title", "name": "title"},
         {"title": "Identifier Name", "name": "name"},
         {"title": "Actions", "name": "structure:buttons"},
     ]
-

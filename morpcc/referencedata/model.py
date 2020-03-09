@@ -4,7 +4,7 @@ from ..referencedatakey.path import get_collection as get_keys_collection
 import rulez
 
 
-class ReferenceEntity(morpfw.Model):
+class ReferenceDataModel(morpfw.Model):
     schema = ReferenceDataSchema
 
     def referencedatakeys(self):
@@ -21,6 +21,7 @@ class ReferenceEntity(morpfw.Model):
         col = get_keys_collection(self.request)
         for k in col.search(rulez.field["referencedata_uuid"] == self.uuid):
             k.delete()
+
 
 class ReferenceDataCollection(morpfw.Collection):
     schema = ReferenceDataSchema

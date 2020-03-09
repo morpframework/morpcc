@@ -3,7 +3,7 @@ import morpfw.sql
 import sqlalchemy as sa
 import sqlalchemy_jsonfield as sajson
 
-from .model import ReferenceEntity
+from .model import ReferenceDataModel
 
 
 class ReferenceData(morpfw.sql.Base):
@@ -16,5 +16,5 @@ class ReferenceData(morpfw.sql.Base):
 
 
 class ReferenceDataStorage(morpfw.SQLStorage):
-    model = ReferenceEntity
+    model = ReferenceDataModel
     orm_model = ReferenceData

@@ -5,8 +5,8 @@ import morpfw
 from morpfw.validator.field import valid_identifier
 
 from ..deform.referencewidget import ReferenceWidget
-from ..validator.reference import ReferenceValidator
 from ..validator.field import valid_refdatakey
+from ..validator.reference import ReferenceValidator
 
 
 @dataclass
@@ -20,7 +20,7 @@ class ReferenceDataKeySchema(morpfw.Schema):
             "required": True,
         },
     )
-    description: typing.Optional[str] = None
+    description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
     referencedata_uuid: typing.Optional[str] = field(
         default=None,
         metadata={

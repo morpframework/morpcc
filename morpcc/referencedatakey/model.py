@@ -1,11 +1,23 @@
 import morpfw
-from .schema import ReferenceDataKeySchema
-from ..referencedataproperty.path import get_collection as get_prop_collection
 import rulez
+
+from ..referencedataproperty.path import get_collection as get_prop_collection
+from .schema import ReferenceDataKeySchema
 
 
 class ReferenceDataKeyModel(morpfw.Model):
     schema = ReferenceDataKeySchema
+
+    def export(self):
+        result = {
+            "name": self["name"],
+            "description": self["description"],
+            "values": {},
+        }
+        for v in self.referencedatavalues():
+            result["values"][v["name"]] = v["value"]
+
+        return result
 
     def referencedatavalues(self):
         col = get_prop_collection(self.request)
@@ -19,4 +31,3 @@ class ReferenceDataKeyModel(morpfw.Model):
 
 class ReferenceDataKeyCollection(morpfw.Collection):
     schema = ReferenceDataKeySchema
-

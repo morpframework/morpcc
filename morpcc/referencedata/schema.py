@@ -16,7 +16,7 @@ class ReferenceDataSchema(morpfw.Schema):
             "editable": False,
         },
     )
-    title: typing.Optional[str] = None
-    description: typing.Optional[str] = None
+    title: typing.Optional[str] = field(default=None, metadata={"required": True})
+    description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
 
     __unique_constraint__ = ["name"]

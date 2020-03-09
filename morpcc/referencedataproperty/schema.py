@@ -27,7 +27,7 @@ class ReferenceDataPropertySchema(morpfw.Schema):
         },
     )
     value: typing.Optional[str] = field(default=None, metadata={"required": True})
-    description: typing.Optional[str] = None
+    description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
     referencedatakey_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
