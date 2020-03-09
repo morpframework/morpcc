@@ -13,6 +13,7 @@ class Endpoint(morpfw.sql.Base):
     name = sa.Column(sa.String(length=1024), index=True)
     title = sa.Column(sa.String(length=1024))
     description = sa.Column(sa.Text())
+    notes = sa.Column(sa.Text())
     code = sa.Column(sa.Text())
 
 
