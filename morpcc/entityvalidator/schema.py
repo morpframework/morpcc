@@ -41,7 +41,7 @@ class EntityValidatorSchema(morpfw.Schema):
         },
     )
     code: typing.Optional[str] = field(
-        default="def validate(value):\n    return True",
+        default="def validate(data):\n    return True",
         metadata={
             "format": "text/python",
             "required": True,
