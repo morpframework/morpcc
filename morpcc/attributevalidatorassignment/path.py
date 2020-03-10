@@ -1,8 +1,16 @@
 from ..app import App
-from .model import AttributeValidatorAssignmentModel, AttributeValidatorAssignmentCollection
-# 
-from .modelui import AttributeValidatorAssignmentModelUI, AttributeValidatorAssignmentCollectionUI
-# 
+from .model import (
+    AttributeValidatorAssignmentCollection,
+    AttributeValidatorAssignmentModel,
+)
+
+#
+from .modelui import (
+    AttributeValidatorAssignmentCollectionUI,
+    AttributeValidatorAssignmentModelUI,
+)
+
+#
 from .storage import AttributeValidatorAssignmentStorage
 
 
@@ -16,39 +24,42 @@ def get_model(request, identifier):
     return col.get(identifier)
 
 
-@App.path(model=AttributeValidatorAssignmentCollection,
-          path='/api/v1/attributevalidatorassignment')
+@App.path(
+    model=AttributeValidatorAssignmentCollection,
+    path="/api/v1/attributevalidatorassignment",
+)
 def _get_collection(request):
     return get_collection(request)
 
 
-@App.path(model=AttributeValidatorAssignmentModel,
-          path='/api/v1/attributevalidatorassignment/{identifier}')
+@App.path(
+    model=AttributeValidatorAssignmentModel,
+    path="/api/v1/attributevalidatorassignment/{identifier}",
+)
 def _get_model(request, identifier):
     return get_model(request, identifier)
 
-# 
+
+#
 
 
-def get_collection_ui(request):
-    col = get_collection(request)
-    return AttributeValidatorAssignmentCollectionUI(request, col)
-
-@App.path(model=AttributeValidatorAssignmentCollectionUI,
-          path='/attributevalidatorassignment')
+@App.path(
+    model=AttributeValidatorAssignmentCollectionUI, path="/attributevalidatorassignment"
+)
 def _get_collection_ui(request):
-    return get_collection_ui(request)
+    collection = get_collection(request)
+    if collection:
+        return collection.ui()
 
 
-def get_model_ui(request, identifier):
-    col = get_collection(request)
-    model = get_model(request, identifier)
-    return AttributeValidatorAssignmentModelUI(
-        request, model,
-        AttributeValidatorAssignmentCollectionUI(request, col))
-
-@App.path(model=AttributeValidatorAssignmentModelUI,
-          path='/attributevalidatorassignment/{identifier}')
+@App.path(
+    model=AttributeValidatorAssignmentModelUI,
+    path="/attributevalidatorassignment/{identifier}",
+)
 def _get_model_ui(request, identifier):
-    return get_model_ui(request, identifier)
-# 
+    model = get_model(request, identifier)
+    if model:
+        return model.ui()
+
+#
+

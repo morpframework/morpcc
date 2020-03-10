@@ -14,5 +14,5 @@ class DictionaryEntityModel(morpfw.Model):
 class DictionaryEntityCollection(morpfw.Collection):
     schema = DictionaryEntitySchema
 
-    def ui():
+    def ui(self):
         return DictionaryEntityCollectionUI(self.request, self)

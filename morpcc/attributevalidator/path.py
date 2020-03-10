@@ -1,8 +1,8 @@
 from ..app import App
-from .model import AttributeValidatorModel, AttributeValidatorCollection
+from .model import AttributeValidatorCollection, AttributeValidatorModel
 
 #
-from .modelui import AttributeValidatorModelUI, AttributeValidatorCollectionUI
+from .modelui import AttributeValidatorCollectionUI, AttributeValidatorModelUI
 
 #
 from .storage import AttributeValidatorStorage
@@ -28,28 +28,18 @@ def _get_model(request, identifier):
     return get_model(request, identifier)
 
 
-#
-
-
-def get_collection_ui(request):
-    col = get_collection(request)
-    return AttributeValidatorCollectionUI(request, col)
-
-
 @App.path(model=AttributeValidatorCollectionUI, path="/attributevalidator")
 def _get_collection_ui(request):
-    return get_collection_ui(request)
-
-
-def get_model_ui(request, identifier):
-    col = get_collection_ui(request)
-    return col.get(identifier)
+    collection = get_collection(request)
+    if collection:
+        return collection.ui()
 
 
 @App.path(model=AttributeValidatorModelUI, path="/attributevalidator/{identifier}")
 def _get_model_ui(request, identifier):
-    return get_model_ui(request, identifier)
+    model = get_model(request, identifier)
+    if model:
+        return model.ui()
 
 
 #
-

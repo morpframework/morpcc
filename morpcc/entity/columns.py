@@ -48,14 +48,7 @@ def get_content_buttons_column(model, request, name):
 @App.structure_column(model=EntityModel, name="buttons")
 def get_buttons_column(model, request, name):
     results = ""
-    typeinfos = request.app.config.type_registry.get_typeinfos(request)
-    uiobj = None
-    for n, ti in typeinfos.items():
-        if model.__class__ == ti["model"]:
-            uiobj = ti["model_ui"](request, model, ti["collection_ui_factory"](request))
-            break
-    if uiobj is None:
-        raise ValueError("Unable to locate typeinfo for %s" % model)
+    uiobj = model.ui()
 
     buttons = [
         {

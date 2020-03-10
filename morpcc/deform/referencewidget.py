@@ -55,12 +55,17 @@ class ReferenceWidget(SelectWidget):
         return request.link(m)
 
     def get_resource(self, request, identifier):
-        typeinfo = request.app.config.type_registry.get_typeinfo(
-            name=self.resource_type, request=request
-        )
         if not (identifier or "").strip():
             return None
-        col = typeinfo["collection_ui_factory"](request)
+
+        col = request.get_collection(self.resource_type)
+        if not getattr(col, "ui", None):
+            typeinfo = request.app.config.type_registry.get_typeinfo(
+                name=self.resource_type, request=request
+            )
+            col = typeinfo["collection_ui_factory"](request)
+        else:
+            col = col.ui()
         models = col.search(rulez.field[self.value_field] == identifier)
         if models:
             return models[0]

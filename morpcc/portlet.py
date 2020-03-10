@@ -4,7 +4,6 @@ from webob.exc import HTTPUnauthorized
 
 from .app import App
 from .application.path import get_collection as get_app_collection
-from .notification.path import get_collection_ui as get_notification_collection_ui
 from .users.path import get_current_user_model_ui
 
 
@@ -42,7 +41,8 @@ def navigation_portlet(context, request):
     for typeinfo in types.values():
         if typeinfo.get("internal", False):
             continue
-        collectionui = typeinfo["collection_ui_factory"](request)
+        collection = typeinfo["collection_factory"](request)
+        collectionui = collection.ui()
         types_nav.append(
             {
                 "title": typeinfo["title"],
@@ -89,7 +89,7 @@ def topnav_portlet(context, request):
     else:
         photo_url = request.relative_url("/__static__/morpcc/img/person-icon.jpg")
 
-    notif_col = get_notification_collection_ui(request)
+    notif_col = request.get_collection("morpcc.notification").ui()
     notifs = notif_col.search(
         query=rulez.field["userid"] == request.identity.userid,
         limit=10,

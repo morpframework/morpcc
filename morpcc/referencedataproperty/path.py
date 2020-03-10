@@ -1,8 +1,8 @@
 from ..app import App
-from .model import ReferenceDataPropertyModel, ReferenceDataPropertyCollection
+from .model import ReferenceDataPropertyCollection, ReferenceDataPropertyModel
 
 #
-from .modelui import ReferenceDataPropertyModelUI, ReferenceDataPropertyCollectionUI
+from .modelui import ReferenceDataPropertyCollectionUI, ReferenceDataPropertyModelUI
 
 #
 from .storage import ReferenceDataPropertyStorage
@@ -33,30 +33,20 @@ def _get_model(request, identifier):
 #
 
 
-def get_collection_ui(request):
-    col = get_collection(request)
-    return ReferenceDataPropertyCollectionUI(request, col)
-
-
 @App.path(model=ReferenceDataPropertyCollectionUI, path="/referencedataproperty")
 def _get_collection_ui(request):
-    return get_collection_ui(request)
-
-
-def get_model_ui(request, identifier):
-    col = get_collection(request)
-    model = get_model(request, identifier)
-    return ReferenceDataPropertyModelUI(
-        request, model, ReferenceDataPropertyCollectionUI(request, col)
-    )
+    collection = get_collection(request)
+    if collection:
+        return collection.ui()
 
 
 @App.path(
     model=ReferenceDataPropertyModelUI, path="/referencedataproperty/{identifier}"
 )
 def _get_model_ui(request, identifier):
-    return get_model_ui(request, identifier)
+    model = get_model(request, identifier)
+    if model:
+        return model.ui()
 
 
 #
-

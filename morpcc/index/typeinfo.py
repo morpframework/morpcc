@@ -1,30 +1,27 @@
 from ..app import App
-from .model import IndexCollection
-from .model import IndexModel
-from .schema import IndexSchema
+from .model import IndexCollection, IndexModel
+
+#
+from .modelui import IndexCollectionUI, IndexModelUI
 from .path import get_collection, get_model
-# 
-from .modelui import IndexCollectionUI
-from .modelui import IndexModelUI
-from .path import get_collection_ui, get_model_ui
-# 
+from .schema import IndexSchema
+
+#
 
 
-@App.typeinfo(name='morpcc.index', schema=IndexSchema)
+@App.typeinfo(name="morpcc.index", schema=IndexSchema)
 def get_typeinfo(request):
     return {
-        'title': 'Index',
-        'description': 'Index type',
-        'schema': IndexSchema,
-        'collection': IndexCollection,
-        'collection_factory': get_collection,
-        'model': IndexModel,
-        'model_factory': get_model,
-        # 
-        'collection_ui': IndexCollectionUI,
-        'collection_ui_factory': get_collection_ui,
-        'model_ui': IndexModelUI,
-        'model_ui_factory': get_model_ui,
-        'internal': True
-        # 
+        "title": "Index",
+        "description": "Index type",
+        "schema": IndexSchema,
+        "collection": IndexCollection,
+        "collection_factory": get_collection,
+        "model": IndexModel,
+        "model_factory": get_model,
+        #
+        "collection_ui": IndexCollectionUI,
+        "model_ui": IndexModelUI,
+        "internal": True
+        #
     }

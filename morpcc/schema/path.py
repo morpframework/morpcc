@@ -1,7 +1,7 @@
 from ..app import App
-from .model import SchemaModel, SchemaCollection
+from .model import SchemaCollection, SchemaModel
 # 
-from .modelui import SchemaModelUI, SchemaCollectionUI
+from .modelui import SchemaCollectionUI, SchemaModelUI
 # 
 from .storage import SchemaStorage
 
@@ -27,28 +27,19 @@ def _get_collection(request):
 def _get_model(request, identifier):
     return get_model(request, identifier)
 
-# 
 
-
-def get_collection_ui(request):
-    col = get_collection(request)
-    return SchemaCollectionUI(request, col)
 
 @App.path(model=SchemaCollectionUI,
           path='/schema')
 def _get_collection_ui(request):
-    return get_collection_ui(request)
-
-
-def get_model_ui(request, identifier):
-    col = get_collection(request)
-    model = get_model(request, identifier)
-    return SchemaModelUI(
-        request, model,
-        SchemaCollectionUI(request, col))
+    collection = get_collection(request)
+    if collection:
+        return collection.ui()
 
 @App.path(model=SchemaModelUI,
           path='/schema/{identifier}')
 def _get_model_ui(request, identifier):
-    return get_model_ui(request, identifier)
+    model = get_model(request, identifier)
+    if model:
+        return model.ui()
 # 

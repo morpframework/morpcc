@@ -1,8 +1,10 @@
 from ..app import App
-from .model import SettingModel, SettingCollection
-# 
-from .modelui import SettingModelUI, SettingCollectionUI
-# 
+from .model import SettingCollection, SettingModel
+
+#
+from .modelui import SettingCollectionUI, SettingModelUI
+
+#
 from .storage import SettingStorage
 
 
@@ -16,36 +18,28 @@ def get_model(request, identifier):
     return col.get(identifier)
 
 
-@App.path(model=SettingCollection,
-          path='/api/v1/setting')
+@App.path(model=SettingCollection, path="/api/v1/setting")
 def _get_collection(request):
     return get_collection(request)
 
 
-@App.path(model=SettingModel,
-          path='/api/v1/setting/{identifier}')
+@App.path(model=SettingModel, path="/api/v1/setting/{identifier}")
 def _get_model(request, identifier):
     return get_model(request, identifier)
 
-# 
 
-
-def get_collection_ui(request):
-    col = get_collection(request)
-    return SettingCollectionUI(request, col)
-
-@App.path(model=SettingCollectionUI,
-          path='/site-settings/setting')
+@App.path(model=SettingCollectionUI, path="/site-settings/setting")
 def _get_collection_ui(request):
-    return get_collection_ui(request)
+    collection = get_collection(request)
+    if collection:
+        return collection.ui()
 
 
-def get_model_ui(request, identifier):
-    col = get_collection_ui(request)
-    return col.get(identifier)
-
-@App.path(model=SettingModelUI,
-          path='/site-settings/setting/{identifier}')
+@App.path(model=SettingModelUI, path="/site-settings/setting/{identifier}")
 def _get_model_ui(request, identifier):
-    return get_model_ui(request, identifier)
-# 
+    model = get_model(request, identifier)
+    if model:
+        return model.ui()
+
+#
+

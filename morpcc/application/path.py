@@ -18,14 +18,6 @@ def get_model(request, identifier):
     return col.get(identifier)
 
 
-def get_collection_ui(request):
-    return get_collection(request).ui()
-
-
-def get_model_ui(request, identifier):
-    return get_model(request, identifier).ui()
-
-
 @App.path(model=ApplicationCollection, path="/api/v1/application")
 def _get_collection(request):
     return get_collection(request)
@@ -39,17 +31,15 @@ def _get_model(request, identifier):
 @App.path(model=ApplicationCollectionUI, path="/application")
 def _get_collection_ui(request):
     collection = get_collection(request)
-    if not collection:
-        return None
-    return collection.ui()
+    if collection:
+        return collection.ui()
 
 
 @App.path(model=ApplicationModelUI, path="/application/{identifier}")
 def _get_model_ui(request, identifier):
     model = get_model(request, identifier)
-    if not model:
-        return None
-    return model.ui()
+    if model:
+        return model.ui()
 
 
 #

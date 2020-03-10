@@ -3,7 +3,7 @@ from .model import BehaviorAssignmentCollection, BehaviorAssignmentModel
 
 #
 from .modelui import BehaviorAssignmentCollectionUI, BehaviorAssignmentModelUI
-from .path import get_collection, get_collection_ui, get_model, get_model_ui
+from .path import get_collection, get_model
 from .schema import BehaviorAssignmentSchema
 
 #
@@ -21,9 +21,7 @@ def get_typeinfo(request):
         "model_factory": get_model,
         #
         "collection_ui": BehaviorAssignmentCollectionUI,
-        "collection_ui_factory": get_collection_ui,
         "model_ui": BehaviorAssignmentModelUI,
-        "model_ui_factory": get_model_ui,
         "internal": True
         #
     }

@@ -6,7 +6,7 @@ from .modelui import (
     EntityValidatorAssignmentCollectionUI,
     EntityValidatorAssignmentModelUI,
 )
-from .path import get_collection, get_collection_ui, get_model, get_model_ui
+from .path import get_collection, get_model
 from .schema import EntityValidatorAssignmentSchema
 
 #
@@ -26,9 +26,7 @@ def get_typeinfo(request):
         "model_factory": get_model,
         #
         "collection_ui": EntityValidatorAssignmentCollectionUI,
-        "collection_ui_factory": get_collection_ui,
         "model_ui": EntityValidatorAssignmentModelUI,
-        "model_ui_factory": get_model_ui,
         "internal": True
         #
     }

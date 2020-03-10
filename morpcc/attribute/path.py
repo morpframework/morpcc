@@ -1,8 +1,8 @@
 from ..app import App
-from .model import AttributeModel, AttributeCollection
-# 
-from .modelui import AttributeModelUI, AttributeCollectionUI
-# 
+from .model import AttributeCollection, AttributeModel
+#
+from .modelui import AttributeCollectionUI, AttributeModelUI
+#
 from .storage import AttributeStorage
 
 
@@ -16,35 +16,27 @@ def get_model(request, identifier):
     return col.get(identifier)
 
 
-@App.path(model=AttributeCollection,
-          path='/api/v1/attribute')
+@App.path(model=AttributeCollection, path="/api/v1/attribute")
 def _get_collection(request):
     return get_collection(request)
 
 
-@App.path(model=AttributeModel,
-          path='/api/v1/attribute/{identifier}')
+@App.path(model=AttributeModel, path="/api/v1/attribute/{identifier}")
 def _get_model(request, identifier):
     return get_model(request, identifier)
 
-# 
 
-
-def get_collection_ui(request):
-    col = get_collection(request)
-    return AttributeCollectionUI(request, col)
-
-@App.path(model=AttributeCollectionUI,
-          path='/attribute')
+@App.path(model=AttributeCollectionUI, path="/attribute")
 def _get_collection_ui(request):
-    return get_collection_ui(request)
+    collection = get_collection(request)
+    if collection:
+        return collection.ui()
 
-def get_model_ui(request, identifier):
-    col = get_collection_ui(request)
-    return col.get(identifier)
 
-@App.path(model=AttributeModelUI,
-          path='/attribute/{identifier}')
+@App.path(model=AttributeModelUI, path="/attribute/{identifier}")
 def _get_model_ui(request, identifier):
-    return get_model_ui(request, identifier)
-# 
+    model = get_model(request, identifier)
+    if model:
+        return model.ui()
+
+#

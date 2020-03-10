@@ -21,11 +21,16 @@ def get_buttons_column(model, request, name):
     typeinfos = request.app.config.type_registry.get_typeinfos(request)
     uiobj = None
     # FIXME: have a nicer API through typeregistry
-    for n, ti in typeinfos.items():
-        path_model = getattr(model, "__path_model__", None)
-        if model.__class__ == ti["model"] or path_model == ti["model"]:
-            uiobj = ti["model_ui"](request, model, ti["collection_ui_factory"](request))
-            break
+    if getattr(model, "ui", None):
+        uiobj = model.ui()
+    else:
+        for n, ti in typeinfos.items():
+            path_model = getattr(model, "__path_model__", None)
+            if model.__class__ == ti["model"] or path_model == ti["model"]:
+                uiobj = ti["model_ui"](
+                    request, model, ti["collection_ui_factory"](request)
+                )
+                break
 
     if uiobj is None:
         raise ValueError("Unable to locate typeinfo for %s" % model)

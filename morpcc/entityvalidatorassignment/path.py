@@ -1,8 +1,13 @@
 from ..app import App
-from .model import EntityValidatorAssignmentModel, EntityValidatorAssignmentCollection
-# 
-from .modelui import EntityValidatorAssignmentModelUI, EntityValidatorAssignmentCollectionUI
-# 
+from .model import EntityValidatorAssignmentCollection, EntityValidatorAssignmentModel
+
+#
+from .modelui import (
+    EntityValidatorAssignmentCollectionUI,
+    EntityValidatorAssignmentModelUI,
+)
+
+#
 from .storage import EntityValidatorAssignmentStorage
 
 
@@ -16,39 +21,41 @@ def get_model(request, identifier):
     return col.get(identifier)
 
 
-@App.path(model=EntityValidatorAssignmentCollection,
-          path='/api/v1/entityvalidatorassignment')
+@App.path(
+    model=EntityValidatorAssignmentCollection, path="/api/v1/entityvalidatorassignment"
+)
 def _get_collection(request):
     return get_collection(request)
 
 
-@App.path(model=EntityValidatorAssignmentModel,
-          path='/api/v1/entityvalidatorassignment/{identifier}')
+@App.path(
+    model=EntityValidatorAssignmentModel,
+    path="/api/v1/entityvalidatorassignment/{identifier}",
+)
 def _get_model(request, identifier):
     return get_model(request, identifier)
 
-# 
+
+#
 
 
-def get_collection_ui(request):
-    col = get_collection(request)
-    return EntityValidatorAssignmentCollectionUI(request, col)
-
-@App.path(model=EntityValidatorAssignmentCollectionUI,
-          path='/entityvalidatorassignment')
+@App.path(
+    model=EntityValidatorAssignmentCollectionUI, path="/entityvalidatorassignment"
+)
 def _get_collection_ui(request):
-    return get_collection_ui(request)
+    collection = get_collection(request)
+    if collection:
+        return collection.ui()
 
 
-def get_model_ui(request, identifier):
-    col = get_collection(request)
-    model = get_model(request, identifier)
-    return EntityValidatorAssignmentModelUI(
-        request, model,
-        EntityValidatorAssignmentCollectionUI(request, col))
-
-@App.path(model=EntityValidatorAssignmentModelUI,
-          path='/entityvalidatorassignment/{identifier}')
+@App.path(
+    model=EntityValidatorAssignmentModelUI,
+    path="/entityvalidatorassignment/{identifier}",
+)
 def _get_model_ui(request, identifier):
-    return get_model_ui(request, identifier)
-# 
+    model = get_model(request, identifier)
+    if model:
+        return model.ui()
+
+
+#

@@ -28,30 +28,18 @@ def _get_model(request, identifier):
     return get_model(request, identifier)
 
 
-#
-
-
-def get_collection_ui(request):
-    col = get_collection(request)
-    return DictionaryElementCollectionUI(request, col)
-
-
 @App.path(model=DictionaryElementCollectionUI, path="/dictionaryelement")
 def _get_collection_ui(request):
-    return get_collection_ui(request)
-
-
-def get_model_ui(request, identifier):
-    col = get_collection(request)
-    model = get_model(request, identifier)
-    return DictionaryElementModelUI(
-        request, model, DictionaryElementCollectionUI(request, col)
-    )
+    collection = get_collection(request)
+    if collection:
+        return collection.ui()
 
 
 @App.path(model=DictionaryElementModelUI, path="/dictionaryelement/{identifier}")
 def _get_model_ui(request, identifier):
-    return get_model_ui(request, identifier)
+    model = get_model(request, identifier)
+    if model:
+        return model.ui()
+
 
 #
-
