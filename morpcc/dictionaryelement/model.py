@@ -1,4 +1,5 @@
 import morpfw
+import rulez
 
 from .schema import DictionaryElementSchema
 

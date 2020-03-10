@@ -53,8 +53,8 @@ def valid_dictionary_element(request, data, mode=None):
 
     if data["type"] != de["type"]:
         return {
-            "field": "type",
-            "message": "Type does not match data dictionary (expected {})".format(
-                de["type"]
+            "field": "dictionaryelement_uuid",
+            "message": "Data dictionary type mismatch (expected {})".format(
+                data["type"]
             ),
         }

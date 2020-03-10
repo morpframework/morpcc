@@ -1,5 +1,6 @@
 import html
 
+import colander
 import deform
 import morepath
 from morpfw.crud import permission as crudperms
@@ -58,6 +59,7 @@ def process_edit(context, request):
         mode="edit-process",
         include_fields=context.edit_include_fields,
         exclude_fields=context.edit_exclude_fields,
+        include_schema_validators=False,
     )
     data = context.model.data.as_dict()
     controls = list(request.POST.items())
@@ -70,8 +72,18 @@ def process_edit(context, request):
         form = e
         failed = True
     if not failed:
-        context.model.update(data, deserialize=False)
-        return morepath.redirect(request.link(context))
+        try:
+            context.model.update(data, deserialize=False)
+        except ValidationError as e:
+            failed = True
+            for fe in e.field_errors:
+                node = form
+                if fe.path in form:
+                    node = form[fe.path]
+                node_error = colander.Invalid(node, fe.message)
+                node.widget.handle_error(node, node_error)
+        if not failed:
+            return morepath.redirect(request.link(context))
 
     @request.after
     def set_header(response):
