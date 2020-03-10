@@ -1,6 +1,7 @@
 from datetime import date, datetime
 
 import morpfw
+import rulez
 from deform.widget import TextAreaWidget
 
 from ..deform.refdatawidget import ReferenceDataWidget
@@ -30,7 +31,14 @@ class AttributeModel(morpfw.Model):
         return DATATYPE_MAPPING[key]["type"]
 
     def field_metadata(self):
-        metadata = {}
+        metadata = {"validators": []}
+        for v in self.validators():
+            metadata["validators"].append(v.field_validator())
+
+        de = self.dictionaryelement()
+        if de:
+            for v in de.validators():
+                metadata["validators"].append(v.field_validator())
 
         if self["default_factory"]:
             factory_name = self["default_factory"]
@@ -40,17 +48,16 @@ class AttributeModel(morpfw.Model):
             metadata["default_factory"] = factory
 
         if self["type"] == "string":
-            de = self.dictionaryelement()
             if de and de["referencedata_name"]:
                 metadata["deform.widget"] = ReferenceDataWidget(
                     de["referencedata_name"], de["referencedata_property"]
                 )
                 if not self["allow_invalid"]:
-                    metadata["validators"] = [
+                    metadata["validators"].append(
                         ReferenceDataValidator(
                             de["referencedata_name"], de["referencedata_property"]
                         )
-                    ]
+                    )
                 return metadata
         if self["type"] == "text":
             metadata.update({"format": "text", "deform.widget": TextAreaWidget()})
@@ -68,22 +75,21 @@ class AttributeModel(morpfw.Model):
         return metadata
 
     def entity(self):
-        typeinfo = self.request.app.config.type_registry.get_typeinfo(
-            name="morpcc.entity", request=self.request
-        )
-
-        col = typeinfo["collection_factory"](self.request)
+        col = self.request.get_collection("morpcc.entity")
         dm = col.get(self["entity_uuid"])
         return dm
 
     def dictionaryelement(self):
-        typeinfo = self.request.app.config.type_registry.get_typeinfo(
-            name="morpcc.dictionaryelement", request=self.request
-        )
+        col = self.request.get_collection("morpcc.dictionaryelement")
+        dictel = col.get(self["dictionaryelement_uuid"])
+        return dictel
 
-        col = typeinfo["collection_factory"](self.request)
-        dm = col.get(self["dictionaryelement_uuid"])
-        return dm
+    def validators(self):
+        col = self.request.get_collection("morpcc.attributevalidatorassignment")
+        assignments = col.search(rulez.field["attribute_uuid"] == self.uuid)
+        validators = [a.validator() for a in assignments]
+
+        return validators
 
 
 class AttributeCollection(morpfw.Collection):

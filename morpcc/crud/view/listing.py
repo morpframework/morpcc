@@ -176,7 +176,7 @@ def datatable_search(context, request, additional_filters=None):
     rows = []
     for o in objs:
         row = []
-        form = deform.Form(dataclass_to_colander(collection.schema)())
+        form = deform.Form(dataclass_to_colander(collection.schema, request=request)())
         for c in data["columns"]:
             if c["name"].startswith("structure:"):
                 row.append(context.get_structure_column(o, request, c["name"]))

@@ -80,7 +80,7 @@ class AttributeSchema(morpfw.Schema):
         metadata={
             "format": "uuid",
             "required": False,
-            "validator": [ReferenceValidator("morpcc.dictionaryelement", "uuid")],
+            "validators": [ReferenceValidator("morpcc.dictionaryelement", "uuid")],
             "deform.widget": ReferenceWidget(
                 "morpcc.dictionaryelement", "title", "uuid"
             ),

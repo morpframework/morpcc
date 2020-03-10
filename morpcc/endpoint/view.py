@@ -3,25 +3,13 @@ import traceback
 
 from morpfw.crud import permission as crudperm
 from morpfw.crud.errors import ValidationError
-from RestrictedPython import compile_restricted, safe_globals
-from RestrictedPython.Eval import default_guarded_getitem, default_guarded_getiter
-from RestrictedPython.Guards import (
-    full_write_guard,
-    guarded_iter_unpack_sequence,
-    safer_getattr,
-)
+from RestrictedPython import compile_restricted
 
 from ..app import App
+from ..restrictedpython import get_restricted_function
 from .model import EndpointModel
 from .modelui import EndpointModelUI
 from .restrictedcontext import RestrictedContext, RestrictedRequest
-
-
-def default_inplacevar(op, x, y):
-    if op == "+=":
-        return x + y
-    raise Exception("{} operator is not allowed".format(op))
-
 
 BYTECODE_CACHE = {}
 
@@ -47,21 +35,11 @@ def _handle(context, request):
         BYTECODE_CACHE[context.uuid] = cache
 
     bytecode = cache["bytecode"]
-    loc = {}
-    glob = safe_globals.copy()
-    glob["dir"] = dir
-    glob["_getiter_"] = default_guarded_getiter
-    glob["_getitem_"] = default_guarded_getitem
-    glob["_iter_unpack_sequence_"] = guarded_iter_unpack_sequence
-    glob["_write_"] = full_write_guard
-    glob["_inplacevar_"] = default_inplacevar
-    glob["getattr"] = safer_getattr
-    glob["enumerate"] = enumerate
+    handler = get_restricted_function(bytecode, "handle")
     ctx = RestrictedContext(context, request)
     req = RestrictedRequest(request)
     try:
-        exec(bytecode, glob, loc)
-        return loc["handle"](ctx, req)
+        return handler(ctx, req)
     except ValidationError as e:
         raise e
     except Exception:
@@ -83,4 +61,21 @@ def handle_GET(context, request):
     model=EndpointModel, name="handle", permission=crudperm.View, request_method="POST"
 )
 def handle_POST(context, request):
+    return _handle(context, request)
+
+
+@App.json(
+    model=EndpointModel, name="handle", permission=crudperm.View, request_method="PATCH"
+)
+def handle_PATCH(context, request):
+    return _handle(context, request)
+
+
+@App.json(
+    model=EndpointModel,
+    name="handle",
+    permission=crudperm.View,
+    request_method="DELETE",
+)
+def handle_DELETE(context, request):
     return _handle(context, request)

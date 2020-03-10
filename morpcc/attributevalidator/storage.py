@@ -13,8 +13,10 @@ class AttributeValidator(morpfw.sql.Base):
     name = sa.Column(sa.String(length=1024), index=True)
     title = sa.Column(sa.String(length=1024))
     description = sa.Column(sa.Text())
+    type = sa.Column(sa.String(length=1024))
     notes = sa.Column(sa.Text())
     code = sa.Column(sa.Text())
+    error_message = sa.Column(sa.String(length=1024))
 
 
 class AttributeValidatorStorage(morpfw.SQLStorage):

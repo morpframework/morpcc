@@ -70,24 +70,12 @@ def process_edit(context, request):
         form = e
         failed = True
     if not failed:
-        try:
-            context.model.update(data, deserialize=False)
-        except ValidationError as e:
-            failed = True
-            for form_error in e.form_errors:
-                request.notify("error", "Form Validation Error", form_error.message)
-            for field_error in e.field_errors:
-                request.notify(
-                    "error",
-                    "Field {} Validation Error".format(field_error.path),
-                    field_error.message,
-                )
-        if not failed:
-            return morepath.redirect(request.link(context))
+        context.model.update(data, deserialize=False)
+        return morepath.redirect(request.link(context))
 
     @request.after
     def set_header(response):
-        response.headers.add('X-MORP-FORM-FAILED', 'True')
+        response.headers.add("X-MORP-FORM-FAILED", "True")
 
     return {
         "page_title": "Edit %s" % html.escape(str(context.model.__class__.__name__)),

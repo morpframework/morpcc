@@ -1,5 +1,6 @@
 import html
 
+import colander
 import deform
 import morepath
 from deform.widget import HiddenWidget
@@ -61,11 +62,13 @@ def modal_create(context, request):
     request_method="POST",
 )
 def process_create(context, request):
+    default_value_fields = list(request.GET.keys())
     formschema = dataclass_to_colander(
         context.collection.schema,
         request=request,
         include_fields=context.create_include_fields,
         exclude_fields=context.create_exclude_fields,
+        hidden_fields=default_value_fields,
     )
 
     controls = list(request.POST.items())
@@ -84,17 +87,10 @@ def process_create(context, request):
             obj = context.collection.create(data, deserialize=False)
         except AlreadyExistsError as e:
             failed = True
-            request.notify("error", "Already Exists", "Object already exists")
-        except ValidationError as e:
-            failed = True
-            for form_error in e.form_errors:
-                request.notify("error", "Form Validation Error", form_error.message)
-            for field_error in e.field_errors:
-                request.notify(
-                    "error",
-                    "Field {} Validation Error".format(field_error.path),
-                    field_error.message,
-                )
+            form_error = colander.Invalid(
+                form.widget, "Object with {} already exists".format(e.message)
+            )
+            form.widget.handle_error(form, form_error)
 
         if not failed:
             return morepath.redirect(

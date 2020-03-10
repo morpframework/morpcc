@@ -2,9 +2,6 @@ import re
 
 import rulez
 
-from ..referencedata.path import get_collection as get_refdata_collection
-from ..referencedatakey.path import get_collection as get_refdatakey_collection
-
 
 class ReferenceDataValidator(object):
     def __init__(self, referencedata_name, referencedata_property):
@@ -17,13 +14,13 @@ class ReferenceDataValidator(object):
             return "Invalid reference : {}".format(value)
 
     def get_resource(self, request, identifier):
-        col = get_refdata_collection(request)
+        col = request.get_collection("morpcc.referencedata")
         refdatas = col.search(rulez.field["name"] == self.referencedata_name)
         if not refdatas:
             return None
         refdata = refdatas[0]
 
-        keycol = get_refdatakey_collection(request)
+        keycol = request.get_collection("morpcc.referencedatakey")
         keys = keycol.search(
             rulez.and_(
                 rulez.field["referencedata_uuid"] == refdata.uuid,

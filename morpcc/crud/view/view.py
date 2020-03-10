@@ -44,7 +44,7 @@ def view(context, request):
     sm = context.model.statemachine()
 
     metadataschema = dataclass_to_colander(
-        morpfw.Schema, exclude_fields=["blobs", "xattrs"], request=request
+        morpfw.Schema, request=request, exclude_fields=["blobs", "xattrs"]
     )
     # FIXME: widget override should be part of dataclass_to_colander
     for f in metadataschema.__all_schema_nodes__:
