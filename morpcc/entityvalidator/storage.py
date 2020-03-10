@@ -10,10 +10,12 @@ class EntityValidator(morpfw.sql.Base):
 
     __tablename__ = "morpcc_entityvalidator"
 
+    name = sa.Column(sa.String(length=1024), index=True)
     title = sa.Column(sa.String(length=1024))
-    validator = sa.Column(sa.String(length=1024))
-    parameters = sa.Column(sa.Text())
-    entity_uuid = sa.Column(morpfw.sql.GUID(), index=True)
+    description = sa.Column(sa.Text())
+    notes = sa.Column(sa.Text())
+    code = sa.Column(sa.Text())
+    error_message = sa.Column(sa.String(length=1024))
 
 
 class EntityValidatorStorage(morpfw.SQLStorage):

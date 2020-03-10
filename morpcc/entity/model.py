@@ -6,14 +6,8 @@ import rulez
 from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
 from sqlalchemy import MetaData
 
-from ..attribute.path import get_collection as get_attribute_collection
-from ..backrelationship.path import get_collection as get_backrelationship_collection
-from ..behaviorassignment.path import (
-    get_collection as get_behaviorassignment_collection,
-)
 from ..deform.refdatawidget import ReferenceDataWidget
 from ..deform.referencewidget import ReferenceWidget
-from ..relationship.path import get_collection as get_relationship_collection
 from ..validator.reference import ReferenceValidator
 from .modelui import EntityCollectionUI, EntityModelUI
 from .schema import EntitySchema
@@ -99,10 +93,12 @@ class EntityModel(morpfw.Model):
         dc = make_dataclass(name, fields=attrs, bases=tuple(bases))
         if primary_key:
             dc.__unique_constraint__ = tuple(primary_key)
+
+        dc.__validators__ = [ev.entity_validator() for ev in self.entity_validators()]
         return dc
 
     def attributes(self):
-        attrcol = get_attribute_collection(self.request)
+        attrcol = self.request.get_collection("morpcc.attribute")
         attrs = attrcol.search(rulez.field["entity_uuid"] == self.uuid)
         result = {}
 
@@ -133,7 +129,7 @@ class EntityModel(morpfw.Model):
         return result
 
     def relationships(self):
-        relcol = get_relationship_collection(self.request)
+        relcol = self.request.get_collection("morpcc.relationship")
         rels = relcol.search(rulez.field["entity_uuid"] == self.uuid)
 
         result = {}
@@ -144,7 +140,7 @@ class EntityModel(morpfw.Model):
         return result
 
     def backrelationships(self):
-        brelcol = get_backrelationship_collection(self.request)
+        brelcol = self.request.get_collection("morpcc.backrelationship")
         brels = brelcol.search(rulez.field["entity_uuid"] == self.uuid)
         result = {}
         for brel in brels:
@@ -153,7 +149,7 @@ class EntityModel(morpfw.Model):
         return result
 
     def behaviors(self):
-        bhvcol = get_behaviorassignment_collection(self.request)
+        bhvcol = self.request.get_collection("morpcc.behaviorassignment")
         assignments = bhvcol.search(rulez.field["entity_uuid"] == self.uuid)
         behaviors = []
         for assignment in assignments:
@@ -165,10 +161,15 @@ class EntityModel(morpfw.Model):
         return behaviors
 
     def entity_schema(self):
-        from ..schema.path import get_model as get_schema
-
-        schema = get_schema(self.request, self["schema_uuid"])
+        col = self.request.get_collection("morpcc.schema")
+        schema = col.get(self["schema_uuid"])
         return schema
+
+    def entity_validators(self):
+        col = self.request.get_collection("morpcc.entityvalidatorassignment")
+        assignments = col.search(rulez.field["entity_uuid"] == self.uuid)
+        validators = [v.validator() for v in assignments]
+        return validators
 
 
 class EntityCollection(morpfw.Collection):
