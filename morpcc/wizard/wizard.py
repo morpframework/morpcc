@@ -1,9 +1,11 @@
 import typing
-import deform
-import morpfw
-import morepath
-from morpfw.crud.errors import ValidationError
 from dataclasses import dataclass, field
+
+import deform
+import morepath
+import morpfw
+from morpfw.crud.errors import ValidationError
+
 from ..util import dataclass_to_colander
 
 
@@ -11,7 +13,7 @@ class WizardStep(object):
     title: str = ""
     template: str
     index: int
-    wizard: 'Wizard'
+    wizard: "Wizard"
 
     def __init__(self, context, request, wizard, index):
         self.context = context
@@ -23,7 +25,7 @@ class WizardStep(object):
         return load_template(self.template).macros.step
 
     def handler_macro(self, load_template):
-        return load_template(self.template).macros['step-handler']
+        return load_template(self.template).macros["step-handler"]
 
     def can_handle(self) -> bool:
         """
@@ -45,27 +47,26 @@ class WizardStep(object):
     @property
     def sessiondata(self):
         req = self.request
-        req.session.setdefault('wizard_data', {})
-        req.session['wizard_data'].setdefault(self.wizard.id, {})
-        req.session['wizard_data'][self.wizard.id].setdefault('steps', {})
-        data = req.session['wizard_data'][self.wizard.id]['steps'].get(
-            self.index, None)
+        req.session.setdefault("wizard_data", {})
+        req.session["wizard_data"].setdefault(self.wizard.id, {})
+        req.session["wizard_data"][self.wizard.id].setdefault("steps", {})
+        data = req.session["wizard_data"][self.wizard.id]["steps"].get(self.index, None)
         return data
 
     @sessiondata.setter
     def sessiondata(self, data):
         req = self.request
-        req.session.setdefault('wizard_data', {})
-        req.session['wizard_data'].setdefault(self.wizard.id, {})
-        req.session['wizard_data'][self.wizard.id].setdefault('steps', {})
-        req.session['wizard_data'][self.wizard.id]['steps'][self.index] = data
+        req.session.setdefault("wizard_data", {})
+        req.session["wizard_data"].setdefault(self.wizard.id, {})
+        req.session["wizard_data"][self.wizard.id].setdefault("steps", {})
+        req.session["wizard_data"][self.wizard.id]["steps"][self.index] = data
         req.session.save()
 
     def clear_sessiondata(self):
         req = self.request
-        req.session.setdefault('wizard_data', {})
+        req.session.setdefault("wizard_data", {})
         if self.sessiondata:
-            del req.session['wizard_data'][self.wizard.id]['steps'][self.index]
+            del req.session["wizard_data"][self.wizard.id]["steps"][self.index]
             req.session.save()
 
     def handle(self):
@@ -74,7 +75,7 @@ class WizardStep(object):
 
 class FormWizardStep(WizardStep):
 
-    template: str = 'master/wizard/form-step.pt'
+    template: str = "master/wizard/form-step.pt"
     schema: object
 
     def get_form(self, formid):
@@ -83,10 +84,10 @@ class FormWizardStep(WizardStep):
 
     def can_handle(self):
         request = self.request
-        formid = request.POST.get('__formid__')
+        formid = request.POST.get("__formid__")
         if formid:
             try:
-                step = int(formid.split('-')[-1])
+                step = int(formid.split("-")[-1])
             except:
                 return False
 
@@ -99,7 +100,7 @@ class FormWizardStep(WizardStep):
         request = self.request
         formschema = dataclass_to_colander(self.schema, request=self.request)
         controls = request.POST.items()
-        form = deform.Form(formschema(), formid=request.POST.get('__formid__'))
+        form = deform.Form(formschema(), formid=request.POST.get("__formid__"))
         failed = False
         try:
             data = form.validate(controls)
@@ -111,11 +112,7 @@ class FormWizardStep(WizardStep):
         if not failed:
             self.sessiondata = data
 
-        return {
-            'form': form,
-            'failed': failed,
-            'data': data
-        }
+        return {"form": form, "failed": failed, "data": data}
 
     def completed(self):
         try:
@@ -128,28 +125,22 @@ class FormWizardStep(WizardStep):
         result = self.process_form()
 
         # FIXME remember the value in session
-        if result['failed']:
-            return {
-                'step': self,
-                'form': result['form']
-            }
+        if result["failed"]:
+            return {"step": self, "form": result["form"]}
 
-        return {
-            'step': self,
-            'form': result['form']
-        }
+        return {"step": self, "form": result["form"]}
 
 
 class ConditionalBlockerWizardStep(WizardStep):
 
-    template: str = 'master/wizard/blocker-step.pt'
+    template: str = "master/wizard/blocker-step.pt"
 
     def can_handle(self):
         request = self.request
-        formid = request.POST.get('__formid__')
+        formid = request.POST.get("__formid__")
         if formid:
             try:
-                step = int(formid.split('-')[-1])
+                step = int(formid.split("-")[-1])
             except:
                 return False
 
@@ -168,19 +159,15 @@ class ConditionalBlockerWizardStep(WizardStep):
 
     def handle(self):
         if not self.validate():
-            return {'step': self, 'error': True}
+            return {"step": self, "error": True}
 
-        return {'step': self, 'error': False}
+        return {"step": self, "error": False}
 
 
 @dataclass
 class AgreementForm(morpfw.BaseSchema):
 
-    agree: bool = field(metadata={
-        'deform': {
-            'widget': deform.widget.CheckboxWidget()
-        }
-    })
+    agree: bool = field(metadata={"deform": {"widget": deform.widget.CheckboxWidget()}})
 
 
 class AgreementWizardStep(FormWizardStep):
@@ -189,39 +176,36 @@ class AgreementWizardStep(FormWizardStep):
     agreement_checkbox_label: str
     agreement_error_msg: str
 
-    template = 'master/wizard/agreement-step.pt'
+    template = "master/wizard/agreement-step.pt"
     schema = AgreementForm
 
     def completed(self):
         if not super().completed():
             return False
 
-        if self.sessiondata.get('agree', False):
+        if self.sessiondata.get("agree", False):
             return True
 
         return False
 
     def handle(self):
         result = self.process_form()
-        data = result['data']
+        data = result["data"]
 
-        if result['failed']:
-            return {'step': self,
-                    'failed': True}
+        if result["failed"]:
+            return {"step": self, "failed": True}
 
-        if not data['agree']:
-            return {'step': self,
-                    'failed': True}
+        if not data["agree"]:
+            return {"step": self, "failed": True}
 
-        return {'step': self,
-                'failed': False}
+        return {"step": self, "failed": False}
 
 
 class Wizard(object):
     steps: typing.List[WizardStep] = []
     style: str
 
-    def __init__(self, context, request, identifier, style='horizontal'):
+    def __init__(self, context, request, identifier, style="horizontal"):
         self.id = identifier
         self.context = context
         self.style = style
@@ -232,8 +216,8 @@ class Wizard(object):
             steps.append(s)
         self.steps = steps
 
-    def macro(self, load_template, macro='wizard'):
-        template = 'master/wizard/wizard-macros.pt'
+    def macro(self, load_template, macro="wizard"):
+        template = "master/wizard/wizard-macros.pt"
         return load_template(template).macros[macro]
 
     def finalize(self):
@@ -241,7 +225,7 @@ class Wizard(object):
         return morepath.redirect(self.request.link(self.context))
 
     def clear(self):
-        del self.request.session['wizard_data'][self.id]
+        del self.request.session["wizard_data"][self.id]
         self.request.session.save()
 
     def handle(self):
@@ -250,12 +234,13 @@ class Wizard(object):
             if step.can_handle():
                 return step.handle()
 
-        finalize_form = '%s-finalize' % self.id
-        if request.POST.get('__formid__') == finalize_form:
+        finalize_form = "%s-finalize" % self.id
+        if request.POST.get("__formid__") == finalize_form:
             for step in self.steps:
                 assert step.completed() == True
                 step.finalize()
 
             return self.finalize()
 
-        raise ValueError('Unable to process wizard form submission')
+        raise ValueError("Unable to process wizard form submission")
+

@@ -8,6 +8,7 @@ from ..deform.refdatawidget import ReferenceDataWidget
 from ..deform.richtextwidget import RichTextWidget
 from ..preparer.html import HTMLSanitizer
 from ..validator.refdata import ReferenceDataValidator
+from .modelui import AttributeCollectionUI, AttributeModelUI
 from .schema import ACCEPTED_TYPES, AttributeSchema
 
 DATATYPE_MAPPING = {
@@ -25,6 +26,9 @@ DATATYPE_MAPPING = {
 
 class AttributeModel(morpfw.Model):
     schema = AttributeSchema
+
+    def ui(self):
+        return AttributeModelUI(self.request, self, self.collection.ui())
 
     def datatype(self):
         key = self["type"]
@@ -94,3 +98,6 @@ class AttributeModel(morpfw.Model):
 
 class AttributeCollection(morpfw.Collection):
     schema = AttributeSchema
+
+    def ui(self):
+        return AttributeCollectionUI(self.request, self)

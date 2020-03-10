@@ -80,7 +80,7 @@ def process_edit(context, request):
                 node = form
                 if fe.path in form:
                     node = form[fe.path]
-                node_error = colander.Invalid(node, fe.message)
+                node_error = colander.Invalid(node.widget, fe.message)
                 node.widget.handle_error(node, node_error)
         if not failed:
             return morepath.redirect(request.link(context))

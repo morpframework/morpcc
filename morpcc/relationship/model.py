@@ -1,11 +1,15 @@
 import morpfw
 import rulez
 
+from .modelui import RelationshipCollectionUI, RelationshipModelUI
 from .schema import RelationshipSchema
 
 
 class RelationshipModel(morpfw.Model):
     schema = RelationshipSchema
+
+    def ui(self):
+        return RelationshipModelUI(self.request, self, self.collection.ui())
 
     def reference_attribute(self):
         typeinfo = self.request.app.config.type_registry.get_typeinfo(
@@ -50,3 +54,6 @@ class RelationshipModel(morpfw.Model):
 
 class RelationshipCollection(morpfw.Collection):
     schema = RelationshipSchema
+
+    def ui(self):
+        return RelationshipCollectionUI(self.request, self)

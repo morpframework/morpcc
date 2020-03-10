@@ -1,10 +1,19 @@
 import morpfw
 
+from .modelui import (
+    AttributeValidatorAssignmentCollectionUI,
+    AttributeValidatorAssignmentModelUI,
+)
 from .schema import AttributeValidatorAssignmentSchema
 
 
 class AttributeValidatorAssignmentModel(morpfw.Model):
     schema = AttributeValidatorAssignmentSchema
+
+    def ui(self):
+        return AttributeValidatorAssignmentModelUI(
+            self.request, self, self.collection.ui()
+        )
 
     def validator(self):
         col = self.request.get_collection("morpcc.attributevalidator")
@@ -17,3 +26,6 @@ class AttributeValidatorAssignmentModel(morpfw.Model):
 
 class AttributeValidatorAssignmentCollection(morpfw.Collection):
     schema = AttributeValidatorAssignmentSchema
+
+    def ui(self):
+        return AttributeValidatorAssignmentCollectionUI(self.request, self)

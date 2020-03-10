@@ -48,6 +48,11 @@ def site_settings(context, request):
                 "href": request.relative_url("/attributevalidator/+listing"),
             },
             {
+                "title": "Manage Entity Validators",
+                "icon": "check-square",
+                "href": request.relative_url("/entityvalidator/+listing"),
+            },
+            {
                 "title": "Manage Data Dictionary",
                 "icon": "book",
                 "href": request.relative_url("/dictionaryentity/+listing"),

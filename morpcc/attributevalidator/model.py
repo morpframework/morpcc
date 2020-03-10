@@ -2,6 +2,7 @@ import morpfw
 from RestrictedPython import compile_restricted
 
 from ..restrictedpython import get_restricted_function
+from .modelui import AttributeValidatorCollectionUI, AttributeValidatorModelUI
 from .schema import AttributeValidatorSchema
 
 
@@ -20,6 +21,9 @@ class AttributeValidatorModel(morpfw.Model):
 
     bytecode_cache: dict = {}
     function_cache: dict = {}
+
+    def ui(self):
+        return AttributeValidatorModelUI(self.request, self, self.collection.ui())
 
     def bytecode(self):
         cache = self.bytecode_cache.get(self.uuid, None)
@@ -53,3 +57,6 @@ class AttributeValidatorModel(morpfw.Model):
 
 class AttributeValidatorCollection(morpfw.Collection):
     schema = AttributeValidatorSchema
+
+    def ui(self):
+        return AttributeValidatorCollectionUI(self.request, self)

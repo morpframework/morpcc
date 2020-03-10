@@ -1,11 +1,16 @@
 import morpfw
-from .schema import ReferenceDataSchema
-from ..referencedatakey.path import get_collection as get_keys_collection
 import rulez
+
+from ..referencedatakey.path import get_collection as get_keys_collection
+from .modelui import ReferenceDataCollectionUI, ReferenceDataModelUI
+from .schema import ReferenceDataSchema
 
 
 class ReferenceDataModel(morpfw.Model):
     schema = ReferenceDataSchema
+
+    def ui(self):
+        return ReferenceDataModelUI(self.request, self, self.collection.ui())
 
     def referencedatakeys(self):
         col = get_keys_collection(self.request)
@@ -26,3 +31,5 @@ class ReferenceDataModel(morpfw.Model):
 class ReferenceDataCollection(morpfw.Collection):
     schema = ReferenceDataSchema
 
+    def ui(self):
+        return ReferenceDataCollectionUI(self.request, self)

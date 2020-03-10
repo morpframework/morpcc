@@ -2,11 +2,15 @@ import morpfw
 import rulez
 
 from ..referencedataproperty.path import get_collection as get_prop_collection
+from .modelui import ReferenceDataKeyCollectionUI, ReferenceDataKeyModelUI
 from .schema import ReferenceDataKeySchema
 
 
 class ReferenceDataKeyModel(morpfw.Model):
     schema = ReferenceDataKeySchema
+
+    def ui(self):
+        return ReferenceDataKeyModelUI(self.request, self, self.collection.ui())
 
     def export(self):
         result = {
@@ -31,3 +35,6 @@ class ReferenceDataKeyModel(morpfw.Model):
 
 class ReferenceDataKeyCollection(morpfw.Collection):
     schema = ReferenceDataKeySchema
+
+    def ui(self):
+        return ReferenceDataKeyCollectionUI(self.request, self)

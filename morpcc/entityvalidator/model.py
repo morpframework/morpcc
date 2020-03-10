@@ -2,6 +2,7 @@ import morpfw
 from RestrictedPython import compile_restricted
 
 from ..restrictedpython import get_restricted_function
+from .modelui import EntityValidatorCollectionUI, EntityValidatorModelUI
 from .schema import EntityValidatorSchema
 
 
@@ -20,6 +21,9 @@ class EntityValidatorModel(morpfw.Model):
 
     bytecode_cache: dict = {}
     function_cache: dict = {}
+
+    def ui(self):
+        return EntityValidatorModelUI(self.request, self, self.collection.ui())
 
     def bytecode(self):
         cache = self.bytecode_cache.get(self.uuid, None)
@@ -53,3 +57,6 @@ class EntityValidatorModel(morpfw.Model):
 
 class EntityValidatorCollection(morpfw.Collection):
     schema = EntityValidatorSchema
+
+    def ui(self):
+        return EntityValidatorCollectionUI(self.request, self)

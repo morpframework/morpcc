@@ -1,10 +1,19 @@
 import morpfw
 
+from .modelui import (
+    EntityValidatorAssignmentCollectionUI,
+    EntityValidatorAssignmentModelUI,
+)
 from .schema import EntityValidatorAssignmentSchema
 
 
 class EntityValidatorAssignmentModel(morpfw.Model):
     schema = EntityValidatorAssignmentSchema
+
+    def ui(self):
+        return EntityValidatorAssignmentModelUI(
+            self.request, self, self.collection.ui()
+        )
 
     def validator(self):
         col = self.request.get_collection("morpcc.entityvalidator")
@@ -17,3 +26,6 @@ class EntityValidatorAssignmentModel(morpfw.Model):
 
 class EntityValidatorAssignmentCollection(morpfw.Collection):
     schema = EntityValidatorAssignmentSchema
+
+    def ui(self):
+        return EntityValidatorAssignmentCollectionUI(self.request, self)

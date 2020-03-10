@@ -38,12 +38,18 @@ def _get_model(request, identifier):
 
 @App.path(model=ApplicationCollectionUI, path="/application")
 def _get_collection_ui(request):
-    return get_collection(request).ui()
+    collection = get_collection(request)
+    if not collection:
+        return None
+    return collection.ui()
 
 
 @App.path(model=ApplicationModelUI, path="/application/{identifier}")
 def _get_model_ui(request, identifier):
-    return get_model(request, identifier).ui()
+    model = get_model(request, identifier)
+    if not model:
+        return None
+    return model.ui()
 
 
 #
