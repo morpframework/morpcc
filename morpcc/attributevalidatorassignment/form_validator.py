@@ -1,4 +1,4 @@
-def valid_assignment(request, data, mode=None):
+def valid_assignment(request, schema, data, mode=None):
     attrcol = request.get_collection("morpcc.attribute")
     valcol = request.get_collection("morpcc.attributevalidator")
 

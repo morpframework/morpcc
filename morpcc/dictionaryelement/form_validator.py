@@ -1,4 +1,4 @@
-def valid_refdata(request, data, mode=None):
+def valid_refdata(request, schema, data, mode=None):
     refdataname = (data.get("referencedata_name", None) or "").strip()
     if refdataname:
         if data["type"] != "string":
