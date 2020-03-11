@@ -19,36 +19,21 @@ class EntityValidatorWrapper(object):
 class EntityValidatorModel(morpfw.Model):
     schema = EntityValidatorSchema
 
-    bytecode_cache: dict = {}
-    function_cache: dict = {}
-
     def ui(self):
         return EntityValidatorModelUI(self.request, self, self.collection.ui())
 
+    @morpfw.memoize()
     def bytecode(self):
-        cache = self.bytecode_cache.get(self.uuid, None)
-        if cache and cache["modified"] < self["modified"]:
-            return cache["bytecode"]
         bytecode = compile_restricted(
             self["code"],
             filename="<EntityValidator {}>".format(self["name"]),
             mode="exec",
         )
-        self.bytecode_cache[self.uuid] = {
-            "bytecode": bytecode,
-            "modified": self["modified"],
-        }
         return bytecode
 
+    @morpfw.memoize()
     def function(self):
-        cache = self.function_cache.get(self.uuid, None)
-        if cache and cache["modified"] < self["modified"]:
-            return cache["function"]
         function = get_restricted_function(self.bytecode(), "validate")
-        self.function_cache[self.uuid] = {
-            "function": function,
-            "modified": self["modified"],
-        }
         return function
 
     def entity_validator(self):

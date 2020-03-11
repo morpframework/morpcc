@@ -31,11 +31,5 @@ class EndpointSchema(morpfw.Schema):
             "deform.widget": RichTextWidget(),
         },
     )
-    code: typing.Optional[str] = field(
-        default="def handle(value, row):\n    return True",
-        metadata={
-            "format": "text/python",
-            "required": True,
-            "deform.widget": CodeWidget(),
-        },
-    )
+
+    __unique_constraint__ = ["name"]

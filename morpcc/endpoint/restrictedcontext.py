@@ -1,5 +1,6 @@
 from ..application.path import get_collection as get_app_col
 from ..entity.path import get_collection as get_entity_col
+from ..entitycontent.path import content_collection_factory
 
 
 class RestrictedEntityContent(object):
@@ -47,9 +48,9 @@ class RestrictedApplication(object):
     def __init__(self, application):
 
         restricted_entities = {}
-        for entity in application.entities():
+        for entity in application.application_schema().entities():
             restricted_entities[entity["name"]] = RestrictedEntityContentCollection(
-                entity.content_collection()
+                content_collection_factory(entity, application)
             )
 
         self.entities = restricted_entities

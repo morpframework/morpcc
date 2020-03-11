@@ -36,13 +36,12 @@ class ApplicationModel(morpfw.Model):
     def ui(self):
         return BehaviorableApplicationModelUI(self.request, self, self.collection.ui())
 
+    def application_schema(self):
+        col = self.request.get_collection("morpcc.schema")
+        return col.get(self["schema_uuid"])
+
     def content_metadata(self):
         return MetaData(schema=self["name"])
-
-    def entities(self):
-        col = get_dm_collection(self.request)
-        dms = col.search(rulez.field["application_uuid"] == self.uuid)
-        return dms
 
     def behaviors(self):
         return get_behaviors(self.request, self.uuid)

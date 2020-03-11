@@ -14,7 +14,6 @@ class Endpoint(morpfw.sql.Base):
     title = sa.Column(sa.String(length=1024))
     description = sa.Column(sa.Text())
     notes = sa.Column(sa.Text())
-    code = sa.Column(sa.Text())
 
 
 class EndpointStorage(morpfw.SQLStorage):
