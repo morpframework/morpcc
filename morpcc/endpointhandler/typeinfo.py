@@ -24,5 +24,6 @@ def get_typeinfo(request):
         # 
         'collection_ui': EndpointHandlerCollectionUI,
         'model_ui': EndpointHandlerModelUI,
+        'internal': True
         # 
     }
