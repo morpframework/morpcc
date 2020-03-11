@@ -1,4 +1,5 @@
 import morpfw
+import rulez
 from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
 
 from ..relationship.validator import EntityContentReferenceValidator
@@ -38,6 +39,27 @@ class EntityContentModel(morpfw.Model):
 
     def entity(self):
         return self.collection.__parent__
+
+    def resolve_relationship(self, relationship):
+        """ return the modelcontent of the relationship """
+        attr = relationship.reference_attribute()
+        entity = attr.entity()
+
+        col = content_collection_factory(entity, self.collection.__application__)
+        res = col.search(rulez.field[attr["name"]] == self[relationship["name"]])
+        if res:
+            return res[0]
+        return None
+
+    def resolve_backrelationship(self, backrelationship):
+        rel = backrelationship.reference_relationship()
+        dm = rel.entity()
+        col = content_collection_factory(dm, self.collection.__application__)
+
+        attr = rel.reference_attribute()
+
+        result = col.search(rulez.field[rel["name"]] == self[attr["name"]])
+        return result
 
 
 def content_collection_factory(entity, application):

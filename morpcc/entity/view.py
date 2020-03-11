@@ -86,7 +86,7 @@ def content_view(context, request):
     result = default_view(context, request)
     result["relationships"] = []
     for r, rel in sorted(context.model.relationships().items(), key=lambda x: x[0]):
-        relmodel = rel.resolve_relationship(context.model)
+        relmodel = context.model.resolve_relationship(rel)
         if relmodel:
             colui = EntityContentCollectionUI(request, relmodel.collection)
             relmodelui = EntityContentModelUI(request, relmodel, colui)
@@ -117,7 +117,7 @@ def content_view(context, request):
             ),
             "columns": columns,
             "column_options": json.dumps(column_options),
-            "content": brel.resolve_relationship(context.model),
+            "content": context.model.resolve_backrelationship(brel),
         }
 
         if brel["single_relation"]:

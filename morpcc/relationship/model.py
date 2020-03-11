@@ -1,6 +1,7 @@
 import morpfw
 import rulez
 
+from ..entitycontent.path import content_collection_factory
 from .modelui import RelationshipCollectionUI, RelationshipModelUI
 from .schema import RelationshipSchema
 
@@ -32,15 +33,6 @@ class RelationshipModel(morpfw.Model):
     def datatype(self):
         refattr = self.reference_attribute()
         return refattr.datatype()
-
-    def resolve_relationship(self, context):
-        """ return the modelcontent of the relationship """
-        attr = self.reference_attribute()
-        col = attr.entity().content_collection()
-        res = col.search(rulez.field[attr["name"]] == context[self["name"]])
-        if res:
-            return res[0]
-        return None
 
     def entity(self):
         typeinfo = self.request.app.config.type_registry.get_typeinfo(

@@ -31,20 +31,9 @@ class BackRelationshipModel(morpfw.Model):
         rel = col.get(self["reference_relationship_uuid"])
         return rel
 
-    def content_collection(self):
+    def reference_entity(self):
         rel = self.reference_relationship()
-        dm = rel.entity()
-        return dm.content_collection()
-
-    def resolve_relationship(self, context):
-        rel = self.reference_relationship()
-        dm = rel.entity()
-        col = dm.content_collection()
-
-        attr = rel.reference_attribute()
-
-        result = col.search(rulez.field[rel["name"]] == context[attr["name"]])
-        return result
+        return rel.entity()
 
 
 class BackRelationshipCollection(morpfw.Collection):

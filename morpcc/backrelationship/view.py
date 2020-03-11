@@ -2,7 +2,7 @@ import rulez
 from morpcc.crud.view.listing import datatable_search
 
 from ..app import App
-from ..entitycontent.model import EntityContentModelUI
+from ..entitycontent.model import EntityContentModelUI, content_collection_factory
 from .modelui import BackRelationshipCollectionUI, BackRelationshipModelUI
 from .path import get_model as get_backrelationship
 
@@ -78,7 +78,9 @@ def relationship_content_search(context, request):
     brel = get_backrelationship(request, brel_uuid)
     rel = brel.reference_relationship()
     attr = rel.reference_attribute()
-    collectionui = brel.content_collection().ui()
+    collectionui = content_collection_factory(
+        brel.reference_entity(), context.model.collection.__application__
+    ).ui()
     return datatable_search(
         collectionui,
         request,
