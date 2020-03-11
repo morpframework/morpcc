@@ -4,7 +4,6 @@ from .model import ReferenceDataPropertyModel
 
 @App.structure_column(model=ReferenceDataPropertyModel, name="buttons")
 def get_buttons_column(model, request, name):
-    results = ""
     uiobj = model.ui()
     buttons = [
         {
@@ -26,10 +25,6 @@ def get_buttons_column(model, request, name):
             "class": "modal-link",
         },
     ]
-    for button in buttons:
-        results += (
-            '<a title="%(title)s" class="%(class)s" data-url="%(data-url)s" href="#">'
-            '<i class="fa fa-%(icon)s">'
-            "</i></a> "
-        ) % button
-    return results
+
+    render = request.app.get_template("master/snippet/button-group-sm.pt")
+    return render({"buttons": buttons}, request)

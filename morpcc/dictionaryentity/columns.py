@@ -4,7 +4,6 @@ from .model import DictionaryEntityModel
 
 @App.structure_column(model=DictionaryEntityModel, name="buttons")
 def get_buttons_column(model, request, name):
-    results = ""
     uiobj = model.ui()
 
     buttons = [
@@ -36,17 +35,5 @@ def get_buttons_column(model, request, name):
             "class": "modal-link",
         },
     ]
-    for button in buttons:
-        results += '<a title="%(title)s" ' % button
-        if button.get("class", None):
-            results += 'class="%(class)s" ' % button
-        if button.get("data-url", None):
-            results += 'data-url="%(data-url)s" ' % button
-        if button.get("data-create-url", None):
-            results += 'data-create-url="%(data-create-url)s" ' % button
-        if button.get("url", None):
-            results += 'href="%(url)s"> ' % button
-        else:
-            results += 'href="#"> '
-        results += '<i class="fa fa-%(icon)s"></i></a> ' % button
-    return results
+    render = request.app.get_template("master/snippet/button-group-sm.pt")
+    return render({"buttons": buttons}, request)
