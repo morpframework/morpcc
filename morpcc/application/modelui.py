@@ -13,7 +13,6 @@ class BehaviorableApplicationModelUI(ApplicationModelUI):
 
         markers = [behavior.modelui_marker for behavior in behaviors]
         markers.append(ApplicationModelUI)
-        print(markers)
         klass = type(
             "ApplicationModelUI", tuple(markers), {"__path_model__": ApplicationModelUI}
         )

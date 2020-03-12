@@ -68,8 +68,6 @@ def process_upload(context, request):
     except deform.ValidationFailure as e:
         failed = True
         form = e
-    print('formcontrol %s' % str(controls))
-    print('formdata %s' % str(data))
     if not failed:
         for f in context.model.blob_fields:
             if f not in data:

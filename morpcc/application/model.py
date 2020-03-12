@@ -6,10 +6,8 @@ from morpfw.crud import signals
 from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
 from sqlalchemy import DDL, MetaData
 
-from ..applicationbehaviorassignment.path import get_collection as get_aba_collection
-from ..entity.path import get_collection as get_dm_collection
+from ..entitycontent.path import content_collection_factory
 from ..index.model import IndexContentCollection, IndexContentModel
-from ..index.path import get_collection as get_index_collection
 from .modelui import (
     ApplicationCollectionUI,
     ApplicationModelUI,
@@ -19,7 +17,7 @@ from .schema import ApplicationSchema
 
 
 def get_behaviors(request, app_uuid):
-    col = get_aba_collection(request)
+    col = request.get_collection("morpcc.applicationbehaviorassignment")
     assignments = col.search(rulez.field["application_uuid"] == app_uuid)
     behaviors = []
     for assignment in assignments:
@@ -39,6 +37,15 @@ class ApplicationModel(morpfw.Model):
     def application_schema(self):
         col = self.request.get_collection("morpcc.schema")
         return col.get(self["schema_uuid"])
+
+    def entity_collections(self):
+        result = {}
+        for entity in self.application_schema().entities():
+            result[entity["name"]] = {
+                "entity": entity,
+                "content_collection": content_collection_factory(entity, self),
+            }
+        return result
 
     def content_metadata(self):
         return MetaData(schema=self["name"])
@@ -64,7 +71,7 @@ class ApplicationModel(morpfw.Model):
                 offset += 1000
 
     def index_sync(self, model):
-        col = get_index_collection(self.request)
+        col = self.request.get_collection("morpcc.index")
         idxcol = col.content_collection()
         existing = idxcol.search(
             rulez.and_(
@@ -89,7 +96,7 @@ class ApplicationModel(morpfw.Model):
         return result
 
     def unindex(self, model):
-        idxcol = get_index_collection(self.request).content_collection()
+        idxcol = self.request.get_collection("morpcc.index").content_collection()
 
         existing = idxcol.search(
             rulez.and_(

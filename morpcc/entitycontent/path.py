@@ -1,6 +1,4 @@
 from ..app import App
-from ..application.path import get_model as get_application
-from ..entity.path import get_model as get_entity
 from .model import (
     EntityContentCollection,
     EntityContentModel,
@@ -12,8 +10,8 @@ from .modelui import EntityContentCollectionUI, EntityContentModelUI
 def get_content_collection(
     request, appidentifier, entityidentifier
 ) -> EntityContentCollection:
-    entity = get_entity(request, entityidentifier)
-    applicaton = get_application(request, appidentifier)
+    entity = request.get_collection("morpcc.entity").get(entityidentifier)
+    applicaton = request.get_collection("morpcc.application").get(appidentifier)
     return content_collection_factory(entity, applicaton)
 
 
