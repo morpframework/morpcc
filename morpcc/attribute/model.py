@@ -35,12 +35,25 @@ class AttributeModel(morpfw.Model):
         return DATATYPE_MAPPING[key]["type"]
 
     def field_metadata(self):
-        metadata = {"validators": []}
-        for v in self.validators():
-            metadata["validators"].append(v.field_validator())
+        metadata = {
+            "title": self["title"],
+            "description": self["description"],
+            "required": self["required"],
+            "validators": [],
+        }
+
+        if self["primary_key"]:
+            metadata["index"] = True
+
+        if self["allow_invalid"]:
+            metadata["required"] = False
+
+        if not self["allow_invalid"]:
+            for v in self.validators():
+                metadata["validators"].append(v.field_validator())
 
         de = self.dictionaryelement()
-        if de:
+        if de and not self["allow_invalid"]:
             for v in de.validators():
                 metadata["validators"].append(v.field_validator())
 

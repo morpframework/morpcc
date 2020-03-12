@@ -39,7 +39,7 @@ def _handle(context, request):
     if not handlers:
         raise HTTPNotFound()
     handler = handlers[0].function()
-    ctx = RestrictedContext(context, request)
+    ctx = RestrictedContext(request)
     req = RestrictedRequest(request)
     return handler(ctx, req)
 

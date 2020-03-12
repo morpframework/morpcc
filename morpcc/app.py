@@ -6,6 +6,7 @@ import dectate
 import morepath
 import morpfw
 import reg
+from beaker.middleware import CacheMiddleware as BeakerCacheMiddleware
 from beaker.middleware import SessionMiddleware as BeakerMiddleware
 from more.chameleon import ChameleonApp
 from morepath.publish import resolve_model
@@ -38,6 +39,10 @@ class WebAppRequest(DBSessionRequest):
     @property
     def session(self):
         return self.environ["beaker.session"]
+
+    @property
+    def cache(self):
+        return self.environ["beaker.cache"]
 
 
 class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
@@ -142,15 +147,12 @@ App.hook_auth_models(prefix="/api/v1/auth")
 
 def create_morpcc_app(settings, scan=True, **kwargs):
     application = create_app(settings=settings, scan=scan, **kwargs)
-    if (
-        settings["beaker_session"].get("session.type", None) is None
-        and settings["beaker_session"].get("session.url", None) is None
-    ):
-        settings["beaker_session"]["session.type"] = settings["configuration"].get(
-            "morpcc.beaker.session.type"
-        )
-        settings["beaker_session"]["session.url"] = settings["configuration"].get(
-            "morpcc.beaker.session.url"
-        )
+    beaker_settings = {}
 
-    return BeakerMiddleware(application, settings["beaker_session"])
+    for k, v in settings["configuration"].items():
+        if k.startswith("morpcc.beaker."):
+            beaker_settings[k[len("morpcc.beaker.") :]] = v
+
+    sessionized = BeakerMiddleware(application, beaker_settings)
+    cached = BeakerCacheMiddleware(sessionized, beaker_settings)
+    return cached

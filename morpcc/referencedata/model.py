@@ -23,8 +23,7 @@ class ReferenceDataModel(morpfw.Model):
         return result
 
     def before_delete(self):
-        col = get_keys_collection(self.request)
-        for k in col.search(rulez.field["referencedata_uuid"] == self.uuid):
+        for k in self.referencedatakeys():
             k.delete()
 
 

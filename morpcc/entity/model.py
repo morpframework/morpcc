@@ -29,17 +29,10 @@ class EntityModel(morpfw.Model):
         ]
 
         for k, attr in self.attributes().items():
-            attrmeta = {
-                "required": attr["required"],
-                "title": attr["title"],
-                "description": attr["description"],
-            }
-            if attr["primary_key"]:
-                attrmeta["index"] = True
-            if attr.uuid in brels:
-                attrmeta["index"] = True
             metadata = attr.field_metadata()
-            metadata.update(attrmeta)
+            if attr.uuid in brels:
+                metadata["index"] = True
+
             name = attr["name"]
             if validators.get(name, []):
                 metadata.setdefault("validators", [])

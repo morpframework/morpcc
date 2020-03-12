@@ -57,6 +57,6 @@ class BackRelationshipSchema(morpfw.Schema):
         },
     )
 
-    single_relation: typing.Optional[bool] = None
+    single_relation: typing.Optional[bool] = False
 
     __validators__ = [unique_attribute]

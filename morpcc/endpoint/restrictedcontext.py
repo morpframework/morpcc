@@ -66,7 +66,7 @@ class RestrictedApplication(object):
 
 
 class RestrictedContext(object):
-    def __init__(self, context, request):
+    def __init__(self, request):
 
         app_col = get_app_col(request)
         apps = app_col.search()

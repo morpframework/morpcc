@@ -1,7 +1,6 @@
 import morpfw
 import rulez
 
-from ..referencedataproperty.path import get_collection as get_prop_collection
 from .modelui import ReferenceDataKeyCollectionUI, ReferenceDataKeyModelUI
 from .schema import ReferenceDataKeySchema
 
@@ -18,19 +17,18 @@ class ReferenceDataKeyModel(morpfw.Model):
             "description": self["description"],
             "values": {},
         }
-        for v in self.referencedatavalues():
+        for v in self.referencedataproperties():
             result["values"][v["name"]] = v["value"]
 
         return result
 
-    def referencedatavalues(self):
-        col = get_prop_collection(self.request)
+    def referencedataproperties(self):
+        col = self.request.get_collection("morpcc.referencedataproperty")
         return col.search(rulez.field["referencedatakey_uuid"] == self.uuid)
 
     def before_delete(self):
-        col = get_prop_collection(self.request)
-        for v in col.search(rulez.field["referencedatakey_uuid"] == self.uuid):
-            v.delete()
+        for p in self.referencedataproperties():
+            p.delete()
 
 
 class ReferenceDataKeyCollection(morpfw.Collection):

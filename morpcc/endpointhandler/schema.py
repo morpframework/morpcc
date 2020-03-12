@@ -42,7 +42,7 @@ class EndpointHandlerSchema(morpfw.Schema):
         },
     )
     code: typing.Optional[str] = field(
-        default="def handle(value, row):\n    return True",
+        default="def handle(context, request):\n    return True",
         metadata={
             "format": "text/python",
             "required": True,
