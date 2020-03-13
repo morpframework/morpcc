@@ -13,7 +13,6 @@ class EntityContentReferenceValidator(object):
             return "Invalid reference : {}".format(value)
 
     def get_resource(self, request, identifier):
-        from ..entity.path import get_model as get_entity
         from ..entitycontent.path import get_content_collection
 
         col = get_content_collection(request, self.application_uuid, self.entity_uuid)

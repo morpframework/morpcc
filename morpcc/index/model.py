@@ -106,13 +106,14 @@ class IndexCollection(morpfw.Collection):
             (
                 "searchabletext",
                 typing.Optional[str],
-                field(default=None, metadata={"format": "fulltextindex",
-                    "index": True}),
+                field(
+                    default=None, metadata={"format": "fulltextindex", "index": True}
+                ),
             ),
         ]
 
         for idx in self.search():
-            metadata = {'index': True}
+            metadata = {"index": True}
             if idx["type"] == "fulltextindex":
                 metadata["format"] = "fulltextindex"
 
