@@ -22,6 +22,7 @@ class ReferenceDataKeyModel(morpfw.Model):
 
         return result
 
+    @morpfw.requestmemoize()
     def referencedataproperties(self):
         col = self.request.get_collection("morpcc.referencedataproperty")
         return col.search(rulez.field["referencedatakey_uuid"] == self.uuid)

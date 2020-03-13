@@ -30,10 +30,12 @@ class AttributeModel(morpfw.Model):
     def ui(self):
         return AttributeModelUI(self.request, self, self.collection.ui())
 
+    @morpfw.requestmemoize()
     def datatype(self):
         key = self["type"]
         return DATATYPE_MAPPING[key]["type"]
 
+    @morpfw.requestmemoize()
     def field_metadata(self):
         metadata = {
             "title": self["title"],
@@ -91,16 +93,19 @@ class AttributeModel(morpfw.Model):
 
         return metadata
 
+    @morpfw.requestmemoize()
     def entity(self):
         col = self.request.get_collection("morpcc.entity")
         dm = col.get(self["entity_uuid"])
         return dm
 
+    @morpfw.requestmemoize()
     def dictionaryelement(self):
         col = self.request.get_collection("morpcc.dictionaryelement")
         dictel = col.get(self["dictionaryelement_uuid"])
         return dictel
 
+    @morpfw.requestmemoize()
     def validators(self):
         col = self.request.get_collection("morpcc.attributevalidatorassignment")
         assignments = col.search(rulez.field["attribute_uuid"] == self.uuid)

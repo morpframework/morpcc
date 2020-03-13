@@ -11,6 +11,7 @@ class DictionaryEntityModel(morpfw.Model):
     def ui(self):
         return DictionaryEntityModelUI(self.request, self, self.collection.ui())
 
+    @morpfw.requestmemoize()
     def dictionary_elements(self):
         col = self.request.get_collection("morpcc.dictionaryelement")
         return col.search({rulez.field["dictionaryentity_uuid"] == self.uuid})

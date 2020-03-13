@@ -12,6 +12,7 @@ class RelationshipModel(morpfw.Model):
     def ui(self):
         return RelationshipModelUI(self.request, self, self.collection.ui())
 
+    @morpfw.requestmemoize()
     def reference_attribute(self):
         typeinfo = self.request.app.config.type_registry.get_typeinfo(
             name="morpcc.attribute", request=self.request
@@ -21,6 +22,7 @@ class RelationshipModel(morpfw.Model):
         attr = col.get(self["reference_attribute_uuid"])
         return attr
 
+    @morpfw.requestmemoize()
     def reference_search_attribute(self):
         typeinfo = self.request.app.config.type_registry.get_typeinfo(
             name="morpcc.attribute", request=self.request
@@ -30,10 +32,12 @@ class RelationshipModel(morpfw.Model):
         attr = col.get(self["reference_search_attribute_uuid"])
         return attr
 
+    @morpfw.requestmemoize()
     def datatype(self):
         refattr = self.reference_attribute()
         return refattr.datatype()
 
+    @morpfw.requestmemoize()
     def entity(self):
         typeinfo = self.request.app.config.type_registry.get_typeinfo(
             name="morpcc.entity", request=self.request

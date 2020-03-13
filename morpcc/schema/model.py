@@ -11,6 +11,7 @@ class SchemaModel(morpfw.Model):
     def ui(self):
         return SchemaModelUI(self.request, self, self.collection.ui())
 
+    @morpfw.requestmemoize()
     def entities(self):
         col = self.request.get_collection("morpcc.entity")
         return col.search(rulez.field["schema_uuid"] == self.uuid)

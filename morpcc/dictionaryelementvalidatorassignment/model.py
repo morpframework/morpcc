@@ -15,10 +15,12 @@ class DictionaryElementValidatorAssignmentModel(morpfw.Model):
             self.request, self, self.collection.ui()
         )
 
+    @morpfw.requestmemoize()
     def validator(self):
         col = self.request.get_collection("morpcc.attributevalidator")
         return col.get(self["attributevalidator_uuid"])
 
+    @morpfw.requestmemoize()
     def dictionaryelement(self):
         col = self.request.get_collection("morpcc.dictionaryelement")
         return col.get(self["dictionaryelement_uuid"])

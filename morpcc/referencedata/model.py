@@ -12,6 +12,7 @@ class ReferenceDataModel(morpfw.Model):
     def ui(self):
         return ReferenceDataModelUI(self.request, self, self.collection.ui())
 
+    @morpfw.requestmemoize()
     def referencedatakeys(self):
         col = get_keys_collection(self.request)
         return col.search(rulez.field["referencedata_uuid"] == self.uuid)

@@ -90,6 +90,7 @@ class EntityModel(morpfw.Model):
         dc.__validators__ = [ev.entity_validator() for ev in self.entity_validators()]
         return dc
 
+    @morpfw.requestmemoize()
     def attributes(self):
         attrcol = self.request.get_collection("morpcc.attribute")
         attrs = attrcol.search(rulez.field["entity_uuid"] == self.uuid)
@@ -100,6 +101,7 @@ class EntityModel(morpfw.Model):
 
         return result
 
+    @morpfw.requestmemoize()
     def effective_attributes(self):
 
         result = {}
@@ -121,6 +123,7 @@ class EntityModel(morpfw.Model):
 
         return result
 
+    @morpfw.requestmemoize()
     def relationships(self):
         relcol = self.request.get_collection("morpcc.relationship")
         rels = relcol.search(rulez.field["entity_uuid"] == self.uuid)
@@ -132,6 +135,7 @@ class EntityModel(morpfw.Model):
 
         return result
 
+    @morpfw.requestmemoize()
     def backrelationships(self):
         brelcol = self.request.get_collection("morpcc.backrelationship")
         brels = brelcol.search(rulez.field["entity_uuid"] == self.uuid)
@@ -141,6 +145,7 @@ class EntityModel(morpfw.Model):
 
         return result
 
+    @morpfw.requestmemoize()
     def behaviors(self):
         bhvcol = self.request.get_collection("morpcc.behaviorassignment")
         assignments = bhvcol.search(rulez.field["entity_uuid"] == self.uuid)
@@ -153,11 +158,13 @@ class EntityModel(morpfw.Model):
 
         return behaviors
 
+    @morpfw.requestmemoize()
     def entity_schema(self):
         col = self.request.get_collection("morpcc.schema")
         schema = col.get(self["schema_uuid"])
         return schema
 
+    @morpfw.requestmemoize()
     def entity_validators(self):
         col = self.request.get_collection("morpcc.entityvalidatorassignment")
         assignments = col.search(rulez.field["entity_uuid"] == self.uuid)

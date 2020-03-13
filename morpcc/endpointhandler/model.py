@@ -18,7 +18,7 @@ class EndpointHandlerModel(morpfw.Model):
         return EndpointHandlerModelUI(self.request, self, self.collection.ui())
 
     #
-
+    @morpfw.requestmemoize()
     def endpoint(self):
         col = self.request.get_collection("morpcc.endpoint")
         return col.get(self["endpoint_uuid"])

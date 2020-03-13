@@ -15,10 +15,12 @@ class EntityValidatorAssignmentModel(morpfw.Model):
             self.request, self, self.collection.ui()
         )
 
+    @morpfw.requestmemoize()
     def validator(self):
         col = self.request.get_collection("morpcc.entityvalidator")
         return col.get(self["entityvalidator_uuid"])
 
+    @morpfw.requestmemoize()
     def entity(self):
         col = self.request.get_collection("morpcc.entity")
         return col.get(self["entity_uuid"])

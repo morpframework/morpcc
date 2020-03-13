@@ -34,10 +34,12 @@ class ApplicationModel(morpfw.Model):
     def ui(self):
         return BehaviorableApplicationModelUI(self.request, self, self.collection.ui())
 
+    @morpfw.requestmemoize()
     def application_schema(self):
         col = self.request.get_collection("morpcc.schema")
         return col.get(self["schema_uuid"])
 
+    @morpfw.requestmemoize()
     def entity_collections(self):
         result = {}
         for entity in self.application_schema().entities():
@@ -50,6 +52,7 @@ class ApplicationModel(morpfw.Model):
     def content_metadata(self):
         return MetaData(schema=self["name"])
 
+    @morpfw.requestmemoize()
     def behaviors(self):
         return get_behaviors(self.request, self.uuid)
 
