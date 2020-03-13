@@ -1,10 +1,7 @@
 import re
 import string
 
-import deform
-import nltk
 from morpfw.crud.schemaconverter.common import dataclass_get_type
-from morpfw.crud.schemaconverter.dataclass2colander import dataclass_to_colander
 
 from ..app import App
 from ..entitycontent.model import EntityContentModel
@@ -65,7 +62,7 @@ def application_uuid(context, name):
 
 
 @App.indexer(model=EntityContentModel, name="entity_uuid")
-def entity_content_uuid(context, name):
+def entity_uuid(context, name):
     return context.collection.__parent__.uuid
 
 

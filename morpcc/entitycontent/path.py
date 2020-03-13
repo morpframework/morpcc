@@ -31,7 +31,7 @@ def _get_collection(request, identifier, entityidentifier):
     model=EntityContentModel,
     path="/api/v1/application/{identifier}/entity/{entityidentifier}/records/{recordidentifier}",
     variables=lambda obj: {
-        "identifier": obj.__application__.identifier,
+        "identifier": obj.collection.__application__.identifier,
         "entityidentifier": obj.collection.__parent__.identifier,
         "recordidentifier": obj.identifier,
     },
