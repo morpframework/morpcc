@@ -61,6 +61,23 @@ class EntityContentModel(morpfw.Model):
         result = col.search(rulez.field[rel["name"]] == self[attr["name"]])
         return result
 
+    @morpfw.requestmemoize()
+    def json(self):
+        result = self.base_json()
+        for name, rel in self.relationships().items():
+            item = self.resolve_relationship(rel)
+            result[name] = item.base_json()
+        for name, brel in self.backrelationships().items():
+            items = self.resolve_backrelationship(brel)
+            if brel["single_relation"]:
+                if items:
+                    result[name] = items[0].base_json()
+                else:
+                    result[name] = {}
+            else:
+                result[name] = [item.base_json() for item in items]
+        return result
+
 
 def content_collection_factory(entity, application):
     behaviors = entity.behaviors()
