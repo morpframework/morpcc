@@ -9,7 +9,8 @@ import morepath
 import rulez
 from boolean.boolean import ParseError
 from morpfw.crud import permission as crudperms
-from morpfw.crud.schemaconverter.dataclass2colander import dataclass_to_colander
+from morpfw.crud.schemaconverter.dataclass2colander import \
+    dataclass_to_colander
 
 from ...app import App
 from ...permission import ViewHome
@@ -113,7 +114,30 @@ def _parse_dtdata(data):
     return result
 
 
-def datatable_search(context, request, additional_filters=None):
+def _dt_result_render(context, request, columns, objs):
+    rows = []
+    collection = context.collection
+    for o in objs:
+        row = []
+        form = deform.Form(dataclass_to_colander(collection.schema, request=request)())
+        for c in columns:
+            if c["name"].startswith("structure:"):
+                row.append(context.get_structure_column(o, request, c["name"]))
+            else:
+                field = form[c["name"]]
+                value = o.data[c["name"]]
+                if value is None:
+                    value = colander.null
+                row.append(
+                    field.render(value, readonly=True, request=request, context=context)
+                )
+        rows.append(row)
+    return rows
+
+
+def datatable_search(
+    context, request, additional_filters=None, renderer=_dt_result_render
+):
     collection = context.collection
     data = list(request.GET.items())
     data = _parse_dtdata(data)
@@ -173,22 +197,8 @@ def datatable_search(context, request, additional_filters=None):
         )
     except NotImplementedError:
         total_filtered = total
-    rows = []
-    for o in objs:
-        row = []
-        form = deform.Form(dataclass_to_colander(collection.schema, request=request)())
-        for c in data["columns"]:
-            if c["name"].startswith("structure:"):
-                row.append(context.get_structure_column(o, request, c["name"]))
-            else:
-                field = form[c["name"]]
-                value = o.data[c["name"]]
-                if value is None:
-                    value = colander.null
-                row.append(
-                    field.render(value, readonly=True, request=request, context=context)
-                )
-        rows.append(row)
+
+    rows = renderer(context, request, data["columns"], objs)
     return {
         "draw": data["draw"],
         "recordsTotal": total[0]["count"],

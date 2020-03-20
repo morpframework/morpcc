@@ -1,5 +1,4 @@
 import rulez
-from morpcc.crud.view.listing import datatable_search
 
 from ..app import App
 from ..entitycontent.model import EntityContentModelUI, content_collection_factory
@@ -67,22 +66,3 @@ def _relationship_search(context, request):
 @App.json(model=BackRelationshipCollectionUI, name="relationship-search")
 def relationship_search(context, request):
     return _relationship_search(context, request)
-
-
-@App.json(model=EntityContentModelUI, name="backrelationship-search.json")
-def relationship_content_search(context, request):
-    brel_uuid = request.GET.get("backrelationship_uuid", "").strip()
-    if not brel_uuid:
-        return {}
-
-    brel = get_backrelationship(request, brel_uuid)
-    rel = brel.reference_relationship()
-    attr = rel.reference_attribute()
-    collectionui = content_collection_factory(
-        brel.reference_entity(), context.model.collection.__application__
-    ).ui()
-    return datatable_search(
-        collectionui,
-        request,
-        additional_filters=rulez.field[rel["name"]] == context.model[attr["name"]],
-    )

@@ -81,11 +81,19 @@ class EntityContentModel(morpfw.Model):
 
 def content_collection_factory(entity, application):
     behaviors = entity.behaviors()
-
     model_markers = []
     modelui_markers = []
     collection_markers = []
     collectionui_markers = []
+
+    for appbehavior in application.behaviors():
+        entity_behaviors = getattr(appbehavior, "entity_behaviors", {})
+        entity_behavior = entity_behaviors.get(entity["name"], None)
+        if entity_behavior:
+            model_markers.append(entity_behavior.model_marker)
+            modelui_markers.append(entity_behavior.modelui_marker)
+            collection_markers.append(entity_behavior.collection_marker)
+            collectionui_markers.append(entity_behavior.collectionui_marker)
 
     for behavior in behaviors:
         model_markers.append(behavior.model_marker)

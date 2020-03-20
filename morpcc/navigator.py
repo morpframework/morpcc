@@ -16,27 +16,11 @@ from .referencedataproperty.path import get_collection as get_refdataprop_collec
 from .relationship.path import get_collection as get_rel_collection
 
 
-def navmemoize(method):
-    def NavigatorMemoizeWrapper(self, *args):
-        klass = self.__class__
-        if getattr(klass, "__memoize__", None) is None:
-            klass.__memoize__ = {}
-        cachemgr = klass.__memoize__
-        key = hash((klass, method, args))
-        cache = cachemgr.get(key, None)
-        if cache:
-            return cache
-        result = method(self, *args)
-        cachemgr[key] = result
-        return result
-
-
 class AttributesBrowser(object):
     def __init__(self, entity, request):
         self.entity = entity
         self.col = get_attr_collection(request)
 
-    @navmemoize
     def __getitem__(self, key):
         attrs = self.col.search(
             rulez.and_(
@@ -168,7 +152,6 @@ class EntityContentCollectionBrowser(object):
         self.application = application
         self.collection = request.get_collection("morpcc.entity")
 
-    @navmemoize
     def __getitem__(self, key):
         items = self.collection.search(rulez.field["name"] == key)
         if items:
@@ -185,7 +168,6 @@ class ApplicationNavigator(object):
         self.request = request
         self.entities = EntityContentCollectionBrowser(request, application)
 
-    @navmemoize
     def __getitem__(self, key):
         return self.entities[key]
 
@@ -211,7 +193,6 @@ class RefDataKeyNavigator(object):
         prop = self.prop_col.create(data, deserialize=False)
         return prop
 
-    @navmemoize
     def __getitem__(self, key):
         props = self.prop_col.search(
             rulez.and_(
@@ -249,7 +230,6 @@ class RefDataNavigator(object):
             return RefDataKeyNavigator(key, self.request)
         return None
 
-    @navmemoize
     def __getitem__(self, key) -> RefDataKeyNavigator:
         keys = self.key_col.search(
             rulez.and_(
@@ -295,7 +275,6 @@ class DictionaryEntityNavigator(object):
         el = self.element_col.create(data, deserialize=False)
         return el
 
-    @navmemoize
     def __getitem__(self, key):
         elements = self.element_col.search(
             rulez.and_(
@@ -321,7 +300,6 @@ class DataDictionaryBrowser(object):
         self.request = request
         self.dictentity_col = get_dent_collection(request)
 
-    @navmemoize
     def __getitem__(self, key):
         dents = self.dictentity_col.search(rulez.field["name"] == key)
         if dents:
@@ -338,7 +316,6 @@ class EntityBrowser(object):
         self.request = request
         self.collection = request.get_collection("morpcc.entity")
 
-    @navmemoize
     def __getitem__(self, key):
         items = self.collection.search(
             rulez.and_(
@@ -383,7 +360,6 @@ class SchemaNavigator(object):
     def keys(self):
         return self.entities.keys()
 
-    @navmemoize
     def __getitem__(self, key):
         return self.entities[key]
 
@@ -393,7 +369,6 @@ class SchemaBrowser(object):
         self.request = request
         self.collection = request.get_collection("morpcc.schema")
 
-    @navmemoize
     def __getitem__(self, key):
         items = self.collection.search(rulez.field["name"] == key)
         if items:
@@ -409,7 +384,6 @@ class ApplicationBrowser(object):
         self.request = request
         self.collection = request.get_collection("morpcc.application")
 
-    @navmemoize
     def __getitem__(self, key):
         items = self.collection.search(rulez.field["name"] == key)
         if items:
