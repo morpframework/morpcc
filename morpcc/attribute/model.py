@@ -101,9 +101,25 @@ class AttributeModel(morpfw.Model):
 
     @morpfw.requestmemoize()
     def dictionaryelement(self):
+        if not self["dictionaryelement_uuid"]:
+            return None
         col = self.request.get_collection("morpcc.dictionaryelement")
         dictel = col.get(self["dictionaryelement_uuid"])
         return dictel
+
+    @morpfw.requestmemoize()
+    def referencedata(self):
+        de = self.dictionaryelement()
+        if de:
+            return de.referencedata()
+        return None
+
+    @morpfw.requestmemoize()
+    def referencedata_resolve(self, key):
+        de = self.dictionaryelement()
+        if de:
+            return de.referencedata_resolve(key)
+        return None
 
     @morpfw.requestmemoize()
     def validators(self):

@@ -17,6 +17,19 @@ class ReferenceDataModel(morpfw.Model):
         col = get_keys_collection(self.request)
         return col.search(rulez.field["referencedata_uuid"] == self.uuid)
 
+    @morpfw.requestmemoize()
+    def lookup_key(self, key):
+        col = self.request.get_collection("morpcc.referencedatakey")
+        res = col.search(
+            rulez.and_(
+                rulez.field["referencedata_uuid"] == self.uuid,
+                rulez.field["name"] == key,
+            )
+        )
+        if res:
+            return res[0]
+        return None
+
     def export(self):
         result = {"name": self["name"], "description": self["description"], "keys": {}}
         for k in self.referencedatakeys():

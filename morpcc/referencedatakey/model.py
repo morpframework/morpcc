@@ -27,6 +27,19 @@ class ReferenceDataKeyModel(morpfw.Model):
         col = self.request.get_collection("morpcc.referencedataproperty")
         return col.search(rulez.field["referencedatakey_uuid"] == self.uuid)
 
+    @morpfw.requestmemoize()
+    def lookup_property(self, prop):
+        col = self.request.get_collection("morpcc.referencedataproperty")
+        res = col.search(
+            rulez.and_(
+                rulez.field["referencedatakey_uuid"] == self.uuid,
+                rulez.field["name"] == prop,
+            )
+        )
+        if res:
+            return res[0]
+        return None
+
     def before_delete(self):
         for p in self.referencedataproperties():
             p.delete()

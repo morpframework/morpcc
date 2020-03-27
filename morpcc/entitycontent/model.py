@@ -16,6 +16,12 @@ class EntityContentCollection(morpfw.Collection):
     def ui(self):
         return EntityContentCollectionUI(self.request, self)
 
+    def entity(self):
+        return self.__parent__
+
+    def application(self):
+        return self.__application__
+
 
 class EntityContentModel(morpfw.Model):
     @property

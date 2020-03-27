@@ -23,6 +23,29 @@ class DictionaryElementModel(morpfw.Model):
         assignments = col.search(rulez.field["dictionaryelement_uuid"] == self.uuid)
         return assignments
 
+    @morpfw.requestmemoize()
+    def referencedata(self):
+        if not self["referencedata_name"]:
+            return None
+        col = self.request.get_collection("morpcc.referencedata")
+        res = col.search(rulez.field["name"] == self["referencedata_name"])
+        if res:
+            return res[0]
+        return None
+
+    @morpfw.requestmemoize()
+    def referencedata_resolve(self, key):
+        refdata = self.referencedata()
+        if not refdata:
+            return None
+        rdkey = refdata.lookup_key(key)
+        if not rdkey:
+            return None
+        rdprop = rdkey.lookup_property(self["referencedata_property"])
+        if not rdprop:
+            return None
+        return rdprop["value"]
+
     def before_delete(self):
         for va in self.validator_assignments():
             va.delete()

@@ -40,6 +40,10 @@ class ApplicationModel(morpfw.Model):
         return col.get(self["schema_uuid"])
 
     @morpfw.requestmemoize()
+    def entities(self):
+        return self.application_schema().entities()
+
+    @morpfw.requestmemoize()
     def entity_collections(self):
         result = {}
         for entity in self.application_schema().entities():
