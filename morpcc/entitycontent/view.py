@@ -125,7 +125,7 @@ def validate_form(context, request, form, form_data):
 
     for validator in entity.entity_validators():
         validate = validator.function()
-        if not validate(form_data):
+        if not validate(context.validation_dict()):
             form_errors.append(validator["error_message"])
 
     if form_errors:

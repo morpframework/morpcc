@@ -1,3 +1,5 @@
+import logging
+
 import six
 
 from RestrictedPython import compile_restricted
@@ -9,6 +11,9 @@ from RestrictedPython.Guards import (
     guarded_iter_unpack_sequence,
     safer_getattr,
 )
+from RestrictedPython.PrintCollector import PrintCollector
+
+log = logging.getLogger("morpcc.restrictedpython")
 
 
 def default_inplacevar(op, x, y):
@@ -52,6 +57,11 @@ class ImportGuard(object):
         return self.app.get_restricted_module(name)
 
 
+class Print(PrintCollector):
+    def _call_print(self, *objects, **kwargs):
+        log.info(" ".join(objects))
+
+
 safe_builtins = orig_safe_builtins.copy()
 safe_globals = orig_safe_globals.copy()
 safe_globals["dir"] = dir
@@ -63,6 +73,7 @@ safe_globals["_inplacevar_"] = default_inplacevar
 safe_globals["__builtins__"] = safe_builtins
 safe_globals["getattr"] = safer_getattr
 safe_globals["enumerate"] = enumerate
+safe_globals["log"] = log
 
 
 def get_restricted_function(app, bytecode, name, local_vars=None):

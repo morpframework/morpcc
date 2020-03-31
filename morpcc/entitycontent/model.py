@@ -84,6 +84,23 @@ class EntityContentModel(morpfw.Model):
                 result[name] = [item.base_json() for item in items]
         return result
 
+    @morpfw.requestmemoize()
+    def validation_dict(self):
+        result = self.as_dict()
+        for name, rel in self.relationships().items():
+            item = self.resolve_relationship(rel)
+            result[name] = item.as_dict()
+        for name, brel in self.backrelationships().items():
+            items = self.resolve_backrelationship(brel)
+            if brel["single_relation"]:
+                if items:
+                    result[name] = items[0].as_dict()
+                else:
+                    result[name] = {}
+            else:
+                result[name] = [item.as_dict() for item in items]
+        return result
+
 
 def content_collection_factory(entity, application):
     behaviors = entity.behaviors()
