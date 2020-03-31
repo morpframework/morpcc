@@ -33,7 +33,9 @@ class EntityValidatorModel(morpfw.Model):
 
     @morpfw.memoize()
     def function(self):
-        function = get_restricted_function(self.bytecode(), "validate")
+        function = get_restricted_function(
+            self.request.app, self.bytecode(), "validate"
+        )
         return function
 
     def entity_validator(self):

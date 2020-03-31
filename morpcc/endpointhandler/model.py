@@ -36,7 +36,7 @@ class EndpointHandlerModel(morpfw.Model):
 
     @morpfw.memoize()
     def function(self):
-        function = get_restricted_function(self.bytecode(), "handle")
+        function = get_restricted_function(self.request.app, self.bytecode(), "handle")
         return function
 
 

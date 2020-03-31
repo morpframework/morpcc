@@ -220,3 +220,17 @@ class IndexResolverAction(dectate.Action):
             return obj
 
         app_class.get_index_resolver.register(reg.methodify(factory), name=self.name)
+
+
+class RestrictedModuleAction(dectate.Action):
+
+    app_class_arg = True
+
+    def __init__(self, name):
+        self.name = name
+
+    def identifier(self, app_class):
+        return str((app_class, self.name))
+
+    def perform(self, obj, app_class):
+        app_class.get_restricted_module.register(reg.methodify(obj), name=self.name)
