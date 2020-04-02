@@ -1,4 +1,5 @@
 import morpfw
+import rulez
 
 from .modelui import (
     EntityValidatorAssignmentCollectionUI,
@@ -18,7 +19,10 @@ class EntityValidatorAssignmentModel(morpfw.Model):
     @morpfw.requestmemoize()
     def validator(self):
         col = self.request.get_collection("morpcc.entityvalidator")
-        return col.get(self["entityvalidator_uuid"])
+        validators = col.search(rulez.field["name"] == self["entityvalidator_name"])
+        if validators:
+            return validators[0]
+        return None
 
     @morpfw.requestmemoize()
     def entity(self):

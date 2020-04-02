@@ -58,7 +58,7 @@
                     processing: true,
                     ajax: "${request.relative_url('/dictionaryelementvalidatorassignment/+datatable.json?filter=dictionaryelement_uuid%3D%3D' + context.model.uuid)}",
                     columns: [
-                        { 'name': 'attributevalidator_uuid' },
+                        { 'name': 'attributevalidator_name' },
                         { 'name': 'structure:buttons' }
                     ]
                 });

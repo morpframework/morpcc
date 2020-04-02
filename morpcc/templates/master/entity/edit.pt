@@ -238,7 +238,7 @@
                     processing: true,
                     ajax: "${request.relative_url('/entityvalidatorassignment/+datatable.json?filter=entity_uuid%3D%3D' + context.model.uuid)}",
                     columns: [
-                        { 'name': 'entityvalidator_uuid' },
+                        { 'name': 'entityvalidator_name' },
                         { 'name': 'structure:buttons' }
                     ]
                 });

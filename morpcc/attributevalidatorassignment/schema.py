@@ -20,14 +20,13 @@ class AttributeValidatorAssignmentSchema(morpfw.Schema):
             "deform.widget": ReferenceWidget("morpcc.attribute", "title", "uuid"),
         },
     )
-    attributevalidator_uuid: typing.Optional[str] = field(
+    attributevalidator_name: typing.Optional[str] = field(
         default=None,
         metadata={
-            "format": "uuid",
             "required": True,
-            "validators": [ReferenceValidator("morpcc.attributevalidator", "uuid")],
+            "validators": [ReferenceValidator("morpcc.attributevalidator", "name")],
             "deform.widget": ReferenceWidget(
-                "morpcc.attributevalidator", "title", "uuid"
+                "morpcc.attributevalidator", "title", "name"
             ),
         },
     )

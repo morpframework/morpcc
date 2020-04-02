@@ -1,4 +1,5 @@
 import morpfw
+import rulez
 
 from .modelui import (
     AttributeValidatorAssignmentCollectionUI,
@@ -18,7 +19,10 @@ class AttributeValidatorAssignmentModel(morpfw.Model):
     @morpfw.requestmemoize()
     def validator(self):
         col = self.request.get_collection("morpcc.attributevalidator")
-        return col.get(self["attributevalidator_uuid"])
+        validators = col.search(rulez.field["name"] == self["attributevalidator_name"])
+        if validators:
+            return validators[0]
+        return None
 
     @morpfw.requestmemoize()
     def attribute(self):

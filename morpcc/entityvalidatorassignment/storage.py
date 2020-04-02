@@ -11,7 +11,7 @@ class EntityValidatorAssignment(morpfw.sql.Base):
     __tablename__ = "morpcc_entityvalidatorassignment"
 
     entity_uuid = sa.Column(morpfw.sql.GUID(), index=True)
-    entityvalidator_uuid = sa.Column(morpfw.sql.GUID(), index=True)
+    entityvalidator_name = sa.Column(sa.String(1024), index=True)
 
 
 class EntityValidatorAssignmentStorage(morpfw.SQLStorage):

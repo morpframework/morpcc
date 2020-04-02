@@ -1,4 +1,5 @@
 import morpfw
+import rulez
 
 from .modelui import (
     DictionaryElementValidatorAssignmentCollectionUI,
@@ -18,7 +19,11 @@ class DictionaryElementValidatorAssignmentModel(morpfw.Model):
     @morpfw.requestmemoize()
     def validator(self):
         col = self.request.get_collection("morpcc.attributevalidator")
-        return col.get(self["attributevalidator_uuid"])
+        res = col.search(rulez.field["name"] == self["attributevalidator_name"])
+        if res:
+            return res[0]
+
+        return None
 
     @morpfw.requestmemoize()
     def dictionaryelement(self):

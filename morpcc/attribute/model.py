@@ -129,6 +129,11 @@ class AttributeModel(morpfw.Model):
 
         return validators
 
+    @morpfw.requestmemoize()
+    def get_validator(self, name):
+        col = self.request.get_collection("morpcc.attributevalidatorassignment")
+        validators = col.search(rulez.field["attribute_uuid"] == self.uuid)
+
 
 class AttributeCollection(morpfw.Collection):
     schema = AttributeSchema

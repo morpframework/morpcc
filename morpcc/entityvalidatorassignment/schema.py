@@ -19,12 +19,11 @@ class EntityValidatorAssignmentSchema(morpfw.Schema):
             "deform.widget": ReferenceWidget("morpcc.entity", "title", "uuid"),
         },
     )
-    entityvalidator_uuid: typing.Optional[str] = field(
+    entityvalidator_name: typing.Optional[str] = field(
         default=None,
         metadata={
-            "format": "uuid",
             "required": True,
-            "validators": [ReferenceValidator("morpcc.entityvalidator", "uuid")],
-            "deform.widget": ReferenceWidget("morpcc.entityvalidator", "title", "uuid"),
+            "validators": [ReferenceValidator("morpcc.entityvalidator", "name")],
+            "deform.widget": ReferenceWidget("morpcc.entityvalidator", "title", "name"),
         },
     )
