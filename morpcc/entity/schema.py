@@ -31,6 +31,8 @@ class EntitySchema(morpfw.Schema):
         },
     )
 
+    allow_invalid: typing.Optional[bool] = False
+
     schema_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
