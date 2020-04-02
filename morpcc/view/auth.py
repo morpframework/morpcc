@@ -24,10 +24,12 @@ class LoginForm(object):
 def login(context, request):
     schema = request.app.get_schemaextender(LoginForm)
     formschema = dataclass_to_colander(schema, request=request)
+    fs = formschema()
+    fs.bind(context=context, request=request)
     return {
         "form_title": "Login",
         "form": deform.Form(
-            formschema(),
+            fs,
             buttons=(
                 "Login",
                 deform.Button(
@@ -48,7 +50,9 @@ def process_login(context, request):
     controls = list(request.POST.items())
     schema = request.app.get_schemaextender(LoginForm)
     formschema = dataclass_to_colander(schema, request=request)
-    form = deform.Form(formschema())
+    fs = formschema()
+    fs.bind(context=context, request=request)
+    form = deform.Form(fs)
     failed = False
     try:
         data = form.validate(controls)
@@ -119,10 +123,12 @@ class RegistrationForm(object):
 def register(context, request):
     schema = request.app.get_schemaextender(RegistrationForm)
     formschema = dataclass_to_colander(schema, request=request)
+    fs = formschema()
+    fs.bind(context=context, request=request)
     return {
         "form_title": "Register",
         "form": deform.Form(
-            formschema(),
+            fs,
             buttons=(
                 "Register",
                 deform.Button(
@@ -141,7 +147,9 @@ def process_register(context, request):
     controls = list(request.POST.items())
     schema = request.app.get_schemaextender(RegistrationForm)
     formschema = dataclass_to_colander(schema, request=request)
-    form = deform.Form(formschema())
+    fs = formschema()
+    fs.bind(context=context, request=request)
+    form = deform.Form(fs)
     failed = False
     try:
         data = form.validate(controls)

@@ -7,13 +7,17 @@ from .schema import EntityValidatorSchema
 
 
 class EntityValidatorWrapper(object):
+
+    __required_binds__ = ["context"]
+
     def __init__(self, validator, message):
         self.validator = validator
         self.message = message
 
-    def __call__(self, request, data, mode=None):
-        if not self.validator(data):
-            return self.message
+    def __call__(self, request, schema, data, mode=None, context=None):
+        obj = context.validation_dict()
+        if not self.validator(obj):
+            return {"message": self.message}
 
 
 class EntityValidatorModel(morpfw.Model):
@@ -38,7 +42,7 @@ class EntityValidatorModel(morpfw.Model):
         )
         return function
 
-    def entity_validator(self):
+    def schema_validator(self):
         return EntityValidatorWrapper(self.function(), self["error_message"])
 
 

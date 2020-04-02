@@ -27,10 +27,12 @@ def edit(context, request):
         exclude_fields=context.edit_exclude_fields,
     )
     data = context.model.data.as_dict()
+    fs = formschema()
+    fs.bind(context=context, request=request)
     return {
         "page_title": "Edit %s" % html.escape(str(context.model.__class__.__name__)),
         "form_title": "Edit",
-        "form": deform.Form(formschema(), buttons=("Submit",)),
+        "form": deform.Form(fs, buttons=("Submit",)),
         "form_data": data,
     }
 
@@ -61,9 +63,11 @@ def process_edit(context, request):
         exclude_fields=context.edit_exclude_fields,
         include_schema_validators=False,
     )
+    fs = formschema()
+    fs.bind(context=context, request=request)
     data = context.model.data.as_dict()
     controls = list(request.POST.items())
-    form = deform.Form(formschema(), buttons=("Submit",))
+    form = deform.Form(fs, buttons=("Submit",))
 
     failed = False
     try:
@@ -160,9 +164,11 @@ def process_xattredit(context, request):
     else:
         raise HTTPNotFound()
 
+    fs = xattrformschema()
+    fs.bind(context=context, request=request)
     data = xattrprovider.as_dict()
     controls = list(request.POST.items())
-    form = deform.Form(xattrformschema(), buttons=("Submit",))
+    form = deform.Form(fs, buttons=("Submit",))
 
     failed = False
     try:

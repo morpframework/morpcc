@@ -28,6 +28,8 @@ def create(context, request):
         exclude_fields=context.create_exclude_fields,
         hidden_fields=default_value_fields,
     )
+    fs = formschema()
+    fs.bind(context=context, request=request)
 
     form_data = {}
     for f in default_value_fields:
@@ -39,7 +41,7 @@ def create(context, request):
             str(context.collection.__class__.__name__.replace("Collection", ""))
         ),
         "form_title": "Create",
-        "form": deform.Form(formschema(), buttons=("Submit",)),
+        "form": deform.Form(fs, buttons=("Submit",)),
         "form_data": form_data,
     }
 
@@ -70,6 +72,8 @@ def process_create(context, request):
         exclude_fields=context.create_exclude_fields,
         hidden_fields=default_value_fields,
     )
+    fs = formschema()
+    fs.bind(context=context, request=request)
 
     controls = list(request.POST.items())
     form = deform.Form(formschema(), buttons=("Submit",))

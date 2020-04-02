@@ -87,7 +87,7 @@ class EntityModel(morpfw.Model):
         if primary_key:
             dc.__unique_constraint__ = tuple(primary_key)
 
-        dc.__validators__ = [ev.entity_validator() for ev in self.entity_validators()]
+        dc.__validators__ = [ev.schema_validator() for ev in self.entity_validators()]
         return dc
 
     @morpfw.requestmemoize()

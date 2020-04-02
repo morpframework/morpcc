@@ -90,7 +90,9 @@ def content_view(context, request):
                     include_fields=itemui.view_include_fields,
                     exclude_fields=itemui.view_exclude_fields,
                 )
-                breldata["form"] = deform.Form(formschema())
+                fs = formschema()
+                fs.bind(context=item, request=request)
+                breldata["form"] = deform.Form(fs)
                 breldata["form_data"] = item.as_dict()
                 validate_form(item, request, breldata["form"], breldata["form_data"])
         result["backrelationships"].append(breldata)
@@ -138,7 +140,10 @@ def _entity_dt_result_render(context, request, columns, objs):
     collection = context.collection
     for o in objs:
         row = []
-        form = deform.Form(dataclass_to_colander(collection.schema, request=request)())
+        formschema = dataclass_to_colander(collection.schema, request=request)
+        fs = formschema()
+        fs.bind(context=o, request=request)
+        form = deform.Form(fs)
         validate_form(o, request, form, o.as_dict())
         for c in columns:
             if c["name"].startswith("structure:"):

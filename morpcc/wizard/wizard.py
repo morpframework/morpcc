@@ -80,7 +80,9 @@ class FormWizardStep(WizardStep):
 
     def get_form(self, formid):
         formschema = dataclass_to_colander(self.schema, request=self.request)
-        return deform.Form(formschema(), formid=formid)
+        fs = formschema()
+        fs.bind(context=self.context, request=self.request)
+        return deform.Form(fs, formid=formid)
 
     def can_handle(self):
         request = self.request
@@ -99,8 +101,10 @@ class FormWizardStep(WizardStep):
     def process_form(self):
         request = self.request
         formschema = dataclass_to_colander(self.schema, request=self.request)
+        fs = formschema()
+        fs.bind(context=self.context, request=self.request)
         controls = request.POST.items()
-        form = deform.Form(formschema(), formid=request.POST.get("__formid__"))
+        form = deform.Form(fs, formid=request.POST.get("__formid__"))
         failed = False
         try:
             data = form.validate(controls)
@@ -243,4 +247,3 @@ class Wizard(object):
             return self.finalize()
 
         raise ValueError("Unable to process wizard form submission")
-

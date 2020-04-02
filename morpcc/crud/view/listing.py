@@ -9,8 +9,7 @@ import morepath
 import rulez
 from boolean.boolean import ParseError
 from morpfw.crud import permission as crudperms
-from morpfw.crud.schemaconverter.dataclass2colander import \
-    dataclass_to_colander
+from morpfw.crud.schemaconverter.dataclass2colander import dataclass_to_colander
 
 from ...app import App
 from ...permission import ViewHome
@@ -119,7 +118,10 @@ def _dt_result_render(context, request, columns, objs):
     collection = context.collection
     for o in objs:
         row = []
-        form = deform.Form(dataclass_to_colander(collection.schema, request=request)())
+        formschema = dataclass_to_colander(collection.schema, request=request)
+        fs = formschema()
+        fs.bind(context=o, request=request)
+        form = deform.Form(fs)
         for c in columns:
             if c["name"].startswith("structure:"):
                 row.append(context.get_structure_column(o, request, c["name"]))

@@ -58,13 +58,25 @@ def view(context, request):
         ]
     else:
         triggers = None
+
+    fs = formschema()
+    fs.bind(context=context, request=request)
+
+    mfs = metadataschema()
+    mfs.bind(context=context, request=request)
+
+    xfs = None
+    if xattrprovider:
+        xfs = xattrformschema()
+        xfs.bind(context=context, request=request)
+
     return {
         "page_title": "View %s" % html.escape(str(context.model.__class__.__name__)),
         "form_title": "View",
-        "metadataform": deform.Form(metadataschema()),
-        "form": deform.Form(formschema()),
+        "metadataform": deform.Form(mfs),
+        "form": deform.Form(fs),
         "form_data": data,
-        "xattrform": deform.Form(xattrformschema()) if xattrprovider else None,
+        "xattrform": deform.Form(xfs) if xattrprovider else None,
         "xattrform_data": xattrprovider.as_dict() if xattrprovider else None,
         "readonly": True,
         "transitions": triggers,
@@ -82,7 +94,9 @@ def preview(context, request):
         exclude_fields=context.view_exclude_fields,
     )
 
-    form = deform.Form(formschema())
+    fs = formschema()
+    fs.bind(context=context, request=request)
+    form = deform.Form(fs)
     form_data = context.model.data.as_dict()
     return form.render(
         appstruct=form_data, readonly=True, request=request, context=context
