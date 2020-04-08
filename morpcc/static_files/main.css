@@ -17,6 +17,18 @@
     text-align: center
 }
 
+.widget_card {
+    position: relative;
+    min-height: 170px;
+}
+
+.widget_card>.x_content {
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+}
+
 .site-settings .widget_card {
     height: 170px;
 }
