@@ -47,10 +47,7 @@ class ApplicationModel(morpfw.Model):
     def entity_collections(self):
         result = {}
         for entity in self.application_schema().entities():
-            result[entity["name"]] = {
-                "entity": entity,
-                "content_collection": content_collection_factory(entity, self),
-            }
+            result[entity["name"]] = content_collection_factory(entity, self)
         return result
 
     def content_metadata(self):
