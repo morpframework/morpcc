@@ -19,6 +19,9 @@ class EntityModel(morpfw.Model):
     def ui(self):
         return EntityModelUI(self.request, self, self.collection.ui())
 
+    def icon(self):
+        return self["icon"] or "database"
+
     def dataclass(self, validators=None, widgets=None):
         validators = validators or {}
         widgets = widgets or {}
