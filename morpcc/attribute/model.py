@@ -130,9 +130,48 @@ class AttributeModel(morpfw.Model):
         return validators
 
     @morpfw.requestmemoize()
+    def builtin_validators(self):
+        result = []
+        if self["required"]:
+            result.append(
+                {
+                    "title": "Required but missing",
+                    "description": "This validator checks for missing records (null)",
+                    "name": "__required__",
+                    "validate": lambda x: x is not None,
+                    "error_message": "Field is required",
+                }
+            )
+        if self.referencedata():
+
+            def refdata_validate(value):
+                resolved = self.referencedata_resolve(value)
+                if value is not None and resolved is None:
+                    return False
+                return True
+
+            result.append(
+                {
+                    "title": "Reference data non-compliance",
+                    "description": "This validator checks for value non-compliance based on configured reference data",
+                    "name": "__refdata_compliance__",
+                    "validate": refdata_validate,
+                    "error_message": "Value does not exists in reference data",
+                }
+            )
+        return result
+
+    @morpfw.requestmemoize()
     def get_validator(self, name):
-        col = self.request.get_collection("morpcc.attributevalidatorassignment")
-        validators = col.search(rulez.field["attribute_uuid"] == self.uuid)
+        for v in self.validators():
+            if v["name"] == name:
+                return v
+
+    @morpfw.requestmemoize()
+    def get_builtin_validator(self, name):
+        for v in self.builtin_validators():
+            if v["name"] == name:
+                return v
 
 
 class AttributeCollection(morpfw.Collection):
