@@ -131,7 +131,7 @@ def _dt_result_render(context, request, columns, objs):
                 if value is None:
                     value = colander.null
                 row.append(
-                    field.render(value, readonly=True, request=request, context=context)
+                    field.render(value, readonly=True, request=request, context=o)
                 )
         rows.append(row)
     return rows
