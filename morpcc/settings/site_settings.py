@@ -72,5 +72,10 @@ def site_settings(context, request):
                 "icon": "search",
                 "href": request.relative_url("/index/+listing"),
             },
+            {
+                "title": "Background Processes",
+                "icon": "gears",
+                "href": request.relative_url("/process/+listing"),
+            },
         ]
     }
