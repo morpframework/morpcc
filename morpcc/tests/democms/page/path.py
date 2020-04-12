@@ -7,8 +7,8 @@ from .storage import PageStorage
 
 
 def get_collection(request):
-    blob_path = request.app.settings.application.fsblobstorage_path
-    storage = PageStorage(request, blobstorage=FSBlobStorage(request, path=blob_path))
+    blobstorage = request.app.get_config_blobstorage(request)
+    storage = PageStorage(request, blobstorage=blobstorage)
     return PageCollection(request, storage)
 
 
