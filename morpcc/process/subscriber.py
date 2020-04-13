@@ -77,9 +77,10 @@ class IOHandler(object):
         filename = "/tmp/{}.zip".format(self.task_id)
         with zipfile.ZipFile(filename, "w", zipfile.ZIP_DEFLATED) as zipf:
             for root, dirs, files in os.walk(self.task_work_dir):
+                relpath = root.replace(self.task_work_dir, "./")
                 for f in files:
                     print("packaging %s" % (os.path.join(root, f)))
-                    zipf.write(os.path.join(root, f), arcname=f)
+                    zipf.write(os.path.join(root, f), arcname=os.path.join(relpath, f))
         return filename
 
     def clear_task_dir(self):
@@ -107,11 +108,11 @@ class IOHandler(object):
 
 
 def handle_task_submitted(request, task_type, task_id, signal, params=None):
-    now = datetime.now(tz=pytz.UTC)
+
     col = request.get_collection("morpcc.process")
     res = col.search(rulez.field["task_id"] == task_id)
     if not res:
-        obj = {"task_id": task_id, "start": now, "signal": signal}
+        obj = {"task_id": task_id, "signal": signal}
         if params:
             obj["params"] = params
         proc = col.create(obj, deserialize=False)
