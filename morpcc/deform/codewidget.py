@@ -1,3 +1,5 @@
+import json
+
 from deform.widget import TextAreaWidget
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
@@ -46,3 +48,17 @@ class CodeWidget(TextAreaWidget):
         if self.syntax in SUPPORTED_EDITAREA_SYNTAX:
             return self.syntax
         return ALT_EDITAREA_SYNTAX.get(self.syntax, "text")
+
+
+class JSONCodeWidget(CodeWidget):
+    """ Code widget to use with JSON/Dictionary field"""
+
+    syntax = "json"
+
+    def deserialize(self, field, pstruct):
+        pstruct = super().deserialize(field, pstruct)
+        return json.loads(pstruct)
+
+    def serialize(self, field, cstruct, **kw):
+        cstruct = json.dumps(cstruct, indent=4)
+        return super().serialize(field, cstruct, **kw)
