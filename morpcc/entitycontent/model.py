@@ -1,5 +1,7 @@
 import morpfw
 import rulez
+from morpfw.crud.schemaconverter.dataclass2avsc import dataclass_to_avsc
+from morpfw.crud.schemaconverter.dataclass2colanderavro import dataclass_to_colanderavro
 from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
 
 from ..relationship.validator import EntityContentReferenceValidator
@@ -21,6 +23,41 @@ class EntityContentCollection(morpfw.Collection):
 
     def application(self):
         return self.__application__
+
+    def avro_schema(self):
+        entity = self.__parent__
+        result = dataclass_to_avsc(self.schema, self.request, namespace=entity["name"])
+        for name, rel in self.relationships().items():
+            ref_entity = rel.reference_entity()
+
+        for name, brel in self.backrelationships().items():
+            ref_entity = brel.reference_entity()
+            item_schema = dataclass_to_avsc(
+                content_collection_factory(ref_entity, self.__application__).schema,
+                request=self.request,
+                namespace="%s.%s" % (entity["name"], ref_entity["name"]),
+            )
+
+            if brel["single_relation"]:
+                field = {"name": name, "type": item_schema}
+            else:
+                field = {
+                    "name": name,
+                    "type": {"type": "array", "items": item_schema},
+                }
+            # print(field)
+            result["fields"].append(field)
+
+        return result
+
+    def attributes(self):
+        return self.__parent__.attributes()
+
+    def relationships(self):
+        return self.__parent__.relationships()
+
+    def backrelationships(self):
+        return self.__parent__.backrelationships()
 
 
 class EntityContentModel(morpfw.Model):
@@ -82,6 +119,33 @@ class EntityContentModel(morpfw.Model):
                     result[name] = {}
             else:
                 result[name] = [item.base_json() for item in items]
+        return result
+
+    @morpfw.requestmemoize()
+    def base_avro_json(self):
+        exclude_fields = self.hidden_fields
+        cschema = dataclass_to_colanderavro(
+            self.schema, exclude_fields=exclude_fields, request=self.request
+        )
+        cs = cschema()
+        cs.bind(context=self, request=self.request)
+        return cs.serialize(self.data.as_dict())
+
+    @morpfw.requestmemoize()
+    def avro_json(self):
+        result = self.base_avro_json()
+        for name, rel in self.relationships().items():
+            item = self.resolve_relationship(rel)
+            result[name] = item.base_avro_json()
+        for name, brel in self.backrelationships().items():
+            items = self.resolve_backrelationship(brel)
+            if brel["single_relation"]:
+                if items:
+                    result[name] = items[0].base_avro_json()
+                else:
+                    result[name] = {}
+            else:
+                result[name] = [item.base_avro_json() for item in items]
         return result
 
     @morpfw.requestmemoize()

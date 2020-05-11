@@ -405,6 +405,11 @@ class Navigator(object):
         self.schemas = SchemaBrowser(request)
         self.applications = ApplicationBrowser(request)
 
+    def get_application(self, app_uuid):
+        col = self.request.get_collection("morpcc.application")
+        app = col.get(app_uuid)
+        return ApplicationNavigator(app, self.request)
+
     def add_schema(self, name, title, icon="cube") -> typing.Optional[SchemaNavigator]:
         data = {"name": name, "title": title}
         schema = self.schema_col.create(data, deserialize=False)
