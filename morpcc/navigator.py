@@ -65,14 +65,14 @@ class EntityNavigator(object):
 
     def add_attribute(
         self,
-        name,
-        type_,
-        title,
-        description=None,
-        required=False,
-        primary_key=False,
+        name: str,
+        type_: typing.Union[int, str, float],
+        title: str,
+        description: str = None,
+        required: bool = False,
+        primary_key: bool = False,
         dictionaryelement=None,
-        allow_invalid=False,
+        allow_invalid: bool = False,
     ):
         data = {
             "name": name,
@@ -92,13 +92,13 @@ class EntityNavigator(object):
 
     def add_relationship(
         self,
-        name,
-        title,
+        name: str,
+        title: str,
         reference_attribute,
         reference_search_attribute,
-        description=None,
-        required=False,
-        primary_key=False,
+        description: str = None,
+        required: bool = False,
+        primary_key: bool = False,
     ):
         data = {
             "name": name,
@@ -115,13 +115,12 @@ class EntityNavigator(object):
 
     def add_backrelationship(
         self,
-        name,
-        title,
+        name: str,
+        title: str,
         reference_relationship,
-        description=None,
-        single_relation=False,
+        description: str = None,
+        single_relation: bool = False,
     ):
-
         data = {
             "name": name,
             "title": title,
@@ -219,7 +218,7 @@ class RefDataNavigator(object):
         self.request = request
         self.key_col = get_refdatakey_collection(request)
 
-    def add_key(self, name, description=None) -> typing.Optional[RefDataKeyNavigator]:
+    def add_key(self, name: str, description: str = None) -> typing.Optional[RefDataKeyNavigator]:
         data = {
             "name": name,
             "referencedata_uuid": self.refdata.uuid,
@@ -258,11 +257,11 @@ class DictionaryEntityNavigator(object):
 
     def add_element(
         self,
-        name,
-        title,
-        type_,
-        referencedata_name=None,
-        referencedata_property="label",
+        name: str,
+        title: str,
+        type_: typing.Union[int, str, float],
+        referencedata_name: str = None,
+        referencedata_property: str = "label",
     ):
         data = {
             "name": name,
@@ -344,7 +343,10 @@ class SchemaNavigator(object):
         self.entities = EntityBrowser(schema, request)
 
     def add_entity(
-        self, name, title, icon="database"
+        self, 
+        name: str, 
+        title: str, 
+        icon="database"
     ) -> typing.Optional[EntityNavigator]:
         data = {
             "name": name,
@@ -410,14 +412,23 @@ class Navigator(object):
         app = col.get(app_uuid)
         return ApplicationNavigator(app, self.request)
 
-    def add_schema(self, name, title, icon="cube") -> typing.Optional[SchemaNavigator]:
+    def add_schema(
+        self,
+        name: str,
+        title: str,
+        icon="cube"
+    ) -> typing.Optional[SchemaNavigator]:
         data = {"name": name, "title": title}
         schema = self.schema_col.create(data, deserialize=False)
         if schema:
             return SchemaNavigator(schema, self.request)
 
     def add_application(
-        self, name, title, schema, icon="cube"
+        self,
+        name: str,
+        title: str,
+        schema,
+        icon="cube"
     ) -> typing.Optional[ApplicationNavigator]:
         data = {
             "name": name,
@@ -430,7 +441,11 @@ class Navigator(object):
             return ApplicationNavigator(app, self.request)
         return None
 
-    def add_referencedata(self, name, title) -> typing.Optional[RefDataNavigator]:
+    def add_referencedata(
+        self,
+        name: str,
+        title: str
+    ) -> typing.Optional[RefDataNavigator]:
         data = {"name": name, "title": title}
         refdata = self.refdata_col.create(data, deserialize=False)
         if refdata:
@@ -438,7 +453,9 @@ class Navigator(object):
         return None
 
     def add_dictionaryentity(
-        self, name, title
+        self,
+        name: str,
+        title: str
     ) -> typing.Optional[DictionaryEntityNavigator]:
         data = {"name": name, "title": title}
         dent = self.dictentity_col.create(data, deserialize=False)
