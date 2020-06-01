@@ -66,9 +66,9 @@ class EntityNavigator(object):
     def add_attribute(
         self,
         name: str,
-        type_: typing.Union[int, str, float],
+        type_: str,
         title: str,
-        description: str = None,
+        description: typing.Optional[str] = None,
         required: bool = False,
         primary_key: bool = False,
         dictionaryelement=None,
@@ -96,7 +96,7 @@ class EntityNavigator(object):
         title: str,
         reference_attribute,
         reference_search_attribute,
-        description: str = None,
+        description: typing.Optional[str] = None,
         required: bool = False,
         primary_key: bool = False,
     ):
@@ -118,7 +118,7 @@ class EntityNavigator(object):
         name: str,
         title: str,
         reference_relationship,
-        description: str = None,
+        description: typing.Optional[str] = None,
         single_relation: bool = False,
     ):
         data = {
@@ -218,7 +218,11 @@ class RefDataNavigator(object):
         self.request = request
         self.key_col = get_refdatakey_collection(request)
 
-    def add_key(self, name: str, description: str = None) -> typing.Optional[RefDataKeyNavigator]:
+    def add_key(
+        self,
+        name: str,
+        description: typing.Optional[str] = None
+    ) -> typing.Optional[RefDataKeyNavigator]:
         data = {
             "name": name,
             "referencedata_uuid": self.refdata.uuid,
@@ -260,7 +264,7 @@ class DictionaryEntityNavigator(object):
         name: str,
         title: str,
         type_: typing.Union[int, str, float],
-        referencedata_name: str = None,
+        referencedata_name: typing.Optional[str] = None,
         referencedata_property: str = "label",
     ):
         data = {
@@ -343,10 +347,10 @@ class SchemaNavigator(object):
         self.entities = EntityBrowser(schema, request)
 
     def add_entity(
-        self, 
-        name: str, 
-        title: str, 
-        icon="database"
+        self,
+        name: str,
+        title: str,
+        icon: str = "database"
     ) -> typing.Optional[EntityNavigator]:
         data = {
             "name": name,
@@ -416,7 +420,7 @@ class Navigator(object):
         self,
         name: str,
         title: str,
-        icon="cube"
+        icon: str = "cube"
     ) -> typing.Optional[SchemaNavigator]:
         data = {"name": name, "title": title}
         schema = self.schema_col.create(data, deserialize=False)
@@ -428,7 +432,7 @@ class Navigator(object):
         name: str,
         title: str,
         schema,
-        icon="cube"
+        icon: str = "cube"
     ) -> typing.Optional[ApplicationNavigator]:
         data = {
             "name": name,
