@@ -71,7 +71,7 @@ class EntityNavigator(object):
         description: typing.Optional[str] = None,
         required: bool = False,
         primary_key: bool = False,
-        dictionaryelement=None,
+        dictionaryelement: typing.Optional[str] = None,
         allow_invalid: bool = False,
     ):
         data = {
@@ -263,7 +263,7 @@ class DictionaryEntityNavigator(object):
         self,
         name: str,
         title: str,
-        type_: typing.Union[int, str, float],
+        type_: str,
         referencedata_name: typing.Optional[str] = None,
         referencedata_property: str = "label",
     ):
