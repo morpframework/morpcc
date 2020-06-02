@@ -94,8 +94,8 @@ class EntityNavigator(object):
         self,
         name: str,
         title: str,
-        reference_attribute,
-        reference_search_attribute,
+        reference_attribute: typing.Optional[str] = None,
+        reference_search_attribute: typing.Optional[str] = None,
         description: typing.Optional[str] = None,
         required: bool = False,
         primary_key: bool = False,
@@ -117,7 +117,7 @@ class EntityNavigator(object):
         self,
         name: str,
         title: str,
-        reference_relationship,
+        reference_relationship: typing.Optional[str] = None,
         description: typing.Optional[str] = None,
         single_relation: bool = False,
     ):
@@ -431,7 +431,7 @@ class Navigator(object):
         self,
         name: str,
         title: str,
-        schema,
+        schema: typing.Optional[str] = None,
         icon: str = "cube"
     ) -> typing.Optional[ApplicationNavigator]:
         data = {
