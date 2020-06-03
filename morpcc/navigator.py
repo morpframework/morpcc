@@ -14,7 +14,10 @@ from .referencedata.path import get_collection as get_refdata_collection
 from .referencedatakey.path import get_collection as get_refdatakey_collection
 from .referencedataproperty.path import get_collection as get_refdataprop_collection
 from .relationship.path import get_collection as get_rel_collection
-
+from morpcc.attribute.model import AttributeModel
+from morpcc.dictionaryelement.model import DictionaryElementModel
+from morpcc.relationship.model import RelationshipModel
+from morpcc.schema.model import SchemaModel
 
 class AttributesBrowser(object):
     def __init__(self, entity, request):
@@ -71,7 +74,7 @@ class EntityNavigator(object):
         description: typing.Optional[str] = None,
         required: bool = False,
         primary_key: bool = False,
-        dictionaryelement: typing.Optional[str] = None,
+        dictionaryelement: typing.Optional[DictionaryElementModel] = None,
         allow_invalid: bool = False,
     ):
         data = {
@@ -94,8 +97,8 @@ class EntityNavigator(object):
         self,
         name: str,
         title: str,
-        reference_attribute: typing.Optional[str] = None,
-        reference_search_attribute: typing.Optional[str] = None,
+        reference_attribute: AttributeModel,
+        reference_search_attribute: AttributeModel,
         description: typing.Optional[str] = None,
         required: bool = False,
         primary_key: bool = False,
@@ -117,7 +120,7 @@ class EntityNavigator(object):
         self,
         name: str,
         title: str,
-        reference_relationship: typing.Optional[str] = None,
+        reference_relationship: RelationshipModel,
         description: typing.Optional[str] = None,
         single_relation: bool = False,
     ):
@@ -431,7 +434,7 @@ class Navigator(object):
         self,
         name: str,
         title: str,
-        schema: typing.Optional[str] = None,
+        schema: SchemaModel,
         icon: str = "cube"
     ) -> typing.Optional[ApplicationNavigator]:
         data = {
