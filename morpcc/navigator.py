@@ -8,12 +8,15 @@ from .attribute.path import get_collection as get_attr_collection
 from .backrelationship.path import get_collection as get_brel_collection
 from .dictionaryelement.path import get_collection as get_del_collection
 from .dictionaryentity.path import get_collection as get_dent_collection
-from .entity.path import get_collection as get_dm_collection
 from .entitycontent.path import content_collection_factory
 from .referencedata.path import get_collection as get_refdata_collection
 from .referencedatakey.path import get_collection as get_refdatakey_collection
 from .referencedataproperty.path import get_collection as get_refdataprop_collection
 from .relationship.path import get_collection as get_rel_collection
+from morpcc.attribute.model import AttributeModel
+from morpcc.dictionaryelement.model import DictionaryElementModel
+from morpcc.relationship.model import RelationshipModel
+from morpcc.schema.model import SchemaModel
 
 
 class AttributesBrowser(object):
@@ -32,7 +35,7 @@ class AttributesBrowser(object):
             return attrs[0]
         return None
 
-    def keys(self):
+    def keys(self) -> typing.List[str]:
         return [
             i["name"]
             for i in self.col.search(rulez.field["entity_uuid"] == self.entity.uuid)
@@ -65,14 +68,14 @@ class EntityNavigator(object):
 
     def add_attribute(
         self,
-        name,
-        type_,
-        title,
-        description=None,
-        required=False,
-        primary_key=False,
-        dictionaryelement=None,
-        allow_invalid=False,
+        name: str,
+        type_: str,
+        title: str,
+        description: typing.Optional[str] = None,
+        required: bool = False,
+        primary_key: bool = False,
+        dictionaryelement: typing.Optional[DictionaryElementModel] = None,
+        allow_invalid: bool = False,
     ):
         data = {
             "name": name,
@@ -92,13 +95,13 @@ class EntityNavigator(object):
 
     def add_relationship(
         self,
-        name,
-        title,
-        reference_attribute,
-        reference_search_attribute,
-        description=None,
-        required=False,
-        primary_key=False,
+        name: str,
+        title: str,
+        reference_attribute: AttributeModel,
+        reference_search_attribute: AttributeModel,
+        description: typing.Optional[str] = None,
+        required: bool = False,
+        primary_key: bool = False,
     ):
         data = {
             "name": name,
@@ -115,13 +118,12 @@ class EntityNavigator(object):
 
     def add_backrelationship(
         self,
-        name,
-        title,
-        reference_relationship,
-        description=None,
-        single_relation=False,
+        name: str,
+        title: str,
+        reference_relationship: RelationshipModel,
+        description: typing.Optional[str] = None,
+        single_relation: bool = False,
     ):
-
         data = {
             "name": name,
             "title": title,
@@ -152,13 +154,13 @@ class EntityContentCollectionBrowser(object):
         self.application = application
         self.collection = request.get_collection("morpcc.entity")
 
-    def __getitem__(self, key):
+    def __getitem__(self, key) -> EntityContentNavigator:
         items = self.collection.search(rulez.field["name"] == key)
         if items:
             return EntityContentNavigator(items[0], self.application, self.request)
         raise KeyError(key)
 
-    def keys(self):
+    def keys(self) -> typing.List[str]:
         return [e["name"] for e in self.collection.search()]
 
 
@@ -204,7 +206,7 @@ class RefDataKeyNavigator(object):
             return props[0]
         return KeyError(key)
 
-    def keys(self):
+    def keys(self) -> typing.List[str]:
         return [
             p["name"]
             for p in self.prop_col.search(
@@ -219,7 +221,11 @@ class RefDataNavigator(object):
         self.request = request
         self.key_col = get_refdatakey_collection(request)
 
-    def add_key(self, name, description=None) -> typing.Optional[RefDataKeyNavigator]:
+    def add_key(
+        self,
+        name: str,
+        description: typing.Optional[str] = None
+    ) -> typing.Optional[RefDataKeyNavigator]:
         data = {
             "name": name,
             "referencedata_uuid": self.refdata.uuid,
@@ -241,7 +247,7 @@ class RefDataNavigator(object):
             return RefDataKeyNavigator(keys[0], self.request)
         raise KeyError(key)
 
-    def keys(self):
+    def keys(self) -> typing.List[str]:
         return [
             k["name"]
             for k in self.key_col.search(
@@ -258,11 +264,11 @@ class DictionaryEntityNavigator(object):
 
     def add_element(
         self,
-        name,
-        title,
-        type_,
-        referencedata_name=None,
-        referencedata_property="label",
+        name: str,
+        title: str,
+        type_: str,
+        referencedata_name: typing.Optional[str] = None,
+        referencedata_property: str = "label",
     ):
         data = {
             "name": name,
@@ -286,7 +292,7 @@ class DictionaryEntityNavigator(object):
             return elements[0]
         raise KeyError(key)
 
-    def keys(self):
+    def keys(self) -> typing.List[str]:
         return [
             e["name"]
             for e in self.element_col.search(
@@ -300,13 +306,13 @@ class DataDictionaryBrowser(object):
         self.request = request
         self.dictentity_col = get_dent_collection(request)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key) -> DictionaryEntityNavigator:
         dents = self.dictentity_col.search(rulez.field["name"] == key)
         if dents:
             return DictionaryEntityNavigator(dents[0], self.request)
         raise KeyError(key)
 
-    def keys(self):
+    def keys(self) -> typing.List[str]:
         return [e["name"] for e in self.dictentity_col.search()]
 
 
@@ -316,7 +322,7 @@ class EntityBrowser(object):
         self.request = request
         self.collection = request.get_collection("morpcc.entity")
 
-    def __getitem__(self, key):
+    def __getitem__(self, key) -> EntityNavigator:
         items = self.collection.search(
             rulez.and_(
                 rulez.field["schema_uuid"] == self.schema.uuid,
@@ -327,7 +333,7 @@ class EntityBrowser(object):
             return EntityNavigator(self.schema, items[0], self.request)
         raise KeyError(key)
 
-    def keys(self):
+    def keys(self) -> typing.List[str]:
         return [
             e["name"]
             for e in self.collection.search(
@@ -344,7 +350,10 @@ class SchemaNavigator(object):
         self.entities = EntityBrowser(schema, request)
 
     def add_entity(
-        self, name, title, icon="database"
+        self,
+        name: str,
+        title: str,
+        icon: str = "database"
     ) -> typing.Optional[EntityNavigator]:
         data = {
             "name": name,
@@ -369,13 +378,13 @@ class SchemaBrowser(object):
         self.request = request
         self.collection = request.get_collection("morpcc.schema")
 
-    def __getitem__(self, key):
+    def __getitem__(self, key) -> SchemaNavigator:
         items = self.collection.search(rulez.field["name"] == key)
         if items:
             return SchemaNavigator(items[0], self.request)
         raise KeyError(key)
 
-    def keys(self):
+    def keys(self) -> typing.List[str]:
         return [e["name"] for e in self.collection.search()]
 
 
@@ -384,13 +393,13 @@ class ApplicationBrowser(object):
         self.request = request
         self.collection = request.get_collection("morpcc.application")
 
-    def __getitem__(self, key):
+    def __getitem__(self, key) -> ApplicationNavigator:
         items = self.collection.search(rulez.field["name"] == key)
         if items:
             return ApplicationNavigator(items[0], self.request)
         raise KeyError(key)
 
-    def keys(self):
+    def keys(self) -> typing.List[str]:
         return [e["name"] for e in self.collection.search()]
 
 
@@ -405,19 +414,29 @@ class Navigator(object):
         self.schemas = SchemaBrowser(request)
         self.applications = ApplicationBrowser(request)
 
-    def get_application(self, app_uuid):
+    def get_application(self, app_uuid) -> ApplicationNavigator:
         col = self.request.get_collection("morpcc.application")
         app = col.get(app_uuid)
         return ApplicationNavigator(app, self.request)
 
-    def add_schema(self, name, title, icon="cube") -> typing.Optional[SchemaNavigator]:
+    def add_schema(
+        self,
+        name: str,
+        title: str,
+        icon: str = "cube"
+    ) -> typing.Optional[SchemaNavigator]:
         data = {"name": name, "title": title}
         schema = self.schema_col.create(data, deserialize=False)
         if schema:
             return SchemaNavigator(schema, self.request)
+        return None
 
     def add_application(
-        self, name, title, schema, icon="cube"
+        self,
+        name: str,
+        title: str,
+        schema: SchemaModel,
+        icon: str = "cube"
     ) -> typing.Optional[ApplicationNavigator]:
         data = {
             "name": name,
@@ -430,7 +449,11 @@ class Navigator(object):
             return ApplicationNavigator(app, self.request)
         return None
 
-    def add_referencedata(self, name, title) -> typing.Optional[RefDataNavigator]:
+    def add_referencedata(
+        self,
+        name: str,
+        title: str
+    ) -> typing.Optional[RefDataNavigator]:
         data = {"name": name, "title": title}
         refdata = self.refdata_col.create(data, deserialize=False)
         if refdata:
@@ -438,7 +461,9 @@ class Navigator(object):
         return None
 
     def add_dictionaryentity(
-        self, name, title
+        self,
+        name: str,
+        title: str
     ) -> typing.Optional[DictionaryEntityNavigator]:
         data = {"name": name, "title": title}
         dent = self.dictentity_col.create(data, deserialize=False)
