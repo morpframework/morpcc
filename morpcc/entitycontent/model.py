@@ -50,6 +50,10 @@ class EntityContentCollection(morpfw.Collection):
 
         return result
 
+    @morpfw.requestmemoize()
+    def memoize_call(self, func, *args):
+        return func(self, *args)
+
     def attributes(self):
         return self.__parent__.attributes()
 
@@ -153,7 +157,8 @@ class EntityContentModel(morpfw.Model):
         result = self.as_dict()
         for name, rel in self.relationships().items():
             item = self.resolve_relationship(rel)
-            result[name] = item.as_dict()
+            if item:
+                result[name] = item.as_dict()
         for name, brel in self.backrelationships().items():
             items = self.resolve_backrelationship(brel)
             if brel["single_relation"]:
@@ -162,11 +167,11 @@ class EntityContentModel(morpfw.Model):
                 else:
                     result[name] = {}
             else:
-                result[name] = [item.as_dict() for item in items]
+                result[name] = [item.as_dict() for item in items if item is not None]
         return result
 
 
-def content_collection_factory(entity, application):
+def content_collection_factory(entity, application, allow_invalid=False):
     behaviors = entity.behaviors()
     model_markers = []
     modelui_markers = []
@@ -205,13 +210,15 @@ def content_collection_factory(entity, application):
             refsearch_field = ref["name"]
 
         field_validators.setdefault(relname, [])
-        field_validators[relname].append(
-            EntityContentReferenceValidator(
-                application_uuid=application.uuid,
-                entity_uuid=ref["entity_uuid"],
-                attribute=ref_field,
+
+        if not allow_invalid:
+            field_validators[relname].append(
+                EntityContentReferenceValidator(
+                    application_uuid=application.uuid,
+                    entity_uuid=ref["entity_uuid"],
+                    attribute=ref_field,
+                )
             )
-        )
 
         field_widgets[relname] = EntityContentReferenceWidget(
             application_uuid=application.uuid,
@@ -220,7 +227,9 @@ def content_collection_factory(entity, application):
             value_field=ref_field,
         )
 
-    dc_schema = entity.dataclass(validators=field_validators, widgets=field_widgets)
+    dc_schema = entity.dataclass(
+        validators=field_validators, widgets=field_widgets, allow_invalid=allow_invalid
+    )
 
     class ContentCollectionUI(EntityContentCollectionUI):
         schema = dc_schema

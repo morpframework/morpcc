@@ -22,7 +22,7 @@ class EntityModel(morpfw.Model):
     def icon(self):
         return self["icon"] or "database"
 
-    def dataclass(self, validators=None, widgets=None):
+    def dataclass(self, validators=None, widgets=None, allow_invalid=False):
         validators = validators or {}
         widgets = widgets or {}
         attrs = []
@@ -31,8 +31,13 @@ class EntityModel(morpfw.Model):
             b["reference_relationship_uuid"] for b in self.backrelationships().values()
         ]
 
+        allow_invalid = allow_invalid or self["allow_invalid"]
         for k, attr in self.attributes().items():
-            metadata = attr.field_metadata()
+            if not allow_invalid:
+                metadata = attr.field_metadata()
+            else:
+                metadata = attr.field_metadata_allow_invalid()
+
             if attr.uuid in brels:
                 metadata["index"] = True
 
@@ -90,7 +95,7 @@ class EntityModel(morpfw.Model):
         if primary_key:
             dc.__unique_constraint__ = tuple(primary_key)
 
-        if not self["allow_invalid"]:
+        if not allow_invalid:
             dc.__validators__ = [
                 ev.schema_validator() for ev in self.entity_validators()
             ]

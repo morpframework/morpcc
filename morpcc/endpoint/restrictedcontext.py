@@ -45,15 +45,19 @@ class RestrictedEntityContentCollection(object):
 
 
 class RestrictedApplication(object):
-    def __init__(self, application):
-
+    def __init__(self, application, allow_invalid=False):
+        self._application = application
         restricted_entities = {}
         for entity in application.application_schema().entities():
             restricted_entities[entity["name"]] = RestrictedEntityContentCollection(
-                content_collection_factory(entity, application)
+                content_collection_factory(entity, application, allow_invalid)
             )
 
         self.entities = restricted_entities
+
+    def allow_invalid(self):
+        # FIXME: too hackish
+        return RestrictedApplication(self._application, allow_invalid=True)
 
     def __getitem__(self, key):
         return self.entities[key]

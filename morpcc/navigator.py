@@ -1,6 +1,10 @@
 import typing
 
 import rulez
+from morpcc.attribute.model import AttributeModel
+from morpcc.dictionaryelement.model import DictionaryElementModel
+from morpcc.relationship.model import RelationshipModel
+from morpcc.schema.model import SchemaModel
 
 from .app import App
 from .application.path import get_collection as get_app_collection
@@ -13,10 +17,6 @@ from .referencedata.path import get_collection as get_refdata_collection
 from .referencedatakey.path import get_collection as get_refdatakey_collection
 from .referencedataproperty.path import get_collection as get_refdataprop_collection
 from .relationship.path import get_collection as get_rel_collection
-from morpcc.attribute.model import AttributeModel
-from morpcc.dictionaryelement.model import DictionaryElementModel
-from morpcc.relationship.model import RelationshipModel
-from morpcc.schema.model import SchemaModel
 
 
 class AttributesBrowser(object):
@@ -140,12 +140,21 @@ class EntityContentNavigator(object):
     def __init__(self, entity, application, request):
         self.request = request
         self.collection = content_collection_factory(entity, application)
+        self.collection_allow_invalid = content_collection_factory(
+            entity, application, allow_invalid=True
+        )
 
-    def add(self, data):
-        return self.collection.create(data, deserialize=False)
+    def add(self, data, allow_invalid=False):
+        if not allow_invalid:
+            return self.collection.create(data, deserialize=False)
+        else:
+            return self.collection_allow_invalid.create(data, deserialize=False)
 
     def search(self, *args, **kwargs):
         return self.collection.search(*args, **kwargs)
+
+    def get(self, uuid):
+        return self.collection.get(uuid)
 
 
 class EntityContentCollectionBrowser(object):
@@ -222,9 +231,7 @@ class RefDataNavigator(object):
         self.key_col = get_refdatakey_collection(request)
 
     def add_key(
-        self,
-        name: str,
-        description: typing.Optional[str] = None
+        self, name: str, description: typing.Optional[str] = None
     ) -> typing.Optional[RefDataKeyNavigator]:
         data = {
             "name": name,
@@ -350,10 +357,7 @@ class SchemaNavigator(object):
         self.entities = EntityBrowser(schema, request)
 
     def add_entity(
-        self,
-        name: str,
-        title: str,
-        icon: str = "database"
+        self, name: str, title: str, icon: str = "database"
     ) -> typing.Optional[EntityNavigator]:
         data = {
             "name": name,
@@ -420,10 +424,7 @@ class Navigator(object):
         return ApplicationNavigator(app, self.request)
 
     def add_schema(
-        self,
-        name: str,
-        title: str,
-        icon: str = "cube"
+        self, name: str, title: str, icon: str = "cube"
     ) -> typing.Optional[SchemaNavigator]:
         data = {"name": name, "title": title}
         schema = self.schema_col.create(data, deserialize=False)
@@ -432,11 +433,7 @@ class Navigator(object):
         return None
 
     def add_application(
-        self,
-        name: str,
-        title: str,
-        schema: SchemaModel,
-        icon: str = "cube"
+        self, name: str, title: str, schema: SchemaModel, icon: str = "cube"
     ) -> typing.Optional[ApplicationNavigator]:
         data = {
             "name": name,
@@ -450,9 +447,7 @@ class Navigator(object):
         return None
 
     def add_referencedata(
-        self,
-        name: str,
-        title: str
+        self, name: str, title: str
     ) -> typing.Optional[RefDataNavigator]:
         data = {"name": name, "title": title}
         refdata = self.refdata_col.create(data, deserialize=False)
@@ -461,9 +456,7 @@ class Navigator(object):
         return None
 
     def add_dictionaryentity(
-        self,
-        name: str,
-        title: str
+        self, name: str, title: str
     ) -> typing.Optional[DictionaryEntityNavigator]:
         data = {"name": name, "title": title}
         dent = self.dictentity_col.create(data, deserialize=False)

@@ -37,6 +37,13 @@ class AttributeModel(morpfw.Model):
 
     @morpfw.requestmemoize()
     def field_metadata(self):
+        return self._field_metadata()
+
+    @morpfw.requestmemoize()
+    def field_metadata_allow_invalid(self):
+        return self._field_metadata(allow_invalid=True)
+
+    def _field_metadata(self, allow_invalid=False):
         metadata = {
             "title": self["title"],
             "description": self["description"],
@@ -44,18 +51,20 @@ class AttributeModel(morpfw.Model):
             "validators": [],
         }
 
+        allow_invalid = allow_invalid or self["allow_invalid"]
+
         if self["primary_key"]:
             metadata["index"] = True
 
-        if self["allow_invalid"]:
+        if allow_invalid:
             metadata["required"] = False
 
-        if not self["allow_invalid"]:
+        if not allow_invalid:
             for v in self.validators():
                 metadata["validators"].append(v.field_validator())
 
         de = self.dictionaryelement()
-        if de and not self["allow_invalid"]:
+        if de and not allow_invalid:
             for v in de.validators():
                 metadata["validators"].append(v.field_validator())
 
@@ -71,7 +80,7 @@ class AttributeModel(morpfw.Model):
                 metadata["deform.widget"] = ReferenceDataWidget(
                     de["referencedata_name"], de["referencedata_property"]
                 )
-                if not self["allow_invalid"]:
+                if not allow_invalid:
                     metadata["validators"].append(
                         ReferenceDataValidator(
                             de["referencedata_name"], de["referencedata_property"]
