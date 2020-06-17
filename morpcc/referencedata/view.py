@@ -1,4 +1,5 @@
 import rulez
+
 from morpcc.crud.view.listing import listing as default_listing
 from morpfw.crud import permission as crudperms
 
@@ -79,3 +80,8 @@ def vocabulary_search(context, request):
     if not key_props:
         return {}
     return {"results": key_props}
+
+@App.html(model=ReferenceDataModelUI, name='view', permission=crudperms.View,
+          template='master/referencedata/view.pt')
+def model_view(context, request):
+    return {}
