@@ -7,22 +7,14 @@ from morpcc.relationship.model import RelationshipModel
 from morpcc.schema.model import SchemaModel
 
 from .app import App
-from .application.path import get_collection as get_app_collection
-from .attribute.path import get_collection as get_attr_collection
-from .backrelationship.path import get_collection as get_brel_collection
-from .dictionaryelement.path import get_collection as get_del_collection
-from .dictionaryentity.path import get_collection as get_dent_collection
 from .entitycontent.path import content_collection_factory
-from .referencedata.path import get_collection as get_refdata_collection
-from .referencedatakey.path import get_collection as get_refdatakey_collection
 from .referencedataproperty.path import get_collection as get_refdataprop_collection
-from .relationship.path import get_collection as get_rel_collection
 
 
 class AttributesBrowser(object):
     def __init__(self, entity, request):
         self.entity = entity
-        self.col = get_attr_collection(request)
+        self.col = request.get_collection("morpcc.attribute")
 
     def __getitem__(self, key):
         attrs = self.col.search(
@@ -45,13 +37,13 @@ class AttributesBrowser(object):
 class RelationshipsBrowser(AttributesBrowser):
     def __init__(self, entity, request):
         self.entity = entity
-        self.col = get_rel_collection(request)
+        self.col = request.get_collection("morpcc.relationship")
 
 
 class BackRelationshipsBrowser(AttributesBrowser):
     def __init__(self, entity, request):
         self.entity = entity
-        self.col = get_brel_collection(request)
+        self.col = request.get_collection("morpcc.backrelationship")
 
 
 class EntityNavigator(object):
@@ -59,9 +51,9 @@ class EntityNavigator(object):
         self.schema = schema
         self.entity = entity
         self.request = request
-        self.attr_col = get_attr_collection(request)
-        self.rel_col = get_rel_collection(request)
-        self.brel_col = get_brel_collection(request)
+        self.attr_col = request.get_collection("morpcc.attribute")
+        self.rel_col = request.get_collection("morpcc.relationship")
+        self.brel_col = request.get_collection("morpcc.backrelationship")
         self.attributes = AttributesBrowser(entity, request)
         self.relationships = RelationshipsBrowser(entity, request)
         self.backrelationships = RelationshipsBrowser(entity, request)
@@ -139,6 +131,7 @@ class EntityNavigator(object):
 class EntityContentNavigator(object):
     def __init__(self, entity, application, request):
         self.request = request
+        self.entity = entity
         self.collection = content_collection_factory(entity, application)
         self.collection_allow_invalid = content_collection_factory(
             entity, application, allow_invalid=True
@@ -170,7 +163,8 @@ class EntityContentCollectionBrowser(object):
         raise KeyError(key)
 
     def keys(self) -> typing.List[str]:
-        return [e["name"] for e in self.collection.search()]
+        schema: SchemaModel = self.application.application_schema()
+        return [e["name"] for e in schema.entities()]
 
 
 class ApplicationNavigator(object):
@@ -179,7 +173,7 @@ class ApplicationNavigator(object):
         self.request = request
         self.entities = EntityContentCollectionBrowser(request, application)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key) -> EntityContentNavigator:
         return self.entities[key]
 
     def keys(self):
@@ -193,7 +187,7 @@ class RefDataKeyNavigator(object):
     def __init__(self, refdatakey, request):
         self.refdatakey = refdatakey
         self.request = request
-        self.prop_col = get_refdataprop_collection(request)
+        self.prop_col = request.get_collection("morpcc.referencedataproperty")
 
     def add_property(self, name, value):
         data = {
@@ -228,7 +222,7 @@ class RefDataNavigator(object):
     def __init__(self, refdata, request):
         self.refdata = refdata
         self.request = request
-        self.key_col = get_refdatakey_collection(request)
+        self.key_col = request.get_collection("morpcc.referencedatakey")
 
     def add_key(
         self, name: str, description: typing.Optional[str] = None
@@ -267,7 +261,7 @@ class DictionaryEntityNavigator(object):
     def __init__(self, dictentity, request):
         self.dictentity = dictentity
         self.request = request
-        self.element_col = get_del_collection(request)
+        self.element_col = request.get_collection("morpcc.dictionaryelement")
 
     def add_element(
         self,
@@ -311,7 +305,7 @@ class DictionaryEntityNavigator(object):
 class DataDictionaryBrowser(object):
     def __init__(self, request):
         self.request = request
-        self.dictentity_col = get_dent_collection(request)
+        self.dictentity_col = request.get_collection("morpcc.dictionaryentity")
 
     def __getitem__(self, key) -> DictionaryEntityNavigator:
         dents = self.dictentity_col.search(rulez.field["name"] == key)
@@ -410,9 +404,9 @@ class ApplicationBrowser(object):
 class Navigator(object):
     def __init__(self, request):
         self.request = request
-        self.app_col = get_app_collection(request)
-        self.refdata_col = get_refdata_collection(request)
-        self.dictentity_col = get_dent_collection(request)
+        self.app_col = request.get_collection("morpcc.application")
+        self.refdata_col = request.get_collection("morpcc.referencedata")
+        self.dictentity_col = request.get_collection("morpcc.dictionaryentity")
         self.schema_col = request.get_collection("morpcc.schema")
         self.datadictionary = DataDictionaryBrowser(request)
         self.schemas = SchemaBrowser(request)
