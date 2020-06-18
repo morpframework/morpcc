@@ -24,11 +24,27 @@ class EntityContentCollection(morpfw.Collection):
     def application(self):
         return self.__application__
 
+    def base_avro_schema(self):
+        entity = self.__parent__
+        result = dataclass_to_avsc(self.schema, self.request, namespace=entity["name"])
+        return result
+
     def avro_schema(self):
         entity = self.__parent__
         result = dataclass_to_avsc(self.schema, self.request, namespace=entity["name"])
         for name, rel in self.relationships().items():
-            ref_entity = rel.reference_entity()
+            ref_entity = rel.entity()
+            item_schema = dataclass_to_avsc(
+                content_collection_factory(ref_entity, self.__application__).schema,
+                request=self.request,
+                namespace="%s.%s" % (entity["name"], ref_entity["name"]),
+            )
+
+            field = {"name": name, "type": [item_schema, "null"]}
+
+            for idx, v in enumerate(result["fields"]):
+                if v["name"] == name:
+                    result["fields"][idx] = field
 
         for name, brel in self.backrelationships().items():
             ref_entity = brel.reference_entity()
@@ -140,7 +156,8 @@ class EntityContentModel(morpfw.Model):
         result = self.base_avro_json()
         for name, rel in self.relationships().items():
             item = self.resolve_relationship(rel)
-            result[name] = item.base_avro_json()
+            if item:
+                result[name] = item.base_avro_json()
         for name, brel in self.backrelationships().items():
             items = self.resolve_backrelationship(brel)
             if brel["single_relation"]:
