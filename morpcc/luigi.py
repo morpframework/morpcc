@@ -31,8 +31,10 @@ if HAS_SPARK:
 
     class MorpSparkTask(MorpTask):
         def spark_session(self):
-            os.environ["PYSPARK_PYTHON"] = sys.executable
-            os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
+            if not os.environ.get("PYSPARK_PYTHON", None):
+                os.environ["PYSPARK_PYTHON"] = sys.executable
+            if not os.environ.get("PYSPARK_DRIVER_PYTHON", None):
+                os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
             return SparkSession.builder.appName(
                 "%s_%s" % (socket.gethostname(), int(time.time()))
             ).getOrCreate()
