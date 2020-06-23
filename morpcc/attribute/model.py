@@ -63,6 +63,10 @@ class AttributeModel(morpfw.Model):
             for v in self.validators():
                 metadata["validators"].append(v.field_validator())
 
+        rel_collection = self.request.get_collection("morpcc.relationship")
+        if rel_collection.search(rulez.field["reference_attribute_uuid"] == self.uuid):
+            metadata["index"] = True
+
         de = self.dictionaryelement()
         if de and not allow_invalid:
             for v in de.validators():
@@ -152,10 +156,18 @@ class AttributeModel(morpfw.Model):
                 }
             )
         if self.referencedata():
+            # we do it this way so that pickling will work
+            refdata = self.referencedata().export()
+            refdata_property = self.dictionaryelement()["referencedata_property"]
 
             def refdata_validate(value):
-                resolved = self.referencedata_resolve(value)
-                if value is not None and resolved is None:
+                if value is None:
+                    return True
+                properties = refdata["keys"].get(value, None)
+                if properties is not None:
+                    return False
+                prop_val = properties["values"].get(refdata_property, None)
+                if prop_val is not None:
                     return False
                 return True
 
