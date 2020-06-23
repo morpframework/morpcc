@@ -56,7 +56,9 @@ class IOHandler(object):
         config = request.app.settings.configuration.__dict__
         self.task_id = task_id
         self.log_path = config.get("morpcc.worker.task_dir", "/tmp/")
-        self.task_work_dir = os.path.join(os.path.abspath(self.log_path), self.task_id)
+        self.task_work_dir = os.path.join(
+            os.path.abspath(self.log_path), "mfw-%s" % self.task_id
+        )
 
     def redirect(self):
 
@@ -74,7 +76,7 @@ class IOHandler(object):
         return package
 
     def package_task(self):
-        filename = "/tmp/{}.zip".format(self.task_id)
+        filename = "/tmp/mfw-{}.zip".format(self.task_id)
         with zipfile.ZipFile(filename, "w", zipfile.ZIP_DEFLATED) as zipf:
             for root, dirs, files in os.walk(self.task_work_dir):
                 relpath = root.replace(self.task_work_dir, "./")
@@ -174,6 +176,8 @@ def put_output(request, task_id, path):
             fileobj=outf,
         )
         outf.close()
+    if os.path.exists(path):
+        os.unlink(path)
 
 
 def handle_task_completed(request, task_type, task_id):
@@ -206,7 +210,9 @@ def handle_task_failed(request, task_type, task_id):
         transaction.commit()
         request.clear_db_session()
         transaction.begin()
-
+        iohandler = IOHandler(request, task_id)
+        output_package = iohandler.restore()
+        put_output(request, task_id, output_package)
         print("%s Task %s (%s) failed" % (task_type.capitalize(), name, task_id))
 
 
