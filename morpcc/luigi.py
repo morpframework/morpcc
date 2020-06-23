@@ -1,9 +1,12 @@
 import os
 import socket
 import sys
+import threading
 import time
+import typing
 
 import luigi
+import transaction
 import yaml
 from morpfw.request import request_factory
 
@@ -14,16 +17,24 @@ try:
 except ImportError:
     HAS_SPARK = False
 
+threadlocal = threading.local()
+
 
 class MorpTask(luigi.Task):
     settings_file = luigi.Parameter()
+
+    environ: typing.Optional[dict] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not os.path.exists(self.settings_file):
             raise IOError("%s not found" % self.settings_file)
-        self.request = request_factory(
-            yaml.load(open(self.settings_file), Loader=yaml.Loader)
+
+    def request(self):
+        extra_environ = self.environ or {}
+        return request_factory(
+            yaml.load(open(self.settings_file), Loader=yaml.Loader),
+            extra_environ=extra_environ,
         )
 
 
