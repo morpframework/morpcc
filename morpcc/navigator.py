@@ -8,7 +8,6 @@ from morpcc.schema.model import SchemaModel
 
 from .app import App
 from .entitycontent.path import content_collection_factory
-from .referencedataproperty.path import get_collection as get_refdataprop_collection
 
 
 class AttributesBrowser(object):
