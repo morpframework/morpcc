@@ -163,11 +163,12 @@ class AttributeModel(morpfw.Model):
             def refdata_validate(value):
                 if value is None:
                     return True
-                properties = refdata["keys"].get(value, None)
-                if properties is not None:
+                marker = object()
+                properties = refdata["keys"].get(value, marker)
+                if properties is marker:
                     return False
-                prop_val = properties["values"].get(refdata_property, None)
-                if prop_val is not None:
+                prop_val = properties["values"].get(refdata_property, marker)
+                if prop_val is marker:
                     return False
                 return True
 

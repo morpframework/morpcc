@@ -44,7 +44,8 @@
                         serverSide: true,
                         processing: true,
                         ajax: "${request.link(context, '+datatable.json')}",
-                        columns: ${ column_options }
+                        columns: ${ column_options },
+                        order: ${ order }
                     });
 
 

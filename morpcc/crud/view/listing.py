@@ -26,6 +26,7 @@ from ..model import CollectionUI, ModelUI
 def listing(context, request):
     column_options = []
     columns = []
+    order = context.columns_order
     for c in context.columns:
         columns.append(c["title"])
         sortable = True
@@ -37,6 +38,7 @@ def listing(context, request):
         "listing_title": context.listing_title,
         "columns": columns,
         "column_options": json.dumps(column_options),
+        "order": json.dumps(order),
     }
 
 

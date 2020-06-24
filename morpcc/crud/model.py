@@ -54,7 +54,6 @@ class ModelUI(object):
         return []
 
 
-
 class CollectionUI(object):
 
     modelui_class = ModelUI
@@ -85,6 +84,12 @@ class CollectionUI(object):
     @property
     def columns(self):
         columns = []
+        if "created" in self.collection.schema.__dataclass_fields__.keys():
+            n = "created"
+            field = morpfw.Schema.__dataclass_fields__["created"]
+            title = field.metadata.get("title", n)
+            columns.append({"title": title, "name": n})
+
         for n, field in self.collection.schema.__dataclass_fields__.items():
             if n in morpfw.Schema.__dataclass_fields__.keys():
                 continue
@@ -93,6 +98,10 @@ class CollectionUI(object):
 
         columns.append({"title": "Actions", "name": "structure:buttons"})
         return columns
+
+    @property
+    def columns_order(self):
+        return [[0, "desc"]]
 
     def __init__(self, request, collection):
         self.request = request
@@ -114,5 +123,3 @@ class CollectionUI(object):
         if obj:
             return self.modelui_class(self.request, obj, self)
         return None
-
-
