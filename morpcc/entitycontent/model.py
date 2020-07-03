@@ -55,7 +55,7 @@ class EntityContentCollection(morpfw.Collection):
             )
 
             if brel["single_relation"]:
-                field = {"name": name, "type": item_schema}
+                field = {"name": name, "type": [item_schema, "null"]}
             else:
                 field = {
                     "name": name,
@@ -164,7 +164,7 @@ class EntityContentModel(morpfw.Model):
                 if items:
                     result[name] = items[0].base_avro_json()
                 else:
-                    result[name] = {}
+                    result[name] = None
             else:
                 result[name] = [item.base_avro_json() for item in items]
         return result
