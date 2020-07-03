@@ -38,6 +38,20 @@ class AttributeValidatorModel(morpfw.Model):
         )
         return function
 
+    def unrestricted_function(self):
+        bytecode = compile(
+            self["code"],
+            filename="<AttributeValidator {}>".format(self["name"]),
+            mode="exec",
+        )
+        name = "validate"
+        local_vars = {}
+        exec(bytecode, {}, local_vars)
+        func = local_vars[name]
+        del local_vars[name]
+        func.__globals__.update(local_vars)
+        return func
+
     def field_validator(self):
         return AttributeValidatorWrapper(self.function(), self["error_message"])
 
