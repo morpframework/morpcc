@@ -3,11 +3,11 @@ import html
 import deform
 import morepath
 import morpfw
+from inverter import dc2colander
 from morpfw.crud import permission as crudperms
 
 from ...app import App
 from ...deform.referencewidget import ReferenceWidget
-from ...util import dataclass_to_colander
 from ..model import CollectionUI, ModelUI
 
 
@@ -28,7 +28,7 @@ def model_index(context, request):
     permission=crudperms.View,
 )
 def view(context, request):
-    formschema = dataclass_to_colander(
+    formschema = dc2colander.convert(
         context.model.schema,
         request=request,
         include_fields=context.view_include_fields,
@@ -37,16 +37,16 @@ def view(context, request):
 
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
-        xattrformschema = dataclass_to_colander(xattrprovider.schema, request=request)
+        xattrformschema = dc2colander.convert(xattrprovider.schema, request=request)
     else:
         xattrformschema = None
     data = context.model.data.as_dict()
     sm = context.model.statemachine()
 
-    metadataschema = dataclass_to_colander(
+    metadataschema = dc2colander.convert(
         morpfw.Schema, request=request, exclude_fields=["blobs", "xattrs"]
     )
-    # FIXME: widget override should be part of dataclass_to_colander
+    # FIXME: widget override should be part of dc2colander
     for f in metadataschema.__all_schema_nodes__:
         if f.name == "creator":
             f.widget = ReferenceWidget(
@@ -87,7 +87,7 @@ def view(context, request):
     model=ModelUI, name="preview", permission=crudperms.View,
 )
 def preview(context, request):
-    formschema = dataclass_to_colander(
+    formschema = dc2colander.convert(
         context.model.schema,
         request=request,
         include_fields=context.view_include_fields,

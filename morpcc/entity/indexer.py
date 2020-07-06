@@ -1,7 +1,7 @@
 import re
 import string
 
-from morpfw.crud.schemaconverter.common import dataclass_get_type
+from inverter.common import dataclass_get_type
 
 from ..app import App
 from ..entitycontent.model import EntityContentModel

@@ -1,12 +1,13 @@
-import morepath
 import html
+
 import deform
+import morepath
+import rulez
 from morpfw.crud import permission as crudperms
-from ..model import CollectionUI, ModelUI
+
 from ...app import App
 from ...root import Root
-from ...util import dataclass_to_colander
-import rulez
+from ..model import CollectionUI, ModelUI
 
 
 def vocabulary_search(context, request):

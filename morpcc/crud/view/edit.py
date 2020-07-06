@@ -3,12 +3,12 @@ import html
 import colander
 import deform
 import morepath
+from inverter import dc2colander
 from morpfw.crud import permission as crudperms
 from morpfw.crud.errors import AlreadyExistsError, ValidationError
 from webob.exc import HTTPFound, HTTPNotFound
 
 from ...app import App
-from ...util import dataclass_to_colander
 from ..model import CollectionUI, ModelUI
 
 
@@ -19,7 +19,7 @@ from ..model import CollectionUI, ModelUI
     permission=crudperms.Edit,
 )
 def edit(context, request):
-    formschema = dataclass_to_colander(
+    formschema = dc2colander.convert(
         context.model.schema,
         request=request,
         mode="edit",
@@ -55,7 +55,7 @@ def modal_edit(context, request):
     request_method="POST",
 )
 def process_edit(context, request):
-    formschema = dataclass_to_colander(
+    formschema = dc2colander.convert(
         context.model.schema,
         request=request,
         mode="edit-process",
@@ -125,7 +125,7 @@ def xattredit(context, request):
 
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
-        xattrformschema = dataclass_to_colander(xattrprovider.schema, request=request)
+        xattrformschema = dc2colander.convert(xattrprovider.schema, request=request)
     else:
         raise HTTPNotFound()
 
@@ -160,7 +160,7 @@ def process_xattredit(context, request):
 
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
-        xattrformschema = dataclass_to_colander(xattrprovider.schema, request=request)
+        xattrformschema = dc2colander.convert(xattrprovider.schema, request=request)
     else:
         raise HTTPNotFound()
 

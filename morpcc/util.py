@@ -8,10 +8,7 @@ from pkg_resources import resource_filename
 
 import colander
 from deform.widget import HiddenWidget
-from morpfw.crud.schemaconverter.common import (dataclass_check_type,
-                                                dataclass_get_type)
-from morpfw.crud.schemaconverter.dataclass2colander import \
-    dataclass_to_colander
+from inverter.common import dataclass_check_type, dataclass_get_type
 from morpfw.interfaces import ISchema
 
 

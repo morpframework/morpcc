@@ -1,10 +1,12 @@
-import morepath
 import html
+
 import deform
+import morepath
+from inverter import dc2colander
 from morpfw.crud import permission as crudperms
-from ..model import CollectionUI, ModelUI
+
 from ...app import App
-from ...util import dataclass_to_colander
+from ..model import CollectionUI, ModelUI
 
 
 @App.html(
@@ -15,7 +17,7 @@ from ...util import dataclass_to_colander
 )
 def delete(context, request):
 
-    formschema = dataclass_to_colander(
+    formschema = dc2colander.convert(
         context.model.schema,
         request=request,
         include_fields=context.view_include_fields,
@@ -62,4 +64,3 @@ def process_delete(context, request):
 def modal_process_delete(context, request):
     context.model.delete()
     return morepath.redirect(request.link(context.collection_ui, "+modal-close"))
-

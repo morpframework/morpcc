@@ -1,7 +1,6 @@
 import morpfw
 import rulez
-from morpfw.crud.schemaconverter.dataclass2avsc import dataclass_to_avsc
-from morpfw.crud.schemaconverter.dataclass2colanderavro import dataclass_to_colanderavro
+from inverter import dc2avsc, dc2colanderavro
 from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
 
 from ..relationship.validator import EntityContentReferenceValidator
@@ -26,15 +25,15 @@ class EntityContentCollection(morpfw.Collection):
 
     def base_avro_schema(self):
         entity = self.__parent__
-        result = dataclass_to_avsc(self.schema, self.request, namespace=entity["name"])
+        result = dc2avsc.convert(self.schema, self.request, namespace=entity["name"])
         return result
 
     def avro_schema(self):
         entity = self.__parent__
-        result = dataclass_to_avsc(self.schema, self.request, namespace=entity["name"])
+        result = dc2avsc.convert(self.schema, self.request, namespace=entity["name"])
         for name, rel in self.relationships().items():
             ref_entity = rel.entity()
-            item_schema = dataclass_to_avsc(
+            item_schema = dc2avsc.convert(
                 content_collection_factory(ref_entity, self.__application__).schema,
                 request=self.request,
                 namespace="%s.%s" % (entity["name"], ref_entity["name"]),
@@ -48,7 +47,7 @@ class EntityContentCollection(morpfw.Collection):
 
         for name, brel in self.backrelationships().items():
             ref_entity = brel.reference_entity()
-            item_schema = dataclass_to_avsc(
+            item_schema = dc2avsc.convert(
                 content_collection_factory(ref_entity, self.__application__).schema,
                 request=self.request,
                 namespace="%s.%s" % (entity["name"], ref_entity["name"]),
@@ -144,7 +143,7 @@ class EntityContentModel(morpfw.Model):
     @morpfw.requestmemoize()
     def base_avro_json(self):
         exclude_fields = self.hidden_fields
-        cschema = dataclass_to_colanderavro(
+        cschema = dc2colanderavro.convert(
             self.schema, exclude_fields=exclude_fields, request=self.request
         )
         cs = cschema()

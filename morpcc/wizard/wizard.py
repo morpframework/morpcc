@@ -4,9 +4,8 @@ from dataclasses import dataclass, field
 import deform
 import morepath
 import morpfw
+from inverter import dc2colander
 from morpfw.crud.errors import ValidationError
-
-from ..util import dataclass_to_colander
 
 
 class WizardStep(object):
@@ -79,7 +78,7 @@ class FormWizardStep(WizardStep):
     schema: object
 
     def get_form(self, formid):
-        formschema = dataclass_to_colander(self.schema, request=self.request)
+        formschema = dc2colander.convert(self.schema, request=self.request)
         fs = formschema()
         fs.bind(context=self.context, request=self.request)
         return deform.Form(fs, formid=formid)
@@ -100,7 +99,7 @@ class FormWizardStep(WizardStep):
 
     def process_form(self):
         request = self.request
-        formschema = dataclass_to_colander(self.schema, request=self.request)
+        formschema = dc2colander.convert(self.schema, request=self.request)
         fs = formschema()
         fs.bind(context=self.context, request=self.request)
         controls = request.POST.items()

@@ -4,12 +4,12 @@ import colander
 import deform
 import morepath
 from deform.widget import HiddenWidget
+from inverter import dc2colander
 from morpfw.crud import permission as crudperms
 from morpfw.crud.errors import AlreadyExistsError, ValidationError
 from webob.exc import HTTPFound
 
 from ...app import App
-from ...util import dataclass_to_colander
 from ..model import CollectionUI, ModelUI
 
 
@@ -21,7 +21,7 @@ from ..model import CollectionUI, ModelUI
 )
 def create(context, request):
     default_value_fields = list(request.GET.keys())
-    formschema = dataclass_to_colander(
+    formschema = dc2colander.convert(
         context.collection.schema,
         request=request,
         include_fields=context.create_include_fields,
@@ -65,7 +65,7 @@ def modal_create(context, request):
 )
 def process_create(context, request):
     default_value_fields = list(request.GET.keys())
-    formschema = dataclass_to_colander(
+    formschema = dc2colander.convert(
         context.collection.schema,
         request=request,
         include_fields=context.create_include_fields,

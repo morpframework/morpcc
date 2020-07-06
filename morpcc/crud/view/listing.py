@@ -8,12 +8,11 @@ import deform
 import morepath
 import rulez
 from boolean.boolean import ParseError
+from inverter import dc2colander
 from morpfw.crud import permission as crudperms
-from morpfw.crud.schemaconverter.dataclass2colander import dataclass_to_colander
 
 from ...app import App
 from ...permission import ViewHome
-from ...util import dataclass_to_colander
 from ..model import CollectionUI, ModelUI
 
 
@@ -120,7 +119,7 @@ def _dt_result_render(context, request, columns, objs):
     collection = context.collection
     for o in objs:
         row = []
-        formschema = dataclass_to_colander(collection.schema, request=request)
+        formschema = dc2colander.convert(collection.schema, request=request)
         fs = formschema()
         fs.bind(context=o, request=request)
         form = deform.Form(fs)

@@ -4,12 +4,9 @@ import pprint
 import tempfile
 import typing
 
-import sqlalchemy
-from sqlalchemy import MetaData, create_engine
-from sqlalchemy.schema import CreateSchema
-
 import morpfw.crud.storage.sqlstorage
 import rulez
+import sqlalchemy
 import sqlalchemy_jsonfield.jsonfield
 import sqlalchemy_utils.types
 from alembic import command
@@ -24,8 +21,10 @@ from alembic.config import Config
 from alembic.migration import MigrationContext
 from alembic.operations import Operations
 from alembic.operations.ops import UpgradeOps
-from morpfw.crud.schemaconverter.dataclass2pgsqla import dataclass_to_pgsqla
+from inverter import dc2pgsqla
 from RestrictedPython import compile_restricted, safe_globals
+from sqlalchemy import MetaData, create_engine
+from sqlalchemy.schema import CreateSchema
 
 from .model import IndexCollection
 
@@ -99,7 +98,7 @@ class IndexDatabaseSyncAdapter(object):
         content_metadata = self.context.content_metadata()
         content_metadata.clear()
         idx_dc = self.context.dataclass()
-        tbl = dataclass_to_pgsqla(idx_dc, content_metadata)
+        tbl = dc2pgsqla.convert(idx_dc, content_metadata)
         upgrade_ops = UpgradeOps([])
         autogen_context = AutogenContext(migration_context, content_metadata)
         schemas = [content_metadata.schema]

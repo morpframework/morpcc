@@ -3,15 +3,14 @@ import json
 import colander
 import deform
 import rulez
+from inverter import dc2colander
 from morpcc.crud.view.edit import edit as default_edit
 from morpcc.crud.view.listing import datatable_search
 from morpcc.crud.view.listing import listing as default_listing
 from morpcc.crud.view.view import view as default_view
 from morpfw.crud import permission as crudperm
-from morpfw.crud.schemaconverter.dataclass2colander import dataclass_to_colander
 
 from ..app import App
-from ..util import dataclass_to_colander
 from .model import content_collection_factory
 from .modelui import EntityContentCollectionUI, EntityContentModelUI
 
@@ -84,7 +83,7 @@ def content_view(context, request):
             if breldata["content"]:
                 item = breldata["content"][0]
                 itemui = item.ui()
-                formschema = dataclass_to_colander(
+                formschema = dc2colander.convert(
                     item.schema,
                     request=request,
                     include_fields=itemui.view_include_fields,
@@ -140,7 +139,7 @@ def _entity_dt_result_render(context, request, columns, objs):
     collection = context.collection
     for o in objs:
         row = []
-        formschema = dataclass_to_colander(collection.schema, request=request)
+        formschema = dc2colander.convert(collection.schema, request=request)
         fs = formschema()
         fs.bind(context=o, request=request)
         form = deform.Form(fs)

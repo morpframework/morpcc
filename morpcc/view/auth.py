@@ -4,11 +4,11 @@ from dataclasses import dataclass, field
 
 import deform
 import morepath
+from inverter import dc2colander
 from morpfw.authn.pas.user.path import get_user_collection
 
 from ..app import App
 from ..root import Root
-from ..util import dataclass_to_colander
 
 
 @dataclass
@@ -23,7 +23,7 @@ class LoginForm(object):
 @App.html(model=Root, name="login", template="master/anon-form.pt")
 def login(context, request):
     schema = request.app.get_schemaextender(LoginForm)
-    formschema = dataclass_to_colander(schema, request=request)
+    formschema = dc2colander.convert(schema, request=request)
     fs = formschema()
     fs.bind(context=context, request=request)
     return {
@@ -49,7 +49,7 @@ def login(context, request):
 def process_login(context, request):
     controls = list(request.POST.items())
     schema = request.app.get_schemaextender(LoginForm)
-    formschema = dataclass_to_colander(schema, request=request)
+    formschema = dc2colander.convert(schema, request=request)
     fs = formschema()
     fs.bind(context=context, request=request)
     form = deform.Form(fs)
@@ -122,7 +122,7 @@ class RegistrationForm(object):
 @App.html(model=Root, name="register", template="master/anon-form.pt")
 def register(context, request):
     schema = request.app.get_schemaextender(RegistrationForm)
-    formschema = dataclass_to_colander(schema, request=request)
+    formschema = dc2colander.convert(schema, request=request)
     fs = formschema()
     fs.bind(context=context, request=request)
     return {
@@ -146,7 +146,7 @@ def register(context, request):
 def process_register(context, request):
     controls = list(request.POST.items())
     schema = request.app.get_schemaextender(RegistrationForm)
-    formschema = dataclass_to_colander(schema, request=request)
+    formschema = dc2colander.convert(schema, request=request)
     fs = formschema()
     fs.bind(context=context, request=request)
     form = deform.Form(fs)

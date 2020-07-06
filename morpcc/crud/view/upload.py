@@ -10,7 +10,6 @@ from morpfw.crud.view import get_blob
 
 from ... import permission
 from ...app import App
-from ...util import dataclass_to_colander
 from ..model import ModelUI
 from ..tempstore import FSBlobFileUploadTempStore
 

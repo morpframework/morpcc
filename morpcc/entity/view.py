@@ -11,7 +11,6 @@ from pygments.formatters import HtmlFormatter
 from pygments.lexers import PythonLexer
 
 from ..app import App
-from ..util import dataclass_to_colander
 from .modelui import EntityCollectionUI, EntityModelUI
 
 

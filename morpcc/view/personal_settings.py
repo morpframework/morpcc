@@ -3,6 +3,7 @@ import deform
 import deform.widget
 import morepath
 import morpfw.authn.pas.exc
+from inverter import dc2colander
 from morpfw.authn.pas.user.path import get_user_collection
 from morpfw.crud import permission as crudperm
 
@@ -11,7 +12,6 @@ from ..app import App
 from ..crud.tempstore import FSBlobFileUploadTempStore
 from ..root import Root
 from ..users.model import CurrentUserModelUI
-from ..util import dataclass_to_colander
 
 
 class UserInfoSchema(colander.MappingSchema):
@@ -76,7 +76,7 @@ def userinfo_form(request) -> deform.Form:
 
 def attributes_form(context, request) -> deform.Form:
     schema = context.xattrprovider().schema
-    formschema = dataclass_to_colander(schema, request=request)
+    formschema = dc2colander.convert(schema, request=request)
     fs = formschema()
     fs.bind(context=context, request=request)
     return deform.Form(fs, buttons=("Submit",), formid="personalinfo-form")

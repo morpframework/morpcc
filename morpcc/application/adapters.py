@@ -11,7 +11,7 @@ from alembic.config import Config
 from alembic.operations import Operations
 from alembic.operations.ops import UpgradeOps
 from alembic.runtime.migration import MigrationContext
-from morpfw.crud.schemaconverter.dataclass2pgsqla import dataclass_to_pgsqla
+from inverter import dc2pgsqla
 from RestrictedPython import compile_restricted, safe_globals
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.schema import CreateSchema
@@ -94,7 +94,7 @@ class ApplicationDatabaseSyncAdapter(object):
             rulez.field["schema_uuid"] == self.context["schema_uuid"]
         ):
             dc = dm.dataclass()
-            tbl = dataclass_to_pgsqla(dc, content_metadata)
+            tbl = dc2pgsqla.convert(dc, content_metadata)
         upgrade_ops = UpgradeOps([])
         autogen_context = AutogenContext(migration_context, content_metadata)
         schemas = [content_metadata.schema]
