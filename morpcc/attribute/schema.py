@@ -25,6 +25,7 @@ ACCEPTED_TYPES = (
     ("double", "Double"),
     ("date", "Date"),
     ("datetime", "DateTime"),
+    ("boolean", "Boolean"),
 )
 
 

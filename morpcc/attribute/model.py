@@ -21,6 +21,7 @@ DATATYPE_MAPPING = {
     "double": {"type": float, "label": "Double"},
     "date": {"type": date, "label": "Date"},
     "datetime": {"type": datetime, "label": "DateTime"},
+    "boolean": {"type": bool, "label": "Boolean"}
 }
 
 
