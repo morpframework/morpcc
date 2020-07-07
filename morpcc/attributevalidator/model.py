@@ -1,6 +1,7 @@
 import morpfw
 from RestrictedPython import compile_restricted
 
+from .. import log
 from ..restrictedpython import get_restricted_function
 from .modelui import AttributeValidatorCollectionUI, AttributeValidatorModelUI
 from .schema import AttributeValidatorSchema
@@ -33,12 +34,16 @@ class AttributeValidatorModel(morpfw.Model):
 
     @morpfw.memoize()
     def function(self):
+        restricted = self.app.get_config("morpcc.pythoncompiler.restricted", True)
+        if not restricted:
+            return self.unrestricted_function()
         function = get_restricted_function(
             self.request.app, self.bytecode(), "validate"
         )
         return function
 
     def unrestricted_function(self):
+        log.warn("Unrestricted function compiler is insecure")
         bytecode = compile(
             self["code"],
             filename="<AttributeValidator {}>".format(self["name"]),

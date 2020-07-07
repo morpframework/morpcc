@@ -37,6 +37,9 @@ class EntityValidatorModel(morpfw.Model):
 
     @morpfw.memoize()
     def function(self):
+        restricted = self.app.get_config("morpcc.pythoncompiler.restricted", True)
+        if not restricted:
+            return self.unrestricted_function()
         function = get_restricted_function(
             self.request.app, self.bytecode(), "validate"
         )
