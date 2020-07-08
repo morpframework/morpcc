@@ -80,7 +80,7 @@ class FormWizardStep(WizardStep):
     def get_form(self, formid):
         formschema = dc2colander.convert(self.schema, request=self.request)
         fs = formschema()
-        fs.bind(context=self.context, request=self.request)
+        fs = fs.bind(context=self.context, request=self.request)
         return deform.Form(fs, formid=formid)
 
     def can_handle(self):
@@ -101,7 +101,7 @@ class FormWizardStep(WizardStep):
         request = self.request
         formschema = dc2colander.convert(self.schema, request=self.request)
         fs = formschema()
-        fs.bind(context=self.context, request=self.request)
+        fs = fs.bind(context=self.context, request=self.request)
         controls = request.POST.items()
         form = deform.Form(fs, formid=request.POST.get("__formid__"))
         failed = False

@@ -60,15 +60,15 @@ def view(context, request):
         triggers = None
 
     fs = formschema()
-    fs.bind(context=context, request=request)
+    fs = fs.bind(context=context, request=request)
 
     mfs = metadataschema()
-    mfs.bind(context=context, request=request)
+    mfs = mfs.bind(context=context, request=request)
 
     xfs = None
     if xattrprovider:
         xfs = xattrformschema()
-        xfs.bind(context=context, request=request)
+        xfs = xfs.bind(context=context, request=request)
 
     return {
         "page_title": "View %s" % html.escape(str(context.model.__class__.__name__)),
@@ -95,7 +95,7 @@ def preview(context, request):
     )
 
     fs = formschema()
-    fs.bind(context=context, request=request)
+    fs = fs.bind(context=context, request=request)
     form = deform.Form(fs)
     form_data = context.model.data.as_dict()
     return form.render(

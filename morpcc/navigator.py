@@ -156,7 +156,13 @@ class EntityContentCollectionBrowser(object):
         self.collection = request.get_collection("morpcc.entity")
 
     def __getitem__(self, key) -> EntityContentNavigator:
-        items = self.collection.search(rulez.field["name"] == key)
+        items = self.collection.search(
+            rulez.and_(
+                rulez.field["name"] == key,
+                rulez.field["schema_uuid"]
+                == self.application.application_schema().uuid,
+            )
+        )
         if items:
             return EntityContentNavigator(items[0], self.application, self.request)
         raise KeyError(key)

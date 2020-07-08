@@ -78,7 +78,7 @@ def attributes_form(context, request) -> deform.Form:
     schema = context.xattrprovider().schema
     formschema = dc2colander.convert(schema, request=request)
     fs = formschema()
-    fs.bind(context=context, request=request)
+    fs = fs.bind(context=context, request=request)
     return deform.Form(fs, buttons=("Submit",), formid="personalinfo-form")
 
 

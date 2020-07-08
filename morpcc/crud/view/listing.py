@@ -121,7 +121,7 @@ def _dt_result_render(context, request, columns, objs):
         row = []
         formschema = dc2colander.convert(collection.schema, request=request)
         fs = formschema()
-        fs.bind(context=o, request=request)
+        fs = fs.bind(context=o, request=request)
         form = deform.Form(fs)
         for c in columns:
             if c["name"].startswith("structure:"):

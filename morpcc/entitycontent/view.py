@@ -90,7 +90,7 @@ def content_view(context, request):
                     exclude_fields=itemui.view_exclude_fields,
                 )
                 fs = formschema()
-                fs.bind(context=item, request=request)
+                fs = fs.bind(context=item, request=request)
                 breldata["form"] = deform.Form(fs)
                 breldata["form_data"] = item.as_dict()
                 validate_form(item, request, breldata["form"], breldata["form_data"])
@@ -141,7 +141,7 @@ def _entity_dt_result_render(context, request, columns, objs):
         row = []
         formschema = dc2colander.convert(collection.schema, request=request)
         fs = formschema()
-        fs.bind(context=o, request=request)
+        fs = fs.bind(context=o, request=request)
         form = deform.Form(fs)
         validate_form(o, request, form, o.as_dict())
         for c in columns:

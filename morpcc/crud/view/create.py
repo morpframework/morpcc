@@ -29,7 +29,7 @@ def create(context, request):
         hidden_fields=default_value_fields,
     )
     fs = formschema()
-    fs.bind(context=context, request=request)
+    fs = fs.bind(context=context, request=request)
 
     form_data = {}
     for f in default_value_fields:
@@ -73,10 +73,10 @@ def process_create(context, request):
         hidden_fields=default_value_fields,
     )
     fs = formschema()
-    fs.bind(context=context, request=request)
+    fs = fs.bind(context=context, request=request)
 
     controls = list(request.POST.items())
-    form = deform.Form(formschema(), buttons=("Submit",))
+    form = deform.Form(fs, buttons=("Submit",))
 
     failed = False
     data = {}

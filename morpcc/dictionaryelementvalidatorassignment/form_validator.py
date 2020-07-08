@@ -1,7 +1,7 @@
 import rulez
 
 
-def valid_assignment(request, schema, data, mode=None):
+def valid_assignment(request, schema, data, mode=None, **kw):
     ddelcol = request.get_collection("morpcc.dictionaryelement")
     valcol = request.get_collection("morpcc.attributevalidator")
 

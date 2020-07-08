@@ -1,6 +1,10 @@
 import morpfw
+from morpcc.crud.model import CollectionUI, ModelUI
+from morpfw.crud.model import Collection, Model
 from RestrictedPython import compile_restricted
 
+from ..entitycontent.model import EntityContentCollection, EntityContentModel
+from ..entitycontent.modelui import EntityContentCollectionUI, EntityContentModelUI
 from ..restrictedpython import get_restricted_function
 from .modelui import EntityValidatorCollectionUI, EntityValidatorModelUI
 from .schema import EntityValidatorSchema
@@ -15,7 +19,18 @@ class EntityValidatorWrapper(object):
         self.message = message
 
     def __call__(self, request, schema, data, mode=None, context=None):
-        obj = context.validation_dict()
+        # FIXME: this should be a reg dispatch
+        if isinstance(context, EntityContentModel):
+            obj = context.validation_dict()
+        elif isinstance(context, EntityContentModelUI):
+            obj = context.model.validation_dict()
+        elif isinstance(context, EntityContentCollection):
+            obj = context.validation_dict(data)
+        elif isinstance(context, EntityContentCollectionUI):
+            obj = context.collection.validation_dict(data)
+        else:
+            raise AssertionError("Unsupported context %s" % context)
+
         if not self.validator(obj):
             return {"message": self.message}
 

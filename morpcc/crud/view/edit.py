@@ -28,7 +28,7 @@ def edit(context, request):
     )
     data = context.model.data.as_dict()
     fs = formschema()
-    fs.bind(context=context, request=request)
+    fs = fs.bind(context=context, request=request)
     return {
         "page_title": "Edit %s" % html.escape(str(context.model.__class__.__name__)),
         "form_title": "Edit",
@@ -64,7 +64,7 @@ def process_edit(context, request):
         include_schema_validators=False,
     )
     fs = formschema()
-    fs.bind(context=context, request=request)
+    fs = fs.bind(context=context, request=request)
     data = context.model.data.as_dict()
     controls = list(request.POST.items())
     form = deform.Form(fs, buttons=("Submit",))
@@ -165,7 +165,7 @@ def process_xattredit(context, request):
         raise HTTPNotFound()
 
     fs = xattrformschema()
-    fs.bind(context=context, request=request)
+    fs = fs.bind(context=context, request=request)
     data = xattrprovider.as_dict()
     controls = list(request.POST.items())
     form = deform.Form(fs, buttons=("Submit",))

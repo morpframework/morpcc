@@ -2,7 +2,7 @@ import morpfw
 import rulez
 
 
-def unique_attribute(request, schema, data, mode=None):
+def unique_attribute(request, schema, data, mode=None, **kw):
     if mode == "update":
         return
 
@@ -33,7 +33,7 @@ def unique_attribute(request, schema, data, mode=None):
             return {"field": "name", "message": message}
 
 
-def required_if_primary_key(request, schema, data, mode=None):
+def required_if_primary_key(request, schema, data, mode=None, **kw):
     if data["primary_key"]:
         if not data["required"]:
             return {
@@ -42,7 +42,7 @@ def required_if_primary_key(request, schema, data, mode=None):
             }
 
 
-def valid_dictionary_element(request, schema, data, mode=None):
+def valid_dictionary_element(request, schema, data, mode=None, **kw):
 
     de_uuid = data.get("dictionaryelement_uuid", None)
     if not de_uuid:

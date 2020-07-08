@@ -1,3 +1,5 @@
+import copy
+
 import morpfw
 import rulez
 from inverter import dc2avsc, dc2colanderavro
@@ -32,7 +34,7 @@ class EntityContentCollection(morpfw.Collection):
         entity = self.__parent__
         result = dc2avsc.convert(self.schema, self.request, namespace=entity["name"])
         for name, rel in self.relationships().items():
-            ref_entity = rel.entity()
+            ref_entity = rel.reference_attribute().entity()
             item_schema = dc2avsc.convert(
                 content_collection_factory(ref_entity, self.__application__).schema,
                 request=self.request,
@@ -78,6 +80,49 @@ class EntityContentCollection(morpfw.Collection):
     def backrelationships(self):
         return self.__parent__.backrelationships()
 
+    def validation_dict(self, data):
+        result = copy.deepcopy(data)
+        for name, rel in self.relationships().items():
+            item = self.resolve_relationship(rel, data)
+            if item:
+                result[name] = item.as_dict()
+        for name, brel in self.backrelationships().items():
+            items = self.resolve_backrelationship(brel, data)
+            if brel["single_relation"]:
+                if items:
+                    result[name] = items[0].as_dict()
+                else:
+                    result[name] = {}
+            else:
+                result[name] = [item.as_dict() for item in items if item is not None]
+        return result
+
+    def resolve_relationship(self, relationship, data):
+        """ return the modelcontent of the relationship """
+        if not relationship["name"] in data:
+            return None
+        attr = relationship.reference_attribute()
+        entity = attr.entity()
+
+        col = content_collection_factory(entity, self.__application__)
+        res = col.search(rulez.field[attr["name"]] == data[relationship["name"]])
+        if res:
+            return res[0]
+        return None
+
+    def resolve_backrelationship(self, backrelationship, data):
+        rel = backrelationship.reference_relationship()
+        dm = rel.entity()
+        col = content_collection_factory(dm, self.__application__)
+
+        attr = rel.reference_attribute()
+
+        if not attr["name"] in data:
+            return []
+
+        result = col.search(rulez.field[rel["name"]] == data[attr["name"]])
+        return result
+
 
 class EntityContentModel(morpfw.Model):
     @property
@@ -86,6 +131,9 @@ class EntityContentModel(morpfw.Model):
 
     def ui(self):
         return EntityContentModelUI(self.request, self, self.collection.ui())
+
+    def application(self):
+        return self.collection.application()
 
     def attributes(self):
         entity = self.collection.__parent__
@@ -128,7 +176,10 @@ class EntityContentModel(morpfw.Model):
         result = self.base_json()
         for name, rel in self.relationships().items():
             item = self.resolve_relationship(rel)
-            result[name] = item.base_json()
+            if item:
+                result[name] = item.base_json()
+            else:
+                result[name] = None
         for name, brel in self.backrelationships().items():
             items = self.resolve_backrelationship(brel)
             if brel["single_relation"]:
@@ -147,7 +198,7 @@ class EntityContentModel(morpfw.Model):
             self.schema, exclude_fields=exclude_fields, request=self.request
         )
         cs = cschema()
-        cs.bind(context=self, request=self.request)
+        cs = cs.bind(context=self, request=self.request)
         return cs.serialize(self.data.as_dict())
 
     @morpfw.requestmemoize()

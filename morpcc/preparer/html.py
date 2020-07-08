@@ -28,4 +28,6 @@ class HTMLSanitizer(object):
         self.sanitizer = _Sanitizer(settings)
 
     def __call__(self, request, schema, value, mode=None):
-        return self.sanitizer.sanitize(value)
+        if value:
+            return self.sanitizer.sanitize(value)
+        return None
