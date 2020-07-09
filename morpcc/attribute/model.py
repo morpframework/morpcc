@@ -21,7 +21,7 @@ DATATYPE_MAPPING = {
     "double": {"type": float, "label": "Double"},
     "date": {"type": date, "label": "Date"},
     "datetime": {"type": datetime, "label": "DateTime"},
-    "boolean": {"type": bool, "label": "Boolean"}
+    "boolean": {"type": bool, "label": "Boolean"},
 }
 
 
@@ -139,7 +139,7 @@ class AttributeModel(morpfw.Model):
     def validators(self):
         col = self.request.get_collection("morpcc.attributevalidatorassignment")
         assignments = col.search(rulez.field["attribute_uuid"] == self.uuid)
-        validators = [a.validator() for a in assignments]
+        validators = [a.validator() for a in assignments if a.validator()]
 
         return validators
 
