@@ -182,6 +182,12 @@ class EntityModel(morpfw.Model):
         validators = [v.validator() for v in assignments]
         return validators
 
+    @morpfw.requestmemoize()
+    def get_entity_validator(self, name):
+        for v in self.entity_validators():
+            if v["name"] == name:
+                return v
+
 
 class EntityCollection(morpfw.Collection):
     schema = EntitySchema
