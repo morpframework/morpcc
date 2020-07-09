@@ -31,6 +31,7 @@ class ReferenceDataPropertySchema(morpfw.Schema):
     referencedatakey_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Reference Data Key",
             "format": "uuid",
             "required": True,
             "editable": False,

@@ -22,6 +22,7 @@ class EndpointHandlerSchema(morpfw.Schema):
     endpoint_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Endpoint",
             "format": "uuid",
             "required": True,
             "index": True,

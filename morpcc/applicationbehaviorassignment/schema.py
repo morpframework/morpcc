@@ -23,6 +23,7 @@ class ApplicationBehaviorAssignmentSchema(morpfw.Schema):
     application_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Application",
             "format": "uuid",
             "required": True,
             "validators": [ReferenceValidator("morpcc.application", "uuid")],

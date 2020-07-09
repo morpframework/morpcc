@@ -14,6 +14,7 @@ class AttributeValidatorAssignmentSchema(morpfw.Schema):
     attribute_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Attribute",
             "format": "uuid",
             "required": True,
             "validators": [ReferenceValidator("morpcc.attribute", "uuid")],

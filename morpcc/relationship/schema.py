@@ -31,6 +31,7 @@ class RelationshipSchema(morpfw.Schema):
     entity_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Entity",
             "format": "uuid",
             "required": True,
             "editable": False,
@@ -42,6 +43,7 @@ class RelationshipSchema(morpfw.Schema):
     reference_attribute_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Reference Attribute",
             "format": "uuid",
             "required": True,
             "editable": False,
@@ -55,6 +57,7 @@ class RelationshipSchema(morpfw.Schema):
     reference_search_attribute_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Reference Search Attribute",
             "required": True,
             "format": "uuid",
             "validators": [ReferenceValidator("morpcc.attribute", "uuid")],

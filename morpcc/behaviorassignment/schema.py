@@ -23,6 +23,7 @@ class BehaviorAssignmentSchema(morpfw.Schema):
     entity_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Entity",
             "format": "uuid",
             "required": True,
             "validators": [ReferenceValidator("morpcc.entity", "uuid")],

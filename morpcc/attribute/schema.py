@@ -69,6 +69,7 @@ class AttributeSchema(morpfw.Schema):
     entity_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Entity",
             "format": "uuid",
             "required": True,
             "editable": False,
@@ -79,6 +80,7 @@ class AttributeSchema(morpfw.Schema):
     dictionaryelement_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Dictionary Element",
             "format": "uuid",
             "required": False,
             "validators": [ReferenceValidator("morpcc.dictionaryelement", "uuid")],

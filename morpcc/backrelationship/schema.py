@@ -33,6 +33,7 @@ class BackRelationshipSchema(morpfw.Schema):
     entity_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Entity",
             "required": True,
             "editable": False,
             "format": "uuid",
@@ -44,6 +45,7 @@ class BackRelationshipSchema(morpfw.Schema):
     reference_relationship_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Reference Relationship",
             "format": "uuid",
             "required": True,
             "editable": False,

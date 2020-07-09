@@ -24,6 +24,7 @@ class DictionaryElementSchema(morpfw.Schema):
     dictionaryentity_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Dictionary Entity",
             "format": "uuid",
             "validators": [ReferenceValidator("morpcc.dictionaryentity", "uuid")],
             "deform.widget": ReferenceWidget(

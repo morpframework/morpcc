@@ -14,6 +14,7 @@ class DictionaryElementValidatorAssignmentSchema(morpfw.Schema):
     dictionaryelement_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Dictionary Element",
             "format": "uuid",
             "required": True,
             "validators": [ReferenceValidator("morpcc.dictionaryelement", "uuid")],

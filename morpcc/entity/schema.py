@@ -36,6 +36,7 @@ class EntitySchema(morpfw.Schema):
     schema_uuid: typing.Optional[str] = field(
         default=None,
         metadata={
+            "title": "Schema",
             "format": "uuid",
             "required": True,
             "editable": False,
