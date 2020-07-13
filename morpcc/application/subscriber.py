@@ -1,3 +1,4 @@
+import morpfw
 import morpfw.crud.signals as signals
 from morpcc.navigator import Navigator
 
@@ -6,25 +7,27 @@ from ..entitycontent.model import EntityContentModel, content_collection_factory
 
 
 @App.async_subscribe("morpcc.entitycontent.index")
-def index(request, app_uuid, entity_uuid, uuid):
-    appcol = request.get_collection("morpcc.application")
-    entitycol = request.get_collection("morpcc.entity")
-    app = appcol.get(app_uuid)
-    entity = entitycol.get(entity_uuid)
-    content_col = content_collection_factory(entity, app)
-    context = content_col.get(uuid)
-    app.index_sync(context)
+def index(request_options, app_uuid, entity_uuid, uuid):
+    with morpfw.request_factory(**request_options) as request:
+        appcol = request.get_collection("morpcc.application")
+        entitycol = request.get_collection("morpcc.entity")
+        app = appcol.get(app_uuid)
+        entity = entitycol.get(entity_uuid)
+        content_col = content_collection_factory(entity, app)
+        context = content_col.get(uuid)
+        app.index_sync(context)
 
 
 @App.async_subscribe("morpcc.entitycontent.unindex")
-def index(request, app_uuid, entity_uuid, uuid):
-    appcol = request.get_collection("morpcc.application")
-    entitycol = request.get_collection("morpcc.entity")
-    app = appcol.get(app_uuid)
-    entity = entitycol.get(entity_uuid)
-    content_col = content_collection_factory(entity, app)
-    context = content_col.get(uuid)
-    app.unindex(context)
+def index(request_options, app_uuid, entity_uuid, uuid):
+    with morpfw.request_factory(**request_options) as request:
+        appcol = request.get_collection("morpcc.application")
+        entitycol = request.get_collection("morpcc.entity")
+        app = appcol.get(app_uuid)
+        entity = entitycol.get(entity_uuid)
+        content_col = content_collection_factory(entity, app)
+        context = content_col.get(uuid)
+        app.unindex(context)
 
 
 @App.subscribe(model=EntityContentModel, signal=signals.OBJECT_CREATED)
