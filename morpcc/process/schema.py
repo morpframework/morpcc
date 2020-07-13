@@ -19,7 +19,7 @@ class ProcessSchema(morpfw.Schema):
     start: typing.Optional[datetime] = field(default=None, metadata={"editable": False})
     end: typing.Optional[datetime] = field(default=None, metadata={"editable": False})
     params: typing.Optional[dict] = field(
-        default=None, metadata={"editable": False, "deform.widget": JSONCodeWidget()}
+        default_factory=dict, metadata={"editable": False, "deform.widget": JSONCodeWidget()}
     )
     traceback: typing.Optional[str] = field(
         default=None,
