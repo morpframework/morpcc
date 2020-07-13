@@ -14,7 +14,7 @@ class ReferenceDataKey(morpfw.sql.Base):
     description = sa.Column(sa.Text())
     referencedata_uuid = sa.Column(morpfw.sql.GUID)
 
-    __table_args__ = (sa.UniqueConstraint("referencedata_uuid", "name"),)
+    __table_args__ = (sa.UniqueConstraint("referencedata_uuid", "name", "deleted"),)
 
 
 class ReferenceDataKeyStorage(morpfw.SQLStorage):

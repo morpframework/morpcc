@@ -10,9 +10,11 @@ class Schema(morpfw.sql.Base):
 
     __tablename__ = "morpcc_schema"
 
-    name = sa.Column(sa.String(length=1024), unique=True)
+    name = sa.Column(sa.String(length=1024), index=True)
     title = sa.Column(sa.String(length=1024))
     description = sa.Column(sa.Text())
+
+    __table_args__ = (sa.UniqueConstraint("name", "deleted"),)
 
 
 class SchemaStorage(morpfw.SQLStorage):
