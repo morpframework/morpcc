@@ -123,6 +123,13 @@ class EntityContentCollection(morpfw.Collection):
         result = col.search(rulez.field[rel["name"]] == data[attr["name"]])
         return result
 
+    def drop_all(self):
+        app = self.application()
+        meta = app.content_metadata()
+        bind = self.storage.session.bind
+        meta.reflect(bind)
+        meta.tables["%s.%s" % (app["name"], self.entity()["name"])].drop(bind)
+
 
 class EntityContentModel(morpfw.Model):
     @property

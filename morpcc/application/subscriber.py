@@ -3,7 +3,12 @@ import morpfw.crud.signals as signals
 from morpcc.navigator import Navigator
 
 from ..app import App
-from ..entitycontent.model import EntityContentModel, content_collection_factory
+from ..entitycontent.model import (
+    EntityContentCollection,
+    EntityContentModel,
+    content_collection_factory,
+)
+from .model import ApplicationModel
 
 
 @App.async_subscribe("morpcc.entitycontent.index")
@@ -68,3 +73,10 @@ def unindex_on_delete(app, request, context, signal):
         entity_uuid=entity.uuid,
         uuid=context.uuid,
     )
+
+
+@App.subscribe(model=ApplicationModel, signal=signals.OBJECT_TOBEDELETED)
+def delete_schema(app, request, context, signal):
+    app_uuid = context.uuid
+    context: ApplicationModel = context
+    context.drop_all()

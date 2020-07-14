@@ -113,6 +113,10 @@ class ApplicationModel(morpfw.Model):
         if existing:
             existing[0].delete(permanent=True)
 
+    def drop_all(self):
+        for ec in self.entity_collections().values():
+            ec.drop_all()
+
 
 class BehaviorableApplicationModel(ApplicationModel):
     def __new__(cls, request, collection, data):
