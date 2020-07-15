@@ -140,7 +140,10 @@ class AttributeModel(morpfw.Model):
         col = self.request.get_collection("morpcc.attributevalidatorassignment")
         assignments = col.search(rulez.field["attribute_uuid"] == self.uuid)
         validators = [a.validator() for a in assignments if a.validator()]
-
+        ddel = self.dictionaryelement()
+        if ddel:
+            ddvalidators = self.dictionaryelement().validators()
+            validators += ddvalidators
         return validators
 
     @morpfw.requestmemoize()
