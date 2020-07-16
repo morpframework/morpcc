@@ -420,7 +420,8 @@ class Navigator(object):
     def get_application(self, app_uuid) -> ApplicationNavigator:
         col = self.request.get_collection("morpcc.application")
         app = col.get(app_uuid)
-        return ApplicationNavigator(app, self.request)
+        if app:
+            return ApplicationNavigator(app, self.request)
 
     def add_schema(
         self, name: str, title: str, icon: str = "cube"
