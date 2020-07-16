@@ -161,21 +161,8 @@ class AttributeModel(morpfw.Model):
             )
         if self.referencedata():
             # we do it this way so that pickling will work
-            refdata = self.referencedata().export()
-            refdata_property = self.dictionaryelement()["referencedata_property"]
-
-            def refdata_validate(value):
-                if value is None:
-                    return True
-                marker = object()
-                properties = refdata["keys"].get(value, marker)
-                if properties is marker:
-                    return False
-                prop_val = properties["values"].get(refdata_property, marker)
-                if prop_val is marker:
-                    return False
-                return True
-
+            refdata = self.referencedata()
+            refdata_validate = refdata.validator()
             result.append(
                 {
                     "title": "Reference data non-compliance",

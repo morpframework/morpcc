@@ -36,6 +36,20 @@ class ReferenceDataModel(morpfw.Model):
             result["keys"][k["name"]] = k.export()
         return result
 
+    def validator(self):
+        refdata = self.export()
+
+        def refdata_validate(value):
+            if value is None:
+                return True
+            marker = object()
+            properties = refdata["keys"].get(value, marker)
+            if properties is marker:
+                return False
+            return True
+
+        return refdata_validate
+
     def before_delete(self):
         for k in self.referencedatakeys():
             k.delete()
