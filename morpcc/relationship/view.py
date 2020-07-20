@@ -8,23 +8,22 @@ def _attribute_search(context, request):
     # FIXME: this need to be secured
     entity_resource_type = "morpcc.entity"
     attribute_resource_type = "morpcc.attribute"
+    schema_resource_type = "morpcc.schema"
+
+    schema_uuid = request.GET.get("schema_uuid", "").strip()
+    if not schema_uuid:
+        return {}
+
     value_field = request.GET.get("value_field", "").strip()
     if not value_field:
         return {}
+
     term = request.GET.get("term", "").strip()
     if not term:
         return {}
 
-    attrtypeinfo = request.app.config.type_registry.get_typeinfo(
-        name=attribute_resource_type, request=request
-    )
-
-    dmtypeinfo = request.app.config.type_registry.get_typeinfo(
-        name=entity_resource_type, request=request
-    )
-
-    attrcol = attrtypeinfo["collection_factory"](request)
-    dmcol = dmtypeinfo["collection_factory"](request)
+    attrcol = request.get_collection(attribute_resource_type)
+    dmcol = request.get_collection(entity_resource_type)
 
     term = term.split(".")
     if len(term) == 1:
@@ -33,7 +32,12 @@ def _attribute_search(context, request):
     dmterm = term[0]
     attrterm = term[1]
 
-    dms = dmcol.search(query={"field": "title", "operator": "~", "value": dmterm})
+    dms = dmcol.search(
+        query=rulez.and_(
+            {"field": "title", "operator": "~", "value": dmterm},
+            rulez.field["schema_uuid"] == schema_uuid,
+        )
+    )
 
     attrs = []
 

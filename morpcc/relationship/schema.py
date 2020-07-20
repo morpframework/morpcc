@@ -11,7 +11,12 @@ from ..validator.reference import ReferenceValidator
 
 
 def attribute_search_url(widget, context, request):
-    return request.relative_url("/relationship/+attribute-search")
+    entity_uuid = request.GET.get("entity_uuid")
+    entitycol = request.get_collection("morpcc.entity")
+    entity = entitycol.get(entity_uuid)
+    return request.relative_url(
+        "/relationship/+attribute-search?schema_uuid=%s" % entity["schema_uuid"]
+    )
 
 
 @dataclass
