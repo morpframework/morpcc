@@ -34,6 +34,9 @@ class ApplicationModel(morpfw.Model):
     def ui(self):
         return BehaviorableApplicationModelUI(self.request, self, self.collection.ui())
 
+    def title(self):
+        return self["title"]
+
     @morpfw.requestmemoize()
     def application_schema(self):
         col = self.request.get_collection("morpcc.schema")

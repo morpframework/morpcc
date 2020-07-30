@@ -139,6 +139,15 @@ class EntityContentModel(morpfw.Model):
     def ui(self):
         return EntityContentModelUI(self.request, self, self.collection.ui())
 
+    def title(self):
+        title_parts = []
+        for attrname, attr in self.attributes().items():
+            if attr["primary_key"]:
+                title_parts.append(self[attrname])
+        if not title_parts:
+            return self["uuid"]
+        return ", ".join(title_parts)
+
     def application(self):
         return self.collection.application()
 
