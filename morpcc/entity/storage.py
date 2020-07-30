@@ -18,6 +18,7 @@ class Entity(morpfw.sql.Base):
 
     allow_invalid = sa.Column(sa.Boolean())
     schema_uuid = sa.Column(morpfw.sql.GUID(), index=True)
+    is_primary = sa.Column(sa.Boolean(), index=True)
 
 
 class EntityStorage(morpfw.SQLStorage):

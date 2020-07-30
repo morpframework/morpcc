@@ -11,6 +11,23 @@ from ..validator.reference import ReferenceValidator
 from ..validator.vocabulary import VocabularyValidator
 
 
+def only_one_primary(request, schema, data, mode=None, **kw):
+    if data["is_primary"] is True:
+        schema_uuid = data["schema_uuid"]
+        schemacol = request.get_collection("morpcc.schema")
+        schema = schemacol.get(schema_uuid)
+        for entity in schema.entities():
+            if entity["name"] != data["name"]:
+                if entity["is_primary"]:
+                    return {
+                        "field": "name",
+                        "message": (
+                            "Only one primary entity is allowed. "
+                            "Current primary entity is '{}'"
+                        ).format(entity["name"]),
+                    }
+
+
 @dataclass
 class EntitySchema(morpfw.Schema):
     name: typing.Optional[str] = field(
@@ -45,4 +62,9 @@ class EntitySchema(morpfw.Schema):
         },
     )
 
-    __unique_constraint__ = ["schema_uuid", "name"]
+    is_primary: typing.Optional[bool] = field(
+        default=False, metadata={"title": "Is Primary Entity", "required": False},
+    )
+
+    __validators__ = [only_one_primary]
+    __unique_constraint__ = ["schema_uuid", "name", "deleted"]
