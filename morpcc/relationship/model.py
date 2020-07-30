@@ -47,6 +47,10 @@ class RelationshipModel(morpfw.Model):
         dm = col.get(self["entity_uuid"])
         return dm
 
+    @morpfw.requestmemoize()
+    def reference_entity(self):
+        return self.reference_attribute().entity()
+
 
 class RelationshipCollection(morpfw.Collection):
     schema = RelationshipSchema
