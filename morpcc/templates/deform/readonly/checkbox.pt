@@ -6,4 +6,6 @@
         i18n:translate="">True</p>
     <p class="deform-readonly-false form-control-static" id="${oid}" tal:condition="cstruct == false_val"
         i18n:translate="">False</p>
+    <p class="form-control-static" id="${oid}" tal:condition="cstruct != false_val and cstruct != true_val"
+        i18n:translate="">&nbsp;</p>
 </div>
