@@ -111,7 +111,7 @@ def validate_form(context, request, form, form_data):
     for attrname, attr in entity.attributes().items():
         field_errors = []
         if attr["required"]:
-            if not form_data.get(attrname, None):
+            if form_data.get(attrname, None) is None:
                 field_errors.append("Field is required")
 
         validators = attr.validators()
