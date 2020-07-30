@@ -234,3 +234,21 @@ class RestrictedModuleAction(dectate.Action):
 
     def perform(self, obj, app_class):
         app_class.get_restricted_module.register(reg.methodify(obj), name=self.name)
+
+
+class BreadcrumbAction(dectate.Action):
+
+    app_class_arg = True
+
+    def __init__(self, model):
+        self.model = model
+
+    def identifier(self, app_class):
+        return str((app_class, self.model))
+
+    def perform(self, obj, app_class):
+        app_class.get_breadcrumb.register(
+            reg.methodify(obj),
+            model=self.model,
+            request=morepath.Request,
+        )

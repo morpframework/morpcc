@@ -17,6 +17,11 @@ def topnav_portlets(context, request):
     return ["morpcc.topnav"]
 
 
+@App.portletprovider(name="morpcc.abovecontent-portlets")
+def abovecontent_portlets(context, request):
+    return ["morpcc.breadcrumb"]
+
+
 @App.portlet(name="morpcc.main_navigation", template="master/portlet/navigation.pt")
 def navigation_portlet(context, request):
 
@@ -108,3 +113,17 @@ def topnav_portlet(context, request):
         "notifications": notifs,
         "notification_count": unread_notifs[0]["count"],
     }
+
+
+@App.portlet(name="morpcc.breadcrumb", template="master/portlet/breadcrumb.pt")
+def breadcrumb_portlet(context, request):
+    """
+    Breadcrumbs should return as 
+    {
+        'breadcrumb': [{'title': '...', 'url': '...', 'active': False}, 
+                       {'title': '...', 'url': '...', 'active': False},
+                       {'title': '...', 'url': '...', 'active': True}]
+    }
+    """
+    breadcrumb = request.app.get_breadcrumb(context, request)
+    return {"breadcrumb": breadcrumb}

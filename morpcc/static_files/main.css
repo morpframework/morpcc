@@ -100,3 +100,7 @@ div.dataTables_processing {
 div.dataTables_processing .fa-spin {
     font-size: 30px;
 }
+
+.breadcrumb {
+    margin-top: 5px;
+}

@@ -61,6 +61,7 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
     application_behavior = dectate.directive(directive.ApplicationBehaviorAction)
     default_factory = dectate.directive(directive.DefaultFactoryAction)
     restricted_module = dectate.directive(directive.RestrictedModuleAction)
+    breadcrumb = dectate.directive(directive.BreadcrumbAction)
 
     @reg.dispatch_method(reg.match_instance("model"), reg.match_key("name"))
     def get_indexer(self, model, name):
@@ -112,6 +113,12 @@ class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
         raise ImportError(
             "Module {} is not allowed to be imported in this context".format(name)
         )
+
+    @reg.dispatch_method(
+        reg.match_instance("model"), reg.match_instance("request"),
+    )
+    def get_breadcrumb(self, model, request):
+        return []
 
     def render_view(self, context, request, name=""):
         lookup = self.get_view.by_predicates(model=context.__class__, name=name)

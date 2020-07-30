@@ -92,7 +92,7 @@
             <div class="clearfix"></div>
 
 
-            <div tal:define="portletprovider app.get_portletprovider('morpcc.left-portlets')"
+            <div class="left-portlets" tal:define="portletprovider app.get_portletprovider('morpcc.left-portlets')"
               tal:condition="portletprovider"
               tal:content="structure:portletprovider.render(context, request, load_template)">
             </div>
@@ -129,7 +129,8 @@
                 </a>
               </div>
 
-              <div tal:define="portletprovider request.app.get_portletprovider('morpcc.top-navigation')"
+              <div class="top-navigation-portlets"
+                tal:define="portletprovider request.app.get_portletprovider('morpcc.top-navigation')"
                 tal:condition="portletprovider"
                 tal:replace="structure:portletprovider.render(context, request, load_template)">
               </div>
@@ -141,13 +142,15 @@
         <!-- page content -->
         <div class="right_col" role="main">
           <!-- top tiles -->
-          <div tal:define="portletprovider app.get_portletprovider('morpcc.abovecontent-portlets')"
+          <div class="abovecontent-portlets"
+            tal:define="portletprovider app.get_portletprovider('morpcc.abovecontent-portlets')"
             tal:condition="portletprovider"
             tal:content="structure:portletprovider.render(context, request, load_template)">
           </div>
-          <div metal:define-slot="main">
+          <div class="main-body" metal:define-slot="main">
           </div>
-          <div tal:define="portletprovider app.get_portletprovider('morpcc.belowcontent-portlets')"
+          <div class="belowcontent-portlets"
+            tal:define="portletprovider app.get_portletprovider('morpcc.belowcontent-portlets')"
             tal:condition="portletprovider"
             tal:content="structure:portletprovider.render(context, request, load_template)">
           </div>
