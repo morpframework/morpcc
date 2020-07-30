@@ -41,11 +41,14 @@ class MorpTask(luigi.Task):
 if HAS_SPARK:
 
     class MorpSparkTask(MorpTask):
-        def spark_session(self):
+        def spark_session(self, app_name=None):
+            return self.spark_session_builder(app_name).getOrCreate()
+
+        def spark_session_builder(self, app_name=None):
             if not os.environ.get("PYSPARK_PYTHON", None):
                 os.environ["PYSPARK_PYTHON"] = sys.executable
             if not os.environ.get("PYSPARK_DRIVER_PYTHON", None):
                 os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
-            return SparkSession.builder.appName(
-                "%s_%s" % (socket.gethostname(), int(time.time()))
-            ).getOrCreate()
+            if app_name is None:
+                app_name = "Morp %s_%s" % (socket.gethostname(), int(time.time()))
+            return SparkSession.builder.appName(app_name)
