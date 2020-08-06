@@ -14,7 +14,7 @@ def get_entity_model_breadcrumb(model, request):
         "active": False,
     }
 
-    schema_typeinfo = request.app.get_typeinfo("morpcc.schema")
+    schema_typeinfo = request.app.get_typeinfo("morpcc.schema", request)
     schema = model.model.entity_schema()
     schema_crumb = {
         "title": schema["title"],
