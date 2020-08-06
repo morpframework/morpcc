@@ -5,7 +5,9 @@ from dataclasses import dataclass, field
 import deform
 import morepath
 from inverter import dc2colander
+from morpfw.authn.pas import permission as authperm
 from morpfw.authn.pas.user.path import get_user_collection
+from webob.exc import HTTPNotFound
 
 from ..app import App
 from ..root import Root
@@ -106,21 +108,19 @@ class RegistrationForm(object):
     username: str = field(metadata={"required": True})
     email: str = field(metadata={"required": True})
     password: str = field(
-        metadata={
-            "required": True,
-            "deform": {"widget": deform.widget.PasswordWidget()},
-        }
+        metadata={"required": True, "deform.widget": deform.widget.PasswordWidget(),}
     )
     password_validate: str = field(
-        metadata={
-            "required": True,
-            "deform": {"widget": deform.widget.PasswordWidget()},
-        }
+        metadata={"required": True, "deform.widget": deform.widget.PasswordWidget(),}
     )
 
 
-@App.html(model=Root, name="register", template="master/anon-form.pt")
+@App.html(
+    model=Root, name="register", template="master/anon-form.pt",
+)
 def register(context, request):
+    if not request.app.get_config("morpcc.allow_registration", True):
+        raise HTTPNotFound()
     schema = request.app.get_schemaextender(RegistrationForm)
     formschema = dc2colander.convert(schema, request=request)
     fs = formschema()
