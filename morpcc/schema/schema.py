@@ -12,3 +12,5 @@ class SchemaSchema(morpfw.Schema):
     )
     title: typing.Optional[str] = None
     description: typing.Optional[str] = None
+
+    __unique_constraint__ = ["name", "deleted"]
