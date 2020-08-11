@@ -33,6 +33,11 @@ def site_settings(context, request):
                 "href": request.relative_url("/manage-apikeys/+listing"),
             },
             {
+                "title": "Manage Permissions",
+                "icon": "shield",
+                "href": request.relative_url("/permissionassignment/+listing"),
+            },
+            {
                 "title": "Manage Schemas",
                 "icon": "file-code-o",
                 "href": request.relative_url("/schema/+listing"),

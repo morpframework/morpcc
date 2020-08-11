@@ -1,0 +1,23 @@
+import morpfw
+import morpfw.sql
+import sqlalchemy as sa
+import sqlalchemy_jsonfield as sajson
+
+from .model import PermissionAssignmentModel
+
+
+class PermissionAssignment(morpfw.sql.Base):
+
+    __tablename__ = "morpcc_permissionassignment"
+
+    model = sa.Column(sa.String(length=2048))
+    permission = sa.Column(sa.String(length=1024))
+    groups = sa.Column(sajson.JSONField())
+    users = sa.Column(sajson.JSONField())
+    rule = sa.Column(sa.String(length=24))
+    enabled = sa.Column(sa.Boolean())
+
+
+class PermissionAssignmentStorage(morpfw.SQLStorage):
+    model = PermissionAssignmentModel
+    orm_model = PermissionAssignment
