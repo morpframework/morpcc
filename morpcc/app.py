@@ -10,6 +10,7 @@ from beaker.middleware import CacheMiddleware as BeakerCacheMiddleware
 from beaker.middleware import SessionMiddleware as BeakerMiddleware
 from more.chameleon import ChameleonApp
 from morepath.publish import resolve_model
+from morpcc.authz.policy import MorpCCAuthzPolicy
 from morpfw.app import DBSessionRequest
 from morpfw.authn.pas.policy import SQLStorageAuthApp, SQLStorageAuthnPolicy
 from morpfw.authz.pas import DefaultAuthzPolicy
@@ -45,7 +46,7 @@ class WebAppRequest(DBSessionRequest):
         return self.environ["beaker.cache"]
 
 
-class App(ChameleonApp, morpfw.SQLApp, DefaultAuthzPolicy):
+class App(ChameleonApp, morpfw.SQLApp, MorpCCAuthzPolicy):
 
     request_class = WebAppRequest
 

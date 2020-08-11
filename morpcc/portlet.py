@@ -1,10 +1,12 @@
 import rulez
 from morpfw.authn.pas.user.path import get_user_collection
+from morpfw.crud import permission as crudperms
 from webob.exc import HTTPUnauthorized
 
 from .app import App
 from .application.path import get_collection as get_app_collection
 from .users.path import get_current_user_model_ui
+from .util import permits
 
 
 @App.portletprovider(name="morpcc.left-portlets")
@@ -33,13 +35,14 @@ def navigation_portlet(context, request):
     apps_nav = []
     for app in appcol.search():
         appui = app.ui()
-        apps_nav.append(
-            {
-                "title": app["title"],
-                "icon": app["icon"] or "cubes",
-                "href": request.link(appui, "+{}".format(appui.default_view)),
-            }
-        )
+        if permits(request, appui, crudperms.View):
+            apps_nav.append(
+                {
+                    "title": app["title"],
+                    "icon": app["icon"] or "cubes",
+                    "href": request.link(appui, "+{}".format(appui.default_view)),
+                }
+            )
 
     types = request.app.config.type_registry.get_typeinfos(request)
     types_nav = []
@@ -48,13 +51,16 @@ def navigation_portlet(context, request):
             continue
         collection = typeinfo["collection_factory"](request)
         collectionui = collection.ui()
-        types_nav.append(
-            {
-                "title": typeinfo["title"],
-                "icon": "database",
-                "href": request.link(collectionui, "+%s" % collectionui.default_view),
-            }
-        )
+        if permits(request, collectionui, crudperms.View):
+            types_nav.append(
+                {
+                    "title": typeinfo["title"],
+                    "icon": "database",
+                    "href": request.link(
+                        collectionui, "+%s" % collectionui.default_view
+                    ),
+                }
+            )
     types_nav.sort(key=lambda x: x["title"])
 
     navtree = []

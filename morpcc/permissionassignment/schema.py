@@ -4,6 +4,10 @@ from dataclasses import dataclass, field
 import deform.widget
 import morpfw
 
+from ..root import Root
+
+MODELS = [Root]
+
 
 def permission_select_widget(request):
     views = list(request.app.get_view.by_args.__self__.registry.known_values)
@@ -31,6 +35,10 @@ def model_select_widget(request):
         ]:
             name = "%s:%s" % (model.__module__, model.__name__)
             models.append((name, name))
+
+    for model in MODELS:
+        name = "%s:%s" % (model.__module__, model.__name__)
+        models.append((name, name))
     return deform.widget.Select2Widget(values=models)
 
 
@@ -42,7 +50,7 @@ def group_select_widget(request):
 
 def user_select_widget(request):
     users = request.get_collection("morpfw.pas.user").all()
-    choices = [(u["username"], u["username"]) for u in users]
+    choices = [(u.userid, u["username"]) for u in users]
     return deform.widget.Select2Widget(values=choices, multiple=True)
 
 

@@ -9,15 +9,18 @@
         <metal:slot metal:fill-slot="page-body">
             <div class="container-fluid">
                 <tal:loop repeat="app applications">
-                    <div class="col-md-3 col-sm-4 col-xs-6" tal:define="card_icon app['icon'] or 'cubes';
+                    <tal:permitted condition="permits('morpfw.crud.permission:View', context=app.ui())">
+                        <div class="col-md-3 col-sm-4 col-xs-6" tal:define="card_icon app['icon'] or 'cubes';
                                 card_icon_link request.link(app.ui())">
-                        <metal:card use-macro="load_template('master/card.pt').macros.card">
-                            <metal:body fill-slot="card_content">
-                                <h4 style="text-align:center"><a href="${request.link(app.ui())}">${app['title']}</a>
-                                </h4>
-                            </metal:body>
-                        </metal:card>
-                    </div>
+                            <metal:card use-macro="load_template('master/card.pt').macros.card">
+                                <metal:body fill-slot="card_content">
+                                    <h4 style="text-align:center"><a
+                                            href="${request.link(app.ui())}">${app['title']}</a>
+                                    </h4>
+                                </metal:body>
+                            </metal:card>
+                        </div>
+                    </tal:permitted>
                 </tal:loop>
             </div>
         </metal:slot>

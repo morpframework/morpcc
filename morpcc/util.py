@@ -13,7 +13,10 @@ from morpfw.interfaces import ISchema
 
 
 def permits(request, context, permission):
-    perm_mod, perm_cls = permission.split(":")
-    mod = import_module(perm_mod)
-    klass = getattr(mod, perm_cls)
+    if isinstance(permission, str):
+        perm_mod, perm_cls = permission.split(":")
+        mod = import_module(perm_mod)
+        klass = getattr(mod, perm_cls)
+    else:
+        klass = permission
     return request.app._permits(request.identity, context, klass)
