@@ -44,6 +44,7 @@
                     $('#content-listing').DataTable({
                         serverSide: true,
                         processing: true,
+                        searching: false,
                         ajax: "${request.link(context, '+datatable.json')}",
                         columns: ${ column_options }
                     });
