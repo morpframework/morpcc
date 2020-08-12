@@ -49,6 +49,7 @@ class AttributeModel(morpfw.Model):
             "title": self["title"],
             "description": self["description"],
             "required": self["required"],
+            "searchable": self["searchable"],
             "validators": [],
         }
 
@@ -83,7 +84,9 @@ class AttributeModel(morpfw.Model):
         if self["type"] == "string":
             if de and de["referencedata_name"]:
                 metadata["deform.widget"] = ReferenceDataWidget(
-                    de["referencedata_name"], de["referencedata_property"]
+                    de["referencedata_name"],
+                    de["referencedata_property"],
+                    placeholder="Select %s" % self["title"],
                 )
                 if not allow_invalid:
                     metadata["validators"].append(

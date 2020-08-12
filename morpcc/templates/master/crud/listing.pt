@@ -10,6 +10,10 @@
             </span>
         </h3>
         <div metal:fill-slot="page-body" class="row">
+            <div id="search-form-wrapper" class="col-md-12 col-sm-12 col-xs-12" tal:condition="search_form">
+                <form tal:replace="structure:search_form.render(request=request, context=context)">
+                </form>
+            </div>
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div metal:use-macro="load_template('master/panel.pt').macros.panel">
                     <h2 metal:fill-slot="panel-title">${listing_title}</h2>
@@ -56,6 +60,22 @@
                         el.DataTable().ajax.reload();
                     }
                 });
+
+                $('#search-form-wrapper>form').on('submit', function () {
+                    var data = $(this).serializeArray();
+                    var data = $.map(data, function (value, index) {
+                        return 'mfw_search[' + value['name'] + ']=' + value['value']
+                    });
+                    var el = $('#content-listing');
+                    if ($.fn.DataTable.isDataTable(el)) {
+                        var dt = el.DataTable();
+                        var url = dt.ajax.url();
+                        url = url + '?' + data.join('&');
+                        dt.ajax.url(url);
+                        dt.ajax.reload();
+                    }
+                    return false;
+                })
                 })
             </script>
         </metal:slot>

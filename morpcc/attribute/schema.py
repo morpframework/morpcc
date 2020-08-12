@@ -13,6 +13,7 @@ from .form_validator import (
     required_if_primary_key,
     unique_attribute,
     valid_dictionary_element,
+    valid_searchable_type,
 )
 
 ACCEPTED_TYPES = (
@@ -96,10 +97,20 @@ class AttributeSchema(morpfw.Schema):
             "description": "Allow values that are considered invalid by data dictionary",
         },
     )
-    __unique_constraint__ = ["entity_uuid", "name"]
+
+    searchable: typing.Optional[bool] = field(
+        default=False,
+        metadata={
+            "title": "Searchable",
+            "description": "Make this attribute searchable",
+        },
+    )
+
+    __unique_constraint__ = ["entity_uuid", "name", "deleted"]
 
     __validators__ = [
         unique_attribute,
         required_if_primary_key,
         valid_dictionary_element,
+        valid_searchable_type,
     ]

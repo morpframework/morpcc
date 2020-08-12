@@ -27,6 +27,8 @@ class ReferenceWidget(SelectWidget):
         self.term_field = term_field
         self.value_field = value_field
         self.get_search_url = get_search_url
+        if kwargs.get("placeholder", None) is None:
+            kwargs["placeholder"] = " "
         super().__init__(**kwargs)
 
     def deserialize(self, *args, **kwargs):

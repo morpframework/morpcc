@@ -20,6 +20,7 @@ class Attribute(morpfw.sql.Base):
     entity_uuid = sa.Column(morpfw.sql.GUID(), index=True)
     dictionaryelement_uuid = sa.Column(morpfw.sql.GUID(), index=True)
     allow_invalid = sa.Column(sa.Boolean())
+    searchable = sa.Column(sa.Boolean())
 
 
 class AttributeStorage(morpfw.SQLStorage):

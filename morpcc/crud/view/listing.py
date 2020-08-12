@@ -2,6 +2,7 @@ import html
 import json
 import re
 import typing
+from dataclasses import field, make_dataclass
 
 import colander
 import deform
@@ -26,15 +27,44 @@ def listing(context, request):
     column_options = []
     columns = []
     order = context.columns_order
+
     for c in context.columns:
         columns.append(c["title"])
         sortable = True
         if c["name"].startswith("structure:"):
             sortable = False
         column_options.append({"name": c["name"], "orderable": sortable})
+
+    search_attrs = []
+    for attrname, attr in context.collection.schema.__dataclass_fields__.items():
+        searchable = attr.metadata.get("searchable", None)
+        if searchable:
+            metadata = {"required": False}
+            for mf in [
+                "title",
+                "description",
+                "deform.widget",
+                "deform.widget_factory",
+            ]:
+                mvalue = attr.metadata.get(mf, None)
+                if mvalue:
+                    metadata[mf] = mvalue
+
+            search_attrs.append(
+                (attrname, attr.type, field(default=None, metadata=metadata))
+            )
+
+    if search_attrs:
+        dc = make_dataclass("Form", search_attrs)
+        formschema = dc2colander.convert(dc, request=request)
+        search_form = deform.Form(formschema(), buttons=("Search",))
+    else:
+        search_form = None
+
     return {
         "page_title": context.page_title,
         "listing_title": context.listing_title,
+        "search_form": search_form,
         "columns": columns,
         "column_options": json.dumps(column_options),
         "order": json.dumps(order),
@@ -44,6 +74,7 @@ def listing(context, request):
 column_pattern = re.compile(r"^columns\[(\d+)\]\[(\w+)\]$")
 search_column_pattern = re.compile(r"^columns\[(\d+)\]\[(\w+)\]\[(\w+)\]$")
 search_pattern = re.compile(r"^search\[(\w+)\]$")
+mfw_search_pattern = re.compile(r"^mfw_search\[(\w+)\]$")
 order_pattern = re.compile(r"order\[(\d+)\]\[(\w+)\]")
 
 
@@ -57,6 +88,7 @@ def _parse_dtdata(data):
     result["start"] = 0
     result["draw"] = 1
     result["filter"] = None
+    result["mfw_search"] = {}
 
     columns = [(k, v) for k, v in data if k.startswith("columns")]
     orders = [(k, v) for k, v in data if k.startswith("order")]
@@ -107,6 +139,10 @@ def _parse_dtdata(data):
             i = search_pattern.match(k).groups()[0]
             result["search"].setdefault(i, {})
             result["search"][i] = v
+        elif k.startswith("mfw_search"):
+            i = mfw_search_pattern.match(k).groups()[0]
+            result["mfw_search"].setdefault(i, {})
+            result["mfw_search"][i] = v
 
     if mfilter:
         result["filter"] = rulez.parse_dsl(mfilter)
@@ -158,11 +194,25 @@ def datatable_search(
                     search.append(
                         {"field": fn, "operator": "~", "value": data["search"]["value"]}
                     )
-        if search:
-            search = rulez.or_(*search)
-        else:
-            search = None
 
+    if data["mfw_search"]:
+        for sfn, value in data["mfw_search"].items():
+            if sfn not in context.collection.schema.__dataclass_fields__:
+                continue
+
+            field = context.collection.schema.__dataclass_fields__[sfn]
+
+            if field.metadata.get("format", None) == "uuid":
+                continue
+            if field.type == str:
+                search.append({"field": sfn, "operator": "~", "value": value})
+            elif field.type.__origin__ == typing.Union:
+                if str in field.type.__args__:
+                    search.append({"field": sfn, "operator": "~", "value": value})
+    if search:
+        search = rulez.or_(*search)
+    else:
+        search = None
     if data["filter"]:
         if search:
             search = rulez.and_(data["filter"], search)

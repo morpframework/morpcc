@@ -58,3 +58,14 @@ def valid_dictionary_element(request, schema, data, mode=None, **kw):
                 data["type"]
             ),
         }
+
+
+def valid_searchable_type(request, schema, data, mode=None, **kw):
+    typ = data.get("type")
+    searchable = data.get("searchable")
+
+    if searchable and typ not in ["string"]:
+        return {
+            "field": "searchable",
+            "message": "Searchable option can only be turned on for string attributes at the moment",
+        }
