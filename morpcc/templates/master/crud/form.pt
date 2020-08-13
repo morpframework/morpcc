@@ -50,6 +50,12 @@
                                             class="fa fa-trash"></i>
                                     </a>
                                 </li>
+                                <li tal:condition="permits('morpfw.crud.permission:Edit')">
+                                    <a tal:attributes="href request.link(context, '+manage-permissions')">
+                                        <i data-toggle="tooltip" data-placement="top"
+                                            data-original-title="Manage Permissions" class="fa fa-shield"></i>
+                                    </a>
+                                </li>
                                 <li class="dropdown" tal:define="transitions context.transitions()"
                                     tal:condition="transitions and permits('morpfw.crud.permission:Edit')">
 

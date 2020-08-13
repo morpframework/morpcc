@@ -49,7 +49,6 @@ def listing(context, request):
                 mvalue = attr.metadata.get(mf, None)
                 if mvalue:
                     metadata[mf] = mvalue
-
             search_attrs.append(
                 (attrname, attr.type, field(default=None, metadata=metadata))
             )
@@ -197,14 +196,17 @@ def datatable_search(
 
     if data["mfw_search"]:
         for sfn, value in data["mfw_search"].items():
+            value = (value or "").strip()
+            if not value:
+                continue
+
             if sfn not in context.collection.schema.__dataclass_fields__:
                 continue
 
             field = context.collection.schema.__dataclass_fields__[sfn]
-
             if field.metadata.get("format", None) == "uuid":
-                continue
-            if field.type == str:
+                search.append({"field": sfn, "operator": "==", "value": value})
+            elif field.type == str:
                 search.append({"field": sfn, "operator": "~", "value": value})
             elif field.type.__origin__ == typing.Union:
                 if str in field.type.__args__:

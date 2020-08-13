@@ -11,8 +11,13 @@
         </h3>
         <div metal:fill-slot="page-body" class="row">
             <div id="search-form-wrapper" class="col-md-12 col-sm-12 col-xs-12" tal:condition="search_form">
-                <form tal:replace="structure:search_form.render(request=request, context=context)">
-                </form>
+                <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+                    <h2 metal:fill-slot="panel-title">Search</h2>
+                    <div metal:fill-slot="panel-content">
+                        <form tal:replace="structure:search_form.render(request=request, context=context)">
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div metal:use-macro="load_template('master/panel.pt').macros.panel">

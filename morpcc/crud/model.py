@@ -36,6 +36,10 @@ class ModelUI(object):
     def identifier(self):
         return self.model.identifier
 
+    @property
+    def uuid(self):
+        return self.model.uuid
+
     def __init__(self, request, model, collection_ui):
         self.request = request
         self.model = model

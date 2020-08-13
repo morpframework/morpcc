@@ -80,9 +80,10 @@ class PermissionAssignmentSchema(morpfw.Schema):
     rule: typing.Optional[str] = field(
         default="allow",
         metadata={
+            "required": True,
             "deform.widget": deform.widget.SelectWidget(
-                choices=[("allow", "Allow"), ("reject", "Reject")]
-            )
+                values=[("allow", "Allow"), ("reject", "Reject")]
+            ),
         },
     )
 
