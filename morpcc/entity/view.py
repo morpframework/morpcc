@@ -15,23 +15,6 @@ from .modelui import EntityCollectionUI, EntityModelUI
 
 
 @App.html(
-    model=EntityCollectionUI,
-    name="listing",
-    template="master/entity/listing.pt",
-    permission=crudperm.View,
-)
-def listing(context, request):
-    result = default_listing(context, request)
-    return result
-
-
-@App.json(model=EntityCollectionUI, name="ajax-status", permission=crudperm.View)
-def need_update(context, request):
-    dbsync = DatabaseSyncAdapter(context.collection, request)
-    return {"need_update": dbsync.need_update()}
-
-
-@App.html(
     model=EntityModelUI,
     name="edit",
     template="master/entity/edit.pt",
@@ -41,13 +24,14 @@ def edit(context, request):
     return default_edit(context, request)
 
 
-@App.html(
-    model=EntityModelUI,
-    name="view",
-    template="master/entity/view.pt",
-    permission=crudperm.View,
-)
-def view(context, request):
-    result = default_view(context, request)
-    # list down columns
-    return result
+# 	@App.html(
+# 	    model=EntityModelUI,
+# 	    name="view",
+# 	    template="master/entity/view.pt",
+# 	    permission=crudperm.View,
+# 	)
+# 	def view(context, request):
+# 	    result = default_view(context, request)
+# 	    # list down columns
+# 	    return result
+#
