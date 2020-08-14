@@ -10,12 +10,15 @@
             </span>
         </h3>
         <div metal:fill-slot="page-body" class="row">
-            <div id="search-form-wrapper" class="col-md-12 col-sm-12 col-xs-12" tal:condition="search_form">
+            <div class="col-md-12 col-sm-12 col-xs-12" tal:condition="search_form">
                 <div metal:use-macro="load_template('master/panel.pt').macros.panel">
                     <h2 metal:fill-slot="panel-title">Search</h2>
                     <div metal:fill-slot="panel-content">
-                        <form tal:replace="structure:search_form.render(request=request, context=context)">
-                        </form>
+                        <div id="search-form-wrapper">
+                            <form
+                                tal:replace="structure:search_form.render(search_data, request=request, context=context)">
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -49,11 +52,16 @@
         <metal:slot fill-slot="footer_script_slot">
             <script>
                 $(document).ready(function () {
+                    var qs = window.location.href.split('?')[1];
+                    var ajax_url = "${request.link(context, '+datatable.json')}";
+                    if (qs !== undefined) {
+                        ajax_url = ajax_url + '?' + qs;
+                    }
                     $('#content-listing').DataTable({
                         serverSide: true,
                         processing: true,
                         searching: false,
-                        ajax: "${request.link(context, '+datatable.json')}",
+                        ajax: ajax_url,
                         columns: ${ column_options },
                         order: ${ order }
                     });
@@ -66,7 +74,7 @@
                     }
                 });
 
-                $('#search-form-wrapper>form').on('submit', function () {
+                $('#search-form-wrapper>form').on('submit', function (ev) {
                     var data = $(this).serializeArray();
                     var data = $.map(data, function (value, index) {
                         return 'mfw_search[' + value['name'] + ']=' + value['value']
@@ -74,10 +82,13 @@
                     var el = $('#content-listing');
                     if ($.fn.DataTable.isDataTable(el)) {
                         var dt = el.DataTable();
-                        var url = dt.ajax.url();
+                        var url = dt.ajax.url().split('?')[0];
                         url = url + '?' + data.join('&');
                         dt.ajax.url(url);
                         dt.ajax.reload();
+                        var docurl = window.location.href.split('?')[0];
+                        docurl = docurl + '?' + data.join('&');
+                        window.history.pushState({ 'url': docurl }, document.title, docurl);
                     }
                     return false;
                 })

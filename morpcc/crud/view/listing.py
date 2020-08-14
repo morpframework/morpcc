@@ -60,10 +60,14 @@ def listing(context, request):
     else:
         search_form = None
 
+    data = _parse_dtdata(list(request.GET.items()))
+    search_data = data['mfw_search']
+
     return {
         "page_title": context.page_title,
         "listing_title": context.listing_title,
         "search_form": search_form,
+        "search_data": search_data,
         "columns": columns,
         "column_options": json.dumps(column_options),
         "order": json.dumps(order),
