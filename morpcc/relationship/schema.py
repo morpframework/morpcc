@@ -3,6 +3,8 @@ from dataclasses import dataclass, field
 
 import morpfw
 from deform.widget import SelectWidget
+from morpcc.crud.model import CollectionUI, ModelUI
+from morpfw.crud.model import Collection, Model
 from morpfw.validator.field import valid_identifier
 
 from ..attribute.form_validator import required_if_primary_key, unique_attribute
@@ -11,7 +13,12 @@ from ..validator.reference import ReferenceValidator
 
 
 def attribute_search_url(widget, context, request):
-    entity_uuid = request.GET.get("entity_uuid")
+    if isinstance(context, Model):
+        entity_uuid = context["entity_uuid"]
+    elif isinstance(context, ModelUI):
+        entity_uuid = context.model["entity_uuid"]
+    else:
+        entity_uuid = request.GET.get("entity_uuid")
     entitycol = request.get_collection("morpcc.entity")
     entity = entitycol.get(entity_uuid)
     return request.relative_url(
