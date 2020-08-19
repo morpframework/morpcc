@@ -32,7 +32,6 @@ class ProcessStateMachine(morpfw.StateMachine):
         context = self._context
         request = self._request
         request.app.celery.control.revoke(context["task_id"], terminate=True)
-        context.update({"end": datetime.now(tz=pytz.UTC)}, deserialize=False)
 
 
 @App.statemachine(model=ProcessModel)

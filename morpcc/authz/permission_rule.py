@@ -32,6 +32,12 @@ def rule_from_assignment(request, model, permission, identity):
     permission_name = "%s:%s" % (permission.__module__, permission.__name__,)
     groups = user.groups()
 
+    user_roles = []
+    for gid, roles in user.group_roles().items():
+        for role in roles:
+            role_ref = "%s::%s" % (gid, role)
+            user_roles.append(role_ref)
+
     if isinstance(model, Model) or isinstance(model, ModelUI):
         found_perms = []
         for perm in opcol.search(
@@ -46,12 +52,8 @@ def rule_from_assignment(request, model, permission, identity):
         for perm in sorted(
             found_perms, key=lambda x: 0 if x["rule"] == "reject" else 1
         ):
-            if user.userid in perm["users"]:
-                if perm["rule"] == "allow":
-                    return True
-                return False
-            for g in groups:
-                if g["groupname"] in perm["groups"]:
+            for role in user_roles:
+                if role in (perm["roles"] or []):
                     if perm["rule"] == "allow":
                         return True
                     return False
@@ -75,15 +77,12 @@ def rule_from_assignment(request, model, permission, identity):
         for perm in sorted(
             found_perms, key=lambda x: 0 if x["rule"] == "reject" else 1
         ):
-            if user.userid in perm["users"]:
-                if perm["rule"] == "allow":
-                    return True
-                return False
-            for g in groups:
-                if g["groupname"] in perm["groups"]:
+            for role in user_roles:
+                if role in (perm["roles"] or []):
                     if perm["rule"] == "allow":
                         return True
                     return False
+
     return False
 
 

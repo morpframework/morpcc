@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 
 import deform.widget
 import morpfw
+from morpfw.authn.pas.group.model import DEFAULT_VALID_ROLES
 
 from ..root import Root
 
@@ -48,6 +49,17 @@ def group_select_widget(request):
     return deform.widget.Select2Widget(values=choices, multiple=True)
 
 
+def roles_select_widget(request):
+    groups = request.get_collection("morpfw.pas.group").all()
+    valid_roles = request.app.get_config("morpfw.valid_roles", DEFAULT_VALID_ROLES)
+    choices = []
+    for g in groups:
+        for role in valid_roles:
+            item = "%s::%s" % (g["groupname"], role)
+            choices.append((item, item))
+    return deform.widget.Select2Widget(values=choices, multiple=True)
+
+
 def user_select_widget(request):
     users = request.get_collection("morpfw.pas.user").all()
     choices = [(u.userid, u["username"]) for u in users]
@@ -70,11 +82,8 @@ class PermissionAssignmentSchema(morpfw.Schema):
         },
     )
 
-    groups: typing.Optional[list] = field(
-        default_factory=list, metadata={"deform.widget_factory": group_select_widget}
-    )
-    users: typing.Optional[list] = field(
-        default_factory=list, metadata={"deform.widget_factory": user_select_widget}
+    roles: typing.Optional[list] = field(
+        default_factory=list, metadata={"deform.widget_factory": roles_select_widget}
     )
 
     rule: typing.Optional[str] = field(

@@ -1,7 +1,8 @@
+from RestrictedPython import compile_restricted
+
 import morpfw
 from morpcc.crud.model import CollectionUI, ModelUI
 from morpfw.crud.model import Collection, Model
-from RestrictedPython import compile_restricted
 
 from ..entitycontent.model import EntityContentCollection, EntityContentModel
 from ..entitycontent.modelui import EntityContentCollectionUI, EntityContentModelUI
@@ -63,7 +64,7 @@ class EntityValidatorModel(morpfw.Model):
     def unrestricted_function(self):
         bytecode = compile(
             self["code"],
-            filename="<AttributeValidator {}>".format(self["name"]),
+            filename="<EntityValidator {}>".format(self["name"]),
             mode="exec",
         )
         name = "validate"

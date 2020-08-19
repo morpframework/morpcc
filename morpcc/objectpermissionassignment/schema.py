@@ -7,6 +7,7 @@ import morpfw
 from ..permissionassignment.schema import (
     group_select_widget,
     permission_select_widget,
+    roles_select_widget,
     user_select_widget,
 )
 
@@ -25,11 +26,8 @@ class ObjectPermissionAssignmentSchema(morpfw.Schema):
         },
     )
 
-    groups: typing.Optional[list] = field(
-        default_factory=list, metadata={"deform.widget_factory": group_select_widget}
-    )
-    users: typing.Optional[list] = field(
-        default_factory=list, metadata={"deform.widget_factory": user_select_widget}
+    roles: typing.Optional[list] = field(
+        default_factory=list, metadata={"deform.widget_factory": roles_select_widget}
     )
 
     rule: typing.Optional[str] = field(

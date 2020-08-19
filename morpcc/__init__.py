@@ -1,3 +1,4 @@
+from . import patches
 import logging
 
 from .app import App
