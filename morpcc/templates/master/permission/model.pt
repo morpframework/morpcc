@@ -21,8 +21,7 @@
                                 <thead>
                                     <tr>
                                         <th>Permission</th>
-                                        <th>Users</th>
-                                        <th>Groups</th>
+                                        <th>Roles</th>
                                         <th>Rule</th>
                                         <th>Enabled</th>
                                         <th>Actions</th>
@@ -51,8 +50,7 @@
                     ajax: "${request.relative_url('/objectpermissionassignment/+datatable.json?filter=object_uuid%3D%3D' + context.model.uuid)}",
                     columns: [
                         { 'name': 'permission' },
-                        { 'name': 'users' },
-                        { 'name': 'groups' },
+                        { 'name': 'roles' },
                         { 'name': 'rule' },
                         { 'name': 'enabled' },
                         { 'name': 'structure:buttons' }
