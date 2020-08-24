@@ -61,7 +61,7 @@ def listing(context, request):
         search_form = None
 
     data = _parse_dtdata(list(request.GET.items()))
-    search_data = data['mfw_search']
+    search_data = data["mfw_search"]
 
     return {
         "page_title": context.page_title,
@@ -241,7 +241,7 @@ def datatable_search(
             order_by = (order_col, data["order"][0]["dir"])
     try:
         objs = collection.search(
-            query=search, limit=data["length"], offset=data["start"], order_by=order_by
+            query=search, limit=data["length"], offset=data["start"], order_by=order_by,
         )
     except NotImplementedError:
         objs = collection.search(
@@ -266,6 +266,6 @@ def datatable_search(
     }
 
 
-@App.json(model=CollectionUI, name="datatable.json", permission=crudperms.View)
+@App.json(model=CollectionUI, name="datatable.json", permission=crudperms.Search)
 def datatable(context, request):
     return datatable_search(context, request)
