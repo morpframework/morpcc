@@ -93,12 +93,12 @@ def allow_api_registration(identity, model, permission):
 
 @Policy.permission_rule(model=CollectionUI, permission=All)
 def collectionui_permission(identity, model, permission):
-    return rule_from_assignment(model.request, model, permission, identity)
+    return rule_from_assignment(model.request, model.collection, permission, identity)
 
 
 @Policy.permission_rule(model=ModelUI, permission=All)
 def modelui_permission(identity, model, permission):
-    return rule_from_assignment(model.request, model, permission, identity)
+    return rule_from_assignment(model.request, model.model, permission, identity)
 
 
 @Policy.permission_rule(model=EntityContentModelUI, permission=All)

@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 
 import deform.widget
 import morpfw
+from morpfw import permission as perms
 from morpfw.authn.pas.group.model import DEFAULT_VALID_ROLES
 
 from ..root import Root
@@ -11,13 +12,10 @@ MODELS = [Root]
 
 
 def permission_select_widget(request):
-    views = list(request.app.get_view.by_args.__self__.registry.known_values)
     permissions = set()
-    for view in views:
-        perm = view.permission
-        if perm:
-            name = "%s:%s" % (perm.__module__, perm.__name__)
-            permissions.add((name, name))
+    for perm in perms.All.subclasses:
+        name = "%s:%s" % (perm.__module__, perm.__name__)
+        permissions.add((name, name))
 
     permissions = sorted(list(permissions), key=lambda x: x[0])
     return deform.widget.Select2Widget(values=permissions)
@@ -31,8 +29,6 @@ def model_select_widget(request):
         for model in [
             ti["collection"],
             ti["model"],
-            ti["collection_ui"],
-            ti["model_ui"],
         ]:
             name = "%s:%s" % (model.__module__, model.__name__)
             models.append((name, name))
