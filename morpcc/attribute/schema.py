@@ -43,6 +43,7 @@ class AttributeSchema(morpfw.Schema):
         metadata={
             "required": True,
             "editable": False,
+            "searchable": True,
             "validators": [valid_identifier],
         },
     )
@@ -55,7 +56,9 @@ class AttributeSchema(morpfw.Schema):
             "deform.widget": SelectWidget(values=ACCEPTED_TYPES),
         },
     )
-    title: typing.Optional[str] = field(default=None, metadata={"required": True})
+    title: typing.Optional[str] = field(
+        default=None, metadata={"required": True, "searchable": True}
+    )
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
     required: typing.Optional[bool] = False
     primary_key: typing.Optional[bool] = False
