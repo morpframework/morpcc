@@ -1,4 +1,5 @@
 import rulez
+from morpfw.crud import permission as crudperms
 
 from ..app import App
 from .modelui import RelationshipCollectionUI
@@ -56,6 +57,8 @@ def _attribute_search(context, request):
     return result
 
 
-@App.json(model=RelationshipCollectionUI, name="attribute-search")
+@App.json(
+    model=RelationshipCollectionUI, name="attribute-search", permission=crudperms.Search
+)
 def attribute_search(context, request):
     return _attribute_search(context, request)

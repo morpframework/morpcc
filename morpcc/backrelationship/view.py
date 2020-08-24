@@ -1,7 +1,9 @@
 import rulez
+from morpfw.crud import permission as crudperm
 
 from ..app import App
-from ..entitycontent.model import EntityContentModelUI, content_collection_factory
+from ..entitycontent.model import (EntityContentModelUI,
+                                   content_collection_factory)
 from .modelui import BackRelationshipCollectionUI, BackRelationshipModelUI
 from .path import get_model as get_backrelationship
 
@@ -63,6 +65,6 @@ def _relationship_search(context, request):
     return result
 
 
-@App.json(model=BackRelationshipCollectionUI, name="relationship-search")
+@App.json(model=BackRelationshipCollectionUI, name="relationship-search", permission=crudperm.Search)
 def relationship_search(context, request):
     return _relationship_search(context, request)

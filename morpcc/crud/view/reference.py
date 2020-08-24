@@ -7,6 +7,7 @@ from morpfw.crud import permission as crudperms
 
 from ...app import App
 from ...root import Root
+from ...util import permits
 from ..model import CollectionUI, ModelUI
 
 
@@ -32,10 +33,11 @@ def _term_search(context, request):
     objs = col.search(query={"field": term_field, "operator": "~", "value": term})
     result = {"results": []}
     for obj in objs:
-        result["results"].append({"id": obj[value_field], "text": obj[term_field]})
+        if permits(request, obj, crudperms.View):
+            result["results"].append({"id": obj[value_field], "text": obj[term_field]})
     return result
 
 
-@App.json(model=Root, name="term-search")
+@App.json(model=Root, name="term-search", permission=crudperms.View)
 def root_term_search(context, request):
     return _term_search(context, request)

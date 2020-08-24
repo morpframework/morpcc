@@ -167,7 +167,11 @@ def _entity_dt_result_render(context, request, columns, objs):
     return rows
 
 
-@App.json(model=EntityContentModelUI, name="backrelationship-search.json")
+@App.json(
+    model=EntityContentModelUI,
+    name="backrelationship-search.json",
+    permission=crudperm.View,
+)
 def relationship_content_search(context, request):
     brel_uuid = request.GET.get("backrelationship_uuid", "").strip()
     if not brel_uuid:

@@ -31,6 +31,6 @@ def vocabulary_search(context, request):
     return result
 
 
-@App.json(model=Root, name="vocabulary-search")
+@App.json(model=Root, name="vocabulary-search", permission=crudperms.View)
 def root_vocabulary_search(context, request):
     return vocabulary_search(context, request)
