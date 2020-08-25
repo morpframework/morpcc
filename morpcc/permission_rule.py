@@ -1,9 +1,10 @@
+from morpcc.authz import rule_from_assignment
+from morpfw.crud import permission as crudperm
+
+from . import permission
 from .app import App
 from .root import Root
 from .users.model import CurrentUserModelUI
-from morpfw.crud import permission as crudperm
-from . import permission
-from morpcc.authz import rule_from_assignment
 
 
 @App.permission_rule(model=Root, permission=permission.ViewHome)

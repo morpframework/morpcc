@@ -104,3 +104,11 @@ div.dataTables_processing .fa-spin {
 .breadcrumb {
     margin-top: 5px;
 }
+
+.left-portlets {
+    padding-bottom: 50px;
+}
+
+.page-title .title_right .pull-right {
+    margin: 0;
+}
