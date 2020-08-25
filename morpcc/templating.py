@@ -27,6 +27,8 @@ def get_chameleon_render(loader, name, original_render):
         context = resolve_model(request.copy(app=request.app))
 
         def _permits(permission, request=request, context=context):
+            if isinstance(context, str):
+                context = request.resolve_path(context)
             return permits(request, context, permission)
 
         variables = {
