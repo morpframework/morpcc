@@ -2,13 +2,15 @@ import morepath
 import rulez
 from morpfw.authn.pas import permission as authnperm
 from morpfw.authn.pas.user.model import UserCollection
-from morpfw.authz.pas import DefaultAuthzPolicy
+from morpfw.authz.pas import DefaultAuthzPolicy, UserModel
+from morpfw.crud import permission as crudperms
 from morpfw.crud.model import Collection, Model
 from morpfw.permission import All
 
 from ..crud.model import CollectionUI, ModelUI
 from ..entitycontent.model import EntityContentCollection, EntityContentModel
-from ..entitycontent.modelui import EntityContentCollectionUI, EntityContentModelUI
+from ..entitycontent.modelui import (EntityContentCollectionUI,
+                                     EntityContentModelUI)
 from ..util import permits
 from .policy import MorpCCAuthzPolicy
 
@@ -91,20 +93,24 @@ def allow_api_registration(identity, model, permission):
     return rule_from_config(model.request, "morpcc.allow_registration")
 
 
+@Policy.permission_rule(model=Collection, permission=All)
+def collection_permission(identity, model, permission):
+    return rule_from_assignment(model.request, model, permission, identity)
+
+
 @Policy.permission_rule(model=CollectionUI, permission=All)
 def collectionui_permission(identity, model, permission):
-    return rule_from_assignment(model.request, model.collection, permission, identity)
+    return permits(model.request, model.collection, permission)
 
 
 @Policy.permission_rule(model=ModelUI, permission=All)
 def modelui_permission(identity, model, permission):
-    return rule_from_assignment(model.request, model.model, permission, identity)
+    return permits(model.request, model.model, permission)
 
 
-@Policy.permission_rule(model=EntityContentModelUI, permission=All)
-def entitycontentmodelui_permission(identity, model, permission):
-    application = model.model.collection.application()
-    return rule_from_assignment(model.request, application, permission, identity)
+@Policy.permission_rule(model=Model, permission=All)
+def model_permission(identity, model, permission):
+    return rule_from_assignment(model.request, model, permission, identity)
 
 
 @Policy.permission_rule(model=EntityContentModel, permission=All)
@@ -112,14 +118,20 @@ def entitycontentmodel_permission(identity, model, permission):
     application = model.collection.application()
     return rule_from_assignment(model.request, application, permission, identity)
 
-
-@Policy.permission_rule(model=EntityContentCollectionUI, permission=All)
-def entitycontentcollectionui_permission(identity, model, permission):
-    application = model.collection.application()
-    return rule_from_assignment(model.request, application, permission, identity)
-
-
 @Policy.permission_rule(model=EntityContentCollection, permission=All)
 def entitycontentcollection_permission(identity, model, permission):
     application = model.application()
     return rule_from_assignment(model.request, application, permission, identity)
+
+
+@Policy.permission_rule(model=UserModel, permission=crudperms.All)
+def currentuser_permission(identity, model, permission):
+    request = model.request
+    usercol = request.get_collection("morpfw.pas.user")
+    user = usercol.get_by_userid(identity.userid)
+    if user["is_administrator"]:
+        return True
+    userid = identity.userid
+    if model.userid == userid:
+        return True
+    return False
