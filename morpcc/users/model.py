@@ -15,7 +15,7 @@ def get_user_blobstorage(model, request):
 class UserModelUI(ModelUI):
 
     view_exclude_fields = ModelUI.view_exclude_fields + ["password", "nonce"]
-    edit_include_fields = ["email"]
+    edit_include_fields = ["email", "timezone"]
 
 
 class UserCollectionUI(CollectionUI):

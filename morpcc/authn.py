@@ -3,6 +3,7 @@ from uuid import uuid4
 import morepath
 from more.itsdangerous import IdentityPolicy as BaseItsDangerousIdentityPolicy
 from morpfw.authn.pas.policy import JWTWithAPIKeyIdentityPolicy
+from morpfw.identity import Identity
 
 
 class ItsDangerousIdentityPolicy(BaseItsDangerousIdentityPolicy):
@@ -28,6 +29,8 @@ class ItsDangerousIdentityPolicy(BaseItsDangerousIdentityPolicy):
             def update_expiry(response):
                 response.headers.add("Access-Control-Expose-Headers", "Authorization")
                 request.app.remember_identity(response, request, identity)
+
+            identity = Identity(request=request, userid=identity.userid)
 
         return identity
 
