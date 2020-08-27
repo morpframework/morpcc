@@ -61,6 +61,15 @@ class ModelUI(object):
             )
         return []
 
+    def __getitem__(self, key):
+        return self.model[key]
+
+    def __setitem__(self, key, value):
+        self.model[key] = value
+
+    def __delitem__(self, key):
+        del self.model[key]
+
 
 class CollectionUI(object):
 
