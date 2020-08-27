@@ -85,8 +85,9 @@ def profile_portlet(context, request):
     else:
         photo_url = request.relative_url("/__static__/morpcc/img/person-icon.jpg")
     return {
-        "displayname": xattr.get("displayname", username),
+        "displayname": xattr.get("displayname", username) or username,
         "profilephoto_url": photo_url,
+        "tzinfo": user.model["timezone"] or "UTC",
     }
 
 
@@ -114,10 +115,11 @@ def topnav_portlet(context, request):
         group={"count": {"function": "count", "field": "uuid"}},
     )
     return {
-        "displayname": xattr.get("displayname", username),
+        "displayname": xattr.get("displayname", username) or username,
         "profilephoto_url": photo_url,
         "notifications": notifs,
         "notification_count": unread_notifs[0]["count"],
+        "tzinfo": user.model["timezone"] or "UTC",
     }
 
 
