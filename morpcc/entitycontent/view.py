@@ -88,6 +88,7 @@ def content_view(context, request):
                     request=request,
                     include_fields=itemui.view_include_fields,
                     exclude_fields=itemui.view_exclude_fields,
+                    default_tzinfo=request.timzeone(),
                 )
                 fs = formschema()
                 fs = fs.bind(context=item, request=request)
@@ -139,7 +140,9 @@ def _entity_dt_result_render(context, request, columns, objs):
     collection = context.collection
     for o in objs:
         row = []
-        formschema = dc2colander.convert(collection.schema, request=request)
+        formschema = dc2colander.convert(
+            collection.schema, request=request, default_tzinfo=request.timezone()
+        )
         fs = formschema()
         fs = fs.bind(context=o, request=request)
         form = deform.Form(fs)

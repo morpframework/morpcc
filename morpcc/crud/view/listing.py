@@ -55,7 +55,9 @@ def listing(context, request):
 
     if search_attrs:
         dc = make_dataclass("Form", search_attrs)
-        formschema = dc2colander.convert(dc, request=request)
+        formschema = dc2colander.convert(
+            dc, request=request, default_tzinfo=request.timezone()
+        )
         search_form = deform.Form(formschema(), buttons=("Search",))
     else:
         search_form = None
@@ -158,7 +160,9 @@ def _dt_result_render(context, request, columns, objs):
     collection = context.collection
     for o in objs:
         row = []
-        formschema = dc2colander.convert(collection.schema, request=request)
+        formschema = dc2colander.convert(
+            collection.schema, request=request, default_tzinfo=request.timezone()
+        )
         fs = formschema()
         fs = fs.bind(context=o, request=request)
         form = deform.Form(fs)

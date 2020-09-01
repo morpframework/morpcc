@@ -25,6 +25,7 @@ def edit(context, request):
         mode="edit",
         include_fields=context.edit_include_fields,
         exclude_fields=context.edit_exclude_fields,
+        default_tzinfo=request.timezone(),
     )
     data = context.model.data.as_dict()
     fs = formschema()
@@ -62,6 +63,7 @@ def process_edit(context, request):
         include_fields=context.edit_include_fields,
         exclude_fields=context.edit_exclude_fields,
         include_schema_validators=False,
+        default_tzinfo=request.timezone(),
     )
     fs = formschema()
     fs = fs.bind(context=context, request=request)
@@ -125,7 +127,9 @@ def xattredit(context, request):
 
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
-        xattrformschema = dc2colander.convert(xattrprovider.schema, request=request)
+        xattrformschema = dc2colander.convert(
+            xattrprovider.schema, request=request, default_tzinfo=request.timezone()
+        )
     else:
         raise HTTPNotFound()
 
@@ -160,7 +164,9 @@ def process_xattredit(context, request):
 
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
-        xattrformschema = dc2colander.convert(xattrprovider.schema, request=request)
+        xattrformschema = dc2colander.convert(
+            xattrprovider.schema, request=request, default_tzinfo=request.timezone()
+        )
     else:
         raise HTTPNotFound()
 

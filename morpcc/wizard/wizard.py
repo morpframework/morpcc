@@ -78,7 +78,9 @@ class FormWizardStep(WizardStep):
     schema: object
 
     def get_form(self, formid):
-        formschema = dc2colander.convert(self.schema, request=self.request)
+        formschema = dc2colander.convert(
+            self.schema, request=self.request, default_tzinfo=self.request.timezone()
+        )
         fs = formschema()
         fs = fs.bind(context=self.context, request=self.request)
         return deform.Form(fs, formid=formid)
@@ -99,7 +101,9 @@ class FormWizardStep(WizardStep):
 
     def process_form(self):
         request = self.request
-        formschema = dc2colander.convert(self.schema, request=self.request)
+        formschema = dc2colander.convert(
+            self.schema, request=self.request, default_tzinfo=request.timezone()
+        )
         fs = formschema()
         fs = fs.bind(context=self.context, request=self.request)
         controls = request.POST.items()

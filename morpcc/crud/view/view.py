@@ -33,18 +33,27 @@ def view(context, request):
         request=request,
         include_fields=context.view_include_fields,
         exclude_fields=context.view_exclude_fields,
+        default_tzinfo=request.timezone(),
     )
 
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
-        xattrformschema = dc2colander.convert(xattrprovider.schema, request=request)
+        xattrformschema = dc2colander.convert(
+            xattrprovider.schema,
+            request=request,
+            default_tzinfo=request.timezone(),
+            exclude_fields=["agreed_terms", "agreed_terms_ts"],
+        )
     else:
         xattrformschema = None
     data = context.model.data.as_dict()
     sm = context.model.statemachine()
 
     metadataschema = dc2colander.convert(
-        morpfw.Schema, request=request, exclude_fields=["blobs", "xattrs"]
+        morpfw.Schema,
+        request=request,
+        exclude_fields=["blobs", "xattrs"],
+        default_tzinfo=request.timezone(),
     )
     # FIXME: widget override should be part of dc2colander
     for f in metadataschema.__all_schema_nodes__:
@@ -92,6 +101,7 @@ def preview(context, request):
         request=request,
         include_fields=context.view_include_fields,
         exclude_fields=context.view_exclude_fields,
+        default_tzinfo=request.timezone(),
     )
 
     fs = formschema()

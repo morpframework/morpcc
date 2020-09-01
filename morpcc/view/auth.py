@@ -25,7 +25,9 @@ class LoginForm(object):
 @App.html(model=Root, name="login", template="master/anon-form.pt")
 def login(context, request):
     schema = request.app.get_schemaextender(LoginForm)
-    formschema = dc2colander.convert(schema, request=request)
+    formschema = dc2colander.convert(
+        schema, request=request, default_tzinfo=request.timezone()
+    )
     fs = formschema()
     fs = fs.bind(context=context, request=request)
     return {
@@ -51,7 +53,9 @@ def login(context, request):
 def process_login(context, request):
     controls = list(request.POST.items())
     schema = request.app.get_schemaextender(LoginForm)
-    formschema = dc2colander.convert(schema, request=request)
+    formschema = dc2colander.convert(
+        schema, request=request, default_tzinfo=request.timezone()
+    )
     fs = formschema()
     fs = fs.bind(context=context, request=request)
     form = deform.Form(fs)
@@ -122,7 +126,9 @@ def register(context, request):
     if not request.app.get_config("morpcc.allow_registration", True):
         raise HTTPNotFound()
     schema = request.app.get_schemaextender(RegistrationForm)
-    formschema = dc2colander.convert(schema, request=request)
+    formschema = dc2colander.convert(
+        schema, request=request, default_tzinfo=request.timezone()
+    )
     fs = formschema()
     fs = fs.bind(context=context, request=request)
     return {
@@ -146,7 +152,9 @@ def register(context, request):
 def process_register(context, request):
     controls = list(request.POST.items())
     schema = request.app.get_schemaextender(RegistrationForm)
-    formschema = dc2colander.convert(schema, request=request)
+    formschema = dc2colander.convert(
+        schema, request=request, default_tzinfo=request.timezone()
+    )
     fs = formschema()
     fs = fs.bind(context=context, request=request)
     form = deform.Form(fs)

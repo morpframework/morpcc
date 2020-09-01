@@ -22,6 +22,7 @@ def delete(context, request):
         request=request,
         include_fields=context.view_include_fields,
         exclude_fields=context.view_exclude_fields,
+        default_tzinfo=request.timezone(),
     )
     data = context.model.data.as_dict()
     return {
