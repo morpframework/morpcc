@@ -1,16 +1,15 @@
 import morepath
 import rulez
-from morpfw.authn.pas import permission as authnperm
+from morpfw.authn.pas import permission as authperm
 from morpfw.authn.pas.user.model import UserCollection
-from morpfw.authz.pas import DefaultAuthzPolicy, UserModel
+from morpfw.authz.pas import APIKeyModel, CurrentUserModel, UserModel
 from morpfw.crud import permission as crudperms
 from morpfw.crud.model import Collection, Model
 from morpfw.permission import All
 
 from ..crud.model import CollectionUI, ModelUI
 from ..entitycontent.model import EntityContentCollection, EntityContentModel
-from ..entitycontent.modelui import (EntityContentCollectionUI,
-                                     EntityContentModelUI)
+from ..entitycontent.modelui import EntityContentCollectionUI, EntityContentModelUI
 from ..util import permits
 from .policy import MorpCCAuthzPolicy
 
@@ -88,7 +87,7 @@ def rule_from_assignment(request, model, permission, identity):
     return False
 
 
-@Policy.permission_rule(model=UserCollection, permission=authnperm.Register)
+@Policy.permission_rule(model=UserCollection, permission=authperm.Register)
 def allow_api_registration(identity, model, permission):
     return rule_from_config(model.request, "morpcc.allow_registration")
 
@@ -118,13 +117,13 @@ def entitycontentmodel_permission(identity, model, permission):
     application = model.collection.application()
     return rule_from_assignment(model.request, application, permission, identity)
 
+
 @Policy.permission_rule(model=EntityContentCollection, permission=All)
 def entitycontentcollection_permission(identity, model, permission):
     application = model.application()
     return rule_from_assignment(model.request, application, permission, identity)
 
 
-@Policy.permission_rule(model=UserModel, permission=crudperms.All)
 def currentuser_permission(identity, model, permission):
     request = model.request
     usercol = request.get_collection("morpfw.pas.user")
@@ -134,4 +133,27 @@ def currentuser_permission(identity, model, permission):
     userid = identity.userid
     if model.userid == userid:
         return True
-    return False
+
+    return rule_from_assignment(
+        request=model.request, model=model, permission=permission, identity=identity
+    )
+
+
+@Policy.permission_rule(model=UserModel, permission=crudperms.All)
+def allow_user_crud(identity, model, permission):
+    return currentuser_permission(identity, model, permission)
+
+
+@Policy.permission_rule(model=UserModel, permission=authperm.ChangePassword)
+def allow_change_password(identity, model, permission):
+    return currentuser_permission(identity, model, permission)
+
+
+@Policy.permission_rule(model=CurrentUserModel, permission=authperm.ChangePassword)
+def allow_self_change_password(identity, model, permission):
+    return currentuser_permission(identity, model, permission)
+
+
+@Policy.permission_rule(model=APIKeyModel, permission=crudperms.All)
+def allow_apikey_management(identity, model, permission):
+    return currentuser_permission(identity, model, permission)

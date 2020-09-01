@@ -2,8 +2,7 @@ from uuid import uuid4
 
 import morepath
 from more.itsdangerous import IdentityPolicy as BaseItsDangerousIdentityPolicy
-from morpfw.authn.pas.policy import JWTWithAPIKeyIdentityPolicy
-from morpfw.identity import Identity
+from morpfw.authn.pas.policy import Identity, JWTWithAPIKeyIdentityPolicy
 
 
 class ItsDangerousIdentityPolicy(BaseItsDangerousIdentityPolicy):

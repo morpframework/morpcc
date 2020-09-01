@@ -1,7 +1,6 @@
 import html
 
 from .app import App
-from .application.path import get_collection as get_app_collection
 from .permission import ViewHome
 
 
@@ -17,4 +16,4 @@ def get_root(request):
 
 @App.html(model=Root, permission=ViewHome, template="master/index.pt")
 def index(context, request):
-    return {"applications": get_app_collection(request).search()}
+    return {"applications": request.get_collection("morpcc.application").search()}
