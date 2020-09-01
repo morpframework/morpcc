@@ -1,3 +1,5 @@
+import pytz
+
 import colander
 import deform
 import deform.widget
@@ -26,6 +28,14 @@ class UserInfoSchema(colander.MappingSchema):
         oid="userinfo-email",
         validator=colander.Email(msg="Invalid e-mail address"),
     )
+    timezone = colander.SchemaNode(
+        colander.String(),
+        oid="userinfo-timezone",
+        widget=deform.widget.Select2Widget(
+            values=[(x, x) for x in pytz.all_timezones]
+        ),
+    )
+
     state = colander.SchemaNode(
         colander.String(),
         oid="userinfo-state",
@@ -74,9 +84,15 @@ def userinfo_form(request) -> deform.Form:
     return deform.Form(UserInfoSchema(), buttons=("Submit",), formid="userinfo-form")
 
 
-def attributes_form(context, request) -> deform.Form:
+def attributes_form(context, request, mode="edit") -> deform.Form:
     schema = context.xattrprovider().schema
-    formschema = dc2colander.convert(schema, request=request)
+    formschema = dc2colander.convert(
+        schema,
+        request=request,
+        default_tzinfo=request.timezone(),
+        mode=mode,
+        exclude_fields=["agreed_terms", "agreed_terms_ts"],
+    )
     fs = formschema()
     fs = fs.bind(context=context, request=request)
     return deform.Form(fs, buttons=("Submit",), formid="personalinfo-form")
@@ -156,7 +172,7 @@ def process_profile(context, request):
 
     user = context.model
 
-    attributes_f = attributes_form(user, request)
+    attributes_f = attributes_form(user, request, mode="edit-process")
 
     failed = False
     if active_form == "userinfo-form":
@@ -212,6 +228,10 @@ def process_profile(context, request):
                 "Your password have been successfully changed",
             )
             return morepath.redirect(request.url)
+        else:
+            request.notify(
+                "error", "Password change failed", "Unable to change password"
+            )
     elif active_form == "personalinfo-form":
         try:
             data = attributes_f.validate(controls)

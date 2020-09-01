@@ -1,20 +1,33 @@
+import typing
+from dataclasses import dataclass, field
+from datetime import datetime
+
 import morpfw
 from morpfw.authn.pas.user.model import UserModel
 from morpfw.crud.xattrprovider import FieldXattrProvider
+
 from ..app import App
-from dataclasses import dataclass
-import typing
 
 
 @dataclass
 class UserXattrSchema(object):
 
-    firstname: typing.Optional[str] = None
-    lastname: typing.Optional[str] = None
-    displayname: typing.Optional[str] = None
-    address: typing.Optional[str] = None
-    agreed_terms: typing.Optional[bool] = None
-    agreed_terms_ts: typing.Optional[int] = None
+    firstname: typing.Optional[str] = field(
+        default=None, metadata={"title": "First Name"}
+    )
+    lastname: typing.Optional[str] = field(
+        default=None, metadata={"title": "Last Name"}
+    )
+    displayname: typing.Optional[str] = field(
+        default=None, metadata={"title": "Display Name"}
+    )
+    address: typing.Optional[str] = field(default=None, metadata={"title": "Address"})
+    agreed_terms: typing.Optional[bool] = field(
+        default=False, metadata={"editable": False}
+    )
+    agreed_terms_ts: typing.Optional[datetime] = field(
+        default=None, metadata={"editable": False}
+    )
 
 
 class UserXattrProvider(FieldXattrProvider):
