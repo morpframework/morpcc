@@ -253,6 +253,29 @@ class EntityContentModel(morpfw.Model):
                 result[name] = [item.as_dict() for item in items if item is not None]
         return result
 
+    def validation_failures(self):
+        entity = self.entity()
+        data = self.validation_dict()
+        result = {"entity_validator": [], "attribute_validator": {}}
+        for validator in entity.entity_validators():
+            validate = validator.function()
+            if not validate(data):
+                result["entity_validator"].append(validator["name"])
+
+        for attrname, attr in entity.attributes().items():
+            for validator in attr.builtin_validators():
+                validate = validator["validate"]
+                if not validate(self[attrname]):
+                    result["attribute_validator"].setdefault(attrname, [])
+                    result["attribute_validator"][attrname].append(validator["name"])
+
+            for validator in attr.validators():
+                validate = validator.function()
+                if not validate(self[attrname]):
+                    result["attribute_validator"].setdefault(attrname, [])
+                    result["attribute_validator"][attrname].append(validator["name"])
+        return result
+
 
 def content_collection_factory(entity, application, allow_invalid=False):
     behaviors = entity.behaviors()
@@ -264,6 +287,13 @@ def content_collection_factory(entity, application, allow_invalid=False):
     for appbehavior in application.behaviors():
         entity_behaviors = getattr(appbehavior, "entity_behaviors", {})
         entity_behavior = entity_behaviors.get(entity["name"], None)
+        
+        all_entity_behavior = entity_behaviors.get("*", None)
+        if all_entity_behavior:
+            model_markers.append(all_entity_behavior.model_marker)
+            modelui_markers.append(all_entity_behavior.modelui_marker)
+            collection_markers.append(all_entity_behavior.collection_marker)
+            collectionui_markers.append(all_entity_behavior.collectionui_marker)
         if entity_behavior:
             model_markers.append(entity_behavior.model_marker)
             modelui_markers.append(entity_behavior.modelui_marker)
