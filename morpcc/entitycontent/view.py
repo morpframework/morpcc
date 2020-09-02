@@ -11,6 +11,7 @@ from morpcc.crud.view.view import view as default_view
 from morpfw.crud import permission as crudperm
 
 from ..app import App
+from ..application.model import ApplicationModel
 from .model import content_collection_factory
 from .modelui import EntityContentCollectionUI, EntityContentModelUI
 
@@ -61,7 +62,7 @@ def content_view(context, request):
         columns = []
         column_options = []
         for colname, col in refmodel.effective_attributes().items():
-            columns.append(colname)
+            columns.append(col["title"])
             column_options.append({"name": colname, "orderable": True})
         breldata = {
             "name": brel["name"],
@@ -88,12 +89,13 @@ def content_view(context, request):
                     request=request,
                     include_fields=itemui.view_include_fields,
                     exclude_fields=itemui.view_exclude_fields,
-                    default_tzinfo=request.timzeone(),
+                    default_tzinfo=request.timezone(),
                 )
                 fs = formschema()
                 fs = fs.bind(context=item, request=request)
                 breldata["form"] = deform.Form(fs)
                 breldata["form_data"] = item.as_dict()
+                breldata["content"] = item
                 validate_form(item, request, breldata["form"], breldata["form_data"])
         result["backrelationships"].append(breldata)
     result["backrelationships"] = sorted(
