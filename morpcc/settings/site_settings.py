@@ -136,4 +136,12 @@ def site_settings(context, request):
                 "href": request.relative_url("/process/+listing"),
             }
         )
+    if request.permits("/activitylog", crudperm.Search):
+        modules.append(
+            {
+                "title": "Activity / Audit Log",
+                "icon": "history",
+                "href": request.relative_url("/activitylog"),
+            }
+        )
     return {"setting_modules": modules}
