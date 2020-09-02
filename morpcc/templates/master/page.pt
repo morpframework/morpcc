@@ -4,6 +4,7 @@
 
     <body metal:use-macro="main_template.macros.master">
         <div metal:fill-slot="main">
+
             <div class="row page-title">
                 <div class="title_left col-md-7 col-sm-7 col-xs-12">
                     <h3>
@@ -16,6 +17,11 @@
             </div>
             <div class="clearfix"></div>
             <!-- page body -->
+            <div class="belowtitle-portlets"
+                tal:define="portletprovider app.get_portletprovider('morpcc.belowtitle-portlets')"
+                tal:condition="portletprovider"
+                tal:content="structure:portletprovider.render(context, request, load_template)">
+            </div>
             <metal:slot define-slot="page-body">
             </metal:slot>
             <!-- /page body -->
