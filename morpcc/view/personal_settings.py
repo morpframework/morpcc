@@ -5,6 +5,7 @@ import deform
 import deform.widget
 import morepath
 import morpfw.authn.pas.exc
+import webob.exc
 from inverter import dc2colander
 from morpfw.authn.pas.user.path import get_user_collection
 from morpfw.crud import permission as crudperm
@@ -31,9 +32,7 @@ class UserInfoSchema(colander.MappingSchema):
     timezone = colander.SchemaNode(
         colander.String(),
         oid="userinfo-timezone",
-        widget=deform.widget.Select2Widget(
-            values=[(x, x) for x in pytz.all_timezones]
-        ),
+        widget=deform.widget.Select2Widget(values=[(x, x) for x in pytz.all_timezones]),
     )
 
     state = colander.SchemaNode(
@@ -129,30 +128,35 @@ def upload_form(context, request) -> deform.Form:
 def profile(context, request: morepath.Request):
     user = context.model
     has_photo = user.get_blob("profile-photo")
+    forms = [
+        {
+            "form_title": "Personal Information",
+            "form": attributes_form(user, request),
+            "readonly": False,
+            "form_data": user.data["xattrs"],
+        },
+        {
+            "form_title": "User Information",
+            "form": userinfo_form(request),
+            "readonly": False,
+            "form_data": user.data.as_dict(),
+        },
+    ]
+    if user["source"] == "local":
+        forms.append(
+            {
+                "form_title": "Password",
+                "form": password_form(request),
+                "readonly": False,
+            }
+        )
+
     return {
         "page_title": "Profile",
         "profile_photo": request.link(context, "+download?field=profile-photo")
         if has_photo
         else None,
-        "forms": [
-            {
-                "form_title": "Personal Information",
-                "form": attributes_form(user, request),
-                "readonly": False,
-                "form_data": user.data["xattrs"],
-            },
-            {
-                "form_title": "User Information",
-                "form": userinfo_form(request),
-                "readonly": False,
-                "form_data": user.data.as_dict(),
-            },
-            {
-                "form_title": "Password",
-                "form": password_form(request),
-                "readonly": False,
-            },
-        ],
+        "forms": forms,
     }
 
 
@@ -201,6 +205,10 @@ def process_profile(context, request):
             )
             return morepath.redirect(request.url)
     elif active_form == "password-form":
+        if user["source"] != "local":
+            raise webob.exc.HTTPUnprocessableEntity(
+                "Password change form is only available for local users"
+            )
         try:
             data = password_f.validate(controls)
         except deform.ValidationFailure as e:
