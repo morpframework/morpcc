@@ -26,11 +26,14 @@ class EntityValidatorSchema(morpfw.Schema):
         metadata={
             "required": True,
             "editable": False,
+            "searchable": True,
             "validators": [valid_namespaced_identifier],
         },
     )
 
-    title: typing.Optional[str] = field(default=None, metadata={"required": True})
+    title: typing.Optional[str] = field(
+        default=None, metadata={"required": True, "searchable": True}
+    )
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
     notes: typing.Optional[str] = field(
         default=None,

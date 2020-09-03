@@ -131,7 +131,18 @@ def _parse_dtdata(data):
     for k in sorted(order_data.keys()):
         result["order"].append(order_data[k])
 
+    in_sequence = False
+    current_mfw_search = None
     for k, v in data:
+        if in_sequence:
+            i = mfw_search_pattern.match(k).groups()[0]
+            if i == "__end__":
+                in_sequence = False
+                current_mfw_search = None
+                continue
+            result["mfw_search"][current_mfw_search].append(v)
+            continue
+
         if k == "draw":
             result["draw"] = int(v)
         elif k == "_":
@@ -146,7 +157,11 @@ def _parse_dtdata(data):
             result["search"][i] = v
         elif k.startswith("mfw_search"):
             i = mfw_search_pattern.match(k).groups()[0]
-            result["mfw_search"].setdefault(i, {})
+            if i == "__start__":
+                current_mfw_search, typ = v.split(":")
+                in_sequence = True
+                result["mfw_search"].setdefault(current_mfw_search, [])
+                continue
             result["mfw_search"][i] = v
 
     if mfilter:
@@ -203,6 +218,7 @@ def datatable_search(
                     )
 
     if data["mfw_search"]:
+        mfw_search = []
         for sfn, value in data["mfw_search"].items():
             value = (value or "").strip()
             if not value:
@@ -213,12 +229,19 @@ def datatable_search(
 
             field = context.collection.schema.__dataclass_fields__[sfn]
             if field.metadata.get("format", None) == "uuid":
-                search.append({"field": sfn, "operator": "==", "value": value})
+                mfw_search.append({"field": sfn, "operator": "==", "value": value})
             elif field.type == str:
-                search.append({"field": sfn, "operator": "~", "value": value})
+                mfw_search.append({"field": sfn, "operator": "~", "value": value})
+            elif field.type == bool:
+                val = True if value.lower() == "true" else False
+                mfw_search.append({"field": sfn, "operator": "==", "value": val})
             elif field.type.__origin__ == typing.Union:
                 if str in field.type.__args__:
-                    search.append({"field": sfn, "operator": "~", "value": value})
+                    mfw_search.append({"field": sfn, "operator": "~", "value": value})
+                elif bool in field.type.__args__:
+                    val = True if value.lower() == "true" else False
+                    mfw_search.append({"field": sfn, "operator": "==", "value": val})
+        search.append(rulez.and_(*mfw_search))
     if search:
         search = rulez.or_(*search)
     else:

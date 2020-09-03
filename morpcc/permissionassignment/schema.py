@@ -17,12 +17,12 @@ def permission_select_widget(request):
         name = "%s:%s" % (perm.__module__, perm.__name__)
         permissions.add((name, name))
 
-    permissions = sorted(list(permissions), key=lambda x: x[0])
-    return deform.widget.Select2Widget(values=permissions)
+    permissions = [("", "")] + list(sorted(list(permissions), key=lambda x: x[0]))
+    return deform.widget.Select2Widget(values=permissions, placeholder=" ")
 
 
 def model_select_widget(request):
-    models = list()
+    models = [("", "")]
     types = sorted(request.app.config.type_registry.types)
     for t in types:
         ti = request.app.get_typeinfo(t, request)
@@ -36,7 +36,7 @@ def model_select_widget(request):
     for model in MODELS:
         name = "%s:%s" % (model.__module__, model.__name__)
         models.append((name, name))
-    return deform.widget.Select2Widget(values=models)
+    return deform.widget.Select2Widget(values=models, placeholder=" ")
 
 
 def group_select_widget(request):
@@ -67,31 +67,39 @@ class PermissionAssignmentSchema(morpfw.Schema):
 
     model: typing.Optional[str] = field(
         default=None,
-        metadata={"title": "Model", "deform.widget_factory": model_select_widget,},
+        metadata={
+            "title": "Model",
+            "searchable": True,
+            "required": True,
+            "deform.widget_factory": model_select_widget,
+        },
     )
 
     permission: typing.Optional[str] = field(
         default=None,
         metadata={
             "title": "Permission",
+            "searchable": True,
+            "required": True,
             "deform.widget_factory": permission_select_widget,
         },
     )
 
     roles: typing.Optional[list] = field(
-        default_factory=list, metadata={"deform.widget_factory": roles_select_widget}
+        default_factory=list, metadata={"deform.widget_factory": roles_select_widget},
     )
 
     rule: typing.Optional[str] = field(
-        default="allow",
+        default=None,
         metadata={
             "required": True,
+            "searchable": True,
             "deform.widget": deform.widget.SelectWidget(
-                values=[("allow", "Allow"), ("reject", "Reject")]
+                values=[("", ""), ("allow", "Allow"), ("reject", "Reject")]
             ),
         },
     )
 
-    enabled: typing.Optional[bool] = True
+    enabled: typing.Optional[bool] = field(default=True)
 
     __unique_constraint__ = ["model", "permission", "rule"]

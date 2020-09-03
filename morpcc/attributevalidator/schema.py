@@ -2,7 +2,7 @@ import typing
 from dataclasses import dataclass, field
 
 import morpfw
-from deform.widget import SelectWidget, TextAreaWidget
+from deform.widget import Select2Widget, TextAreaWidget
 from morpfw.validator.field import valid_namespaced_identifier
 
 from ..attribute.schema import ACCEPTED_TYPES, valid_type
@@ -23,19 +23,25 @@ class AttributeValidatorSchema(morpfw.Schema):
         metadata={
             "required": True,
             "editable": False,
+            "searchable": True,
             "validators": [valid_namespaced_identifier],
         },
     )
 
-    title: typing.Optional[str] = field(default=None, metadata={"required": True})
+    title: typing.Optional[str] = field(
+        default=None, metadata={"required": True, "searchable": True}
+    )
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
     type: typing.Optional[str] = field(
         default=None,
         metadata={
             "required": True,
             "editable": False,
+            "searchable": True,
             "validators": [valid_type],
-            "deform.widget": SelectWidget(values=ACCEPTED_TYPES),
+            "deform.widget": Select2Widget(
+                values=[("", "")] + list(ACCEPTED_TYPES), placeholder=" "
+            ),
         },
     )
     notes: typing.Optional[str] = field(
