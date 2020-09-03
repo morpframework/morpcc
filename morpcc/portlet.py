@@ -24,6 +24,31 @@ def abovecontent_portlets(context, request):
     return ["morpcc.breadcrumb"]
 
 
+@App.portletprovider(name="morpcc.logo-portlets")
+def logo_portlets(context, request):
+    return ["morpcc.logo"]
+
+
+@App.portletprovider(name="morpcc.style-portlets")
+def style_portlets(context, request):
+    return ["morpcc.custom_styles"]
+
+
+@App.portletprovider(name="morpcc.header-script-portlets")
+def header_scripts_portlets(context, request):
+    return ["morpcc.custom_header_scripts"]
+
+
+@App.portletprovider(name="morpcc.footer-script-portlets")
+def footer_scripts_portlets(context, request):
+    return ["morpcc.custom_footer_scripts"]
+
+
+@App.portletprovider(name="morpcc.footer-portlets")
+def footer_portlets(context, request):
+    return ["morpcc.footer"]
+
+
 @App.portlet(name="morpcc.main_navigation", template="master/portlet/navigation.pt")
 def navigation_portlet(context, request):
 
@@ -135,3 +160,34 @@ def breadcrumb_portlet(context, request):
     """
     breadcrumb = request.app.get_breadcrumb(context, request)
     return {"breadcrumb": breadcrumb}
+
+
+@App.portlet(name="morpcc.logo", template="master/portlet/logo.pt")
+def logo_portlet(context, request):
+    return {}
+
+
+@App.portlet(name="morpcc.footer", template="master/portlet/footer.pt")
+def footer_portlet(context, request):
+    return {}
+
+
+@App.portlet(name="morpcc.custom_styles", template="master/portlet/custom_styles.pt")
+def custom_styles_portlet(context, request):
+    return {}
+
+
+@App.portlet(
+    name="morpcc.custom_header_scripts",
+    template="master/portlet/custom_header_scripts.pt",
+)
+def custom_header_scripts_portlet(context, request):
+    return {}
+
+
+@App.portlet(
+    name="morpcc.custom_footer_scripts",
+    template="master/portlet/custom_footer_scripts.pt",
+)
+def custom_footer_scripts_portlet(context, request):
+    return {}

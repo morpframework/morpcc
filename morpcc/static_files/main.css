@@ -109,6 +109,10 @@ div.dataTables_processing .fa-spin {
     padding-bottom: 50px;
 }
 
+.left_col {
+    width: 100%;
+}
+
 .page-title .title_right .pull-right {
     margin: 0;
 }

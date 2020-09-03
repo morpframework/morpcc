@@ -65,7 +65,10 @@
     <link href="/__static__/morpcc/pygments-css/default.css" rel="stylesheet">
     <link href="/__static__/morpcc/main.css" rel="stylesheet">
 
-
+    <tal:block tal:define="portletprovider request.app.get_portletprovider('morpcc.style-portlets')"
+      tal:condition="portletprovider" tal:replace="structure:portletprovider.render(context, request, load_template)">
+      >
+    </tal:block>
     <metal:slot define-slot="style_slot">
     </metal:slot>
 
@@ -73,6 +76,10 @@
     <script src="/__static__/morpcc/modernizr/modernizr-min.js"></script>
     <script src="/__static__/deform/scripts/jquery.form.js"></script>
     <script src="/__static__/deform/scripts/deform.js"></script>
+    <tal:block tal:define="portletprovider request.app.get_portletprovider('morpcc.header-script-portlets')"
+      tal:condition="portletprovider" tal:replace="structure:portletprovider.render(context, request, load_template)">
+      >
+    </tal:block>
 
     <metal:slot define-slot="header_script_slot">
     </metal:slot>
@@ -83,15 +90,6 @@
       <div class="main_container">
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
-            <div class="navbar nav_title" style="border: 0;">
-              <a href="${request.relative_url('/')}" class="site_title">
-                <i class="fa fa-wrench"></i>
-                <span tal:content="settings.application.title"></span>
-              </a>
-            </div>
-
-            <div class="clearfix"></div>
-
 
             <div class="left-portlets" tal:define="portletprovider app.get_portletprovider('morpcc.left-portlets')"
               tal:condition="portletprovider"
@@ -131,7 +129,12 @@
                   <i class="fa fa-bars"></i>
                 </a>
               </div>
-
+              <div class="logo-portlets"
+                tal:define="portletprovider request.app.get_portletprovider('morpcc.logo-portlets')"
+                tal:condition="portletprovider"
+                tal:replace="structure:portletprovider.render(context, request, load_template)">
+                >
+              </div>
               <div class="top-navigation-portlets"
                 tal:define="portletprovider request.app.get_portletprovider('morpcc.top-navigation')"
                 tal:condition="portletprovider"
@@ -157,13 +160,15 @@
             tal:condition="portletprovider"
             tal:content="structure:portletprovider.render(context, request, load_template)">
           </div>
+          <div class="clearfix"></div>
         </div>
         <!-- /page content -->
 
         <!-- footer content -->
         <footer>
-          <div class="pull-right">
-            Morp Control Center - <a href="http://morpcc.rtfd.org">morpcc.rtfd.org</a>
+          <div class="footer-portlets" tal:define="portletprovider app.get_portletprovider('morpcc.footer-portlets')"
+            tal:condition="portletprovider"
+            tal:content="structure:portletprovider.render(context, request, load_template)">
           </div>
           <div class="clearfix"></div>
         </footer>
@@ -283,6 +288,11 @@
 
     <!-- Morpfw script -->
     <script src="/__static__/morpcc/main.js"></script>
+
+    <tal:block tal:define="portletprovider request.app.get_portletprovider('morpcc.footer-script-portlets')"
+      tal:condition="portletprovider" tal:replace="structure:portletprovider.render(context, request, load_template)">
+      >
+    </tal:block>
 
     <metal:slot define-slot="footer_script_slot">
     </metal:slot>
