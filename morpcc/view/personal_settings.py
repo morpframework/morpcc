@@ -14,7 +14,7 @@ from .. import permission
 from ..app import App
 from ..crud.tempstore import FSBlobFileUploadTempStore
 from ..root import Root
-from ..users.model import CurrentUserModelUI
+from ..users.model import CurrentUserModelUI, UserModelUI
 
 
 class UserInfoSchema(colander.MappingSchema):
@@ -79,6 +79,29 @@ class PasswordSchema(colander.MappingSchema):
             raise colander.Invalid(node["password"], "Password does not match")
 
 
+class AdminPasswordSchema(colander.MappingSchema):
+
+    password = colander.SchemaNode(
+        colander.String(),
+        oid="password-new",
+        title="New password",
+        widget=deform.widget.PasswordWidget(),
+        missing="",
+        validator=colander.Length(min=8),
+    )
+    password_confirm = colander.SchemaNode(
+        colander.String(),
+        oid="password-confirm",
+        widget=deform.widget.PasswordWidget(),
+        title="Confirm new password",
+        missing="",
+    )
+
+    def validator(self, node: "PasswordSchema", appstruct: dict):
+        if appstruct["password"] != appstruct["password_confirm"]:
+            raise colander.Invalid(node["password"], "Password does not match")
+
+
 def userinfo_form(request) -> deform.Form:
     return deform.Form(UserInfoSchema(), buttons=("Submit",), formid="userinfo-form")
 
@@ -98,6 +121,13 @@ def attributes_form(context, request, mode="edit") -> deform.Form:
 
 
 def password_form(request) -> deform.Form:
+    userid = request.identity.userid
+    users = request.get_collection("morpfw.pas.user")
+    user = users.get_by_userid(userid)
+    if user["is_administrator"]:
+        return deform.Form(
+            AdminPasswordSchema(), buttons=("Change password",), formid="password-form"
+        )
     return deform.Form(
         PasswordSchema(), buttons=("Change password",), formid="password-form"
     )
@@ -120,7 +150,7 @@ def upload_form(context, request) -> deform.Form:
 
 
 @App.html(
-    model=CurrentUserModelUI,
+    model=UserModelUI,
     name="edit",
     template="master/personal-settings.pt",
     permission=crudperm.Edit,
@@ -161,7 +191,7 @@ def profile(context, request: morepath.Request):
 
 
 @App.html(
-    model=CurrentUserModelUI,
+    model=UserModelUI,
     name="edit",
     request_method="POST",
     template="master/personal-settings.pt",
@@ -193,7 +223,7 @@ def process_profile(context, request):
 
         if not failed:
             updatedata = {}
-            for f in ["email"]:
+            for f in ["email", "timezone"]:
                 updatedata[f] = data[f]
             user.update(updatedata)
 
@@ -216,14 +246,20 @@ def process_profile(context, request):
             password_f = e
 
         if not failed:
-            if not user.validate(data["password_current"]):
+            users = request.get_collection("morpfw.pas.user")
+            current_user = users.get_by_userid(request.identity.userid)
+            if not current_user["is_administrator"] and not user.validate(
+                data["password_current"]
+            ):
                 exc = colander.Invalid(password_f, "Invalid password")
                 password_f.widget.handle_error(password_f, exc)
                 failed = True
 
         if not failed:
             try:
-                user.change_password(data["password_current"], data["password"])
+                user.change_password(
+                    data.get("password_current", ""), data["password"], secure=False
+                )
             except morpfw.authn.pas.exc.InvalidPasswordError as e:
                 exc = colander.Invalid(password_f, "Invalid password")
                 password_f.widget.handle_error(password_f, exc)
