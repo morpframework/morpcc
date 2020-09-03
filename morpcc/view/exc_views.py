@@ -82,7 +82,7 @@ def internalserver_error(context, request):
         response.status = 500
 
     tb = traceback.format_exc()
-    logger.error(tb)
+    logger.error("Internal Server Error\n" + tb)
 
     if request.path.startswith("/api/"):
         return morepath.render_json(
