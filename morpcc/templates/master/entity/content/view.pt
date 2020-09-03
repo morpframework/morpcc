@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <div metal:use-macro="load_template('master/panel.pt').macros.panel">
-                            <h2 metal:fill-slot="panel-title">General</h2>
+                            <h2 metal:fill-slot="panel-title">${ entity_title }</h2>
                             <div metal:fill-slot="panel-content">
                                 <div
                                     tal:replace="structure:form.render(form_data, request=request, context=context, readonly=True)">
