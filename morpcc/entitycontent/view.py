@@ -44,6 +44,9 @@ def term_search(context, request):
 )
 def content_view(context, request):
     result = default_view(context, request)
+    entity = context.model.entity()
+    result["entity_name"] = entity["name"]
+    result["entity_title"] = entity["title"]
     result["relationships"] = []
     for r, rel in sorted(context.model.relationships().items(), key=lambda x: x[0]):
         relmodel = context.model.resolve_relationship(rel)
@@ -53,6 +56,7 @@ def content_view(context, request):
             reldata = default_view(relmodelui, request)
             reldata["title"] = rel["title"]
             reldata["context"] = relmodelui
+            reldata["content"] = relmodel
             result["relationships"].append(reldata)
     result["backrelationships"] = []
     for br, brel in sorted(
