@@ -50,10 +50,10 @@
         </div>
 
         <metal:slot fill-slot="footer_script_slot">
-            <script>
+            <script tal:define="ajax_url datatable_url|request.link(context, '+datatable.json')">
                 $(document).ready(function () {
                     var qs = window.location.href.split('?')[1];
-                    var ajax_url = "${request.link(context, '+datatable.json')}";
+                    var ajax_url = "${ajax_url}";
                     if (qs !== undefined) {
                         ajax_url = ajax_url + '?' + qs;
                     }
