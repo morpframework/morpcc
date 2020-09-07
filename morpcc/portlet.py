@@ -21,7 +21,7 @@ def topnav_portlets(context, request):
 
 @App.portletprovider(name="morpcc.abovecontent-portlets")
 def abovecontent_portlets(context, request):
-    return ["morpcc.breadcrumb"]
+    return ["morpcc.timezone", "morpcc.breadcrumb"]
 
 
 @App.portletprovider(name="morpcc.logo-portlets")
@@ -160,6 +160,12 @@ def breadcrumb_portlet(context, request):
     """
     breadcrumb = request.app.get_breadcrumb(context, request)
     return {"breadcrumb": breadcrumb}
+
+
+@App.portlet(name="morpcc.timezone", template="master/portlet/timezone.pt")
+def timezone_portlet(context, request):
+    user = get_current_user_model_ui(request)
+    return {"timezone": user.model["timezone"] or "UTC"}
 
 
 @App.portlet(name="morpcc.logo", template="master/portlet/logo.pt")
