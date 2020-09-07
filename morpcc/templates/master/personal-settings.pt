@@ -22,12 +22,33 @@
                         </div>
                         <br />
                         <div style="text-align:center">
-                            <a tal:attributes="href request.link(context, '+upload')">
-                                <button class="btn btn-primary">Edit Profile Photo</button>
+                            <a class="btn btn-primary" tal:attributes="href request.link(context, '+upload')">
+                                Edit Profile Photo
                             </a>
                         </div>
                     </div>
                 </metal:use>
+                <tal:block define="transitions context.transitions()"
+                    tal:condition="transitions and permits('morpfw.crud.permission:StateUpdate')">
+
+
+                    <metal:use use-macro="load_template('master/panel.pt').macros.panel">
+                        <h2 metal:fill-slot="panel_title">State</h2>
+                        <div metal:fill-slot="panel_content">
+                            <div class="text-center">
+                                <a href="#" class="btn btn-default" tal:repeat="transition transitions"
+                                    onclick="$('#transition-value').val('${transition}');$('#transition-form').submit();">
+                                    ${transition.replace('-',' ').title()}
+                                </a>
+                                <form id="transition-form" method="POST"
+                                    tal:attributes="action request.link(context, '+statemachine')"
+                                    style="display: none">
+                                    <input id="transition-value" type="hidden" name="transition" value="" />
+                                </form>
+                            </div>
+                        </div>
+                    </metal:use>
+                </tal:block>
             </div>
             <div class="col-md-9 col-sm-8 col-xs-12">
                 <div class="row" tal:repeat="form forms">

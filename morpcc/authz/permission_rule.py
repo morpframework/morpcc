@@ -131,8 +131,12 @@ def currentuser_permission(identity, model, permission):
     if user["is_administrator"]:
         return True
     userid = identity.userid
-    if model.userid == userid:
-        return True
+    if isinstance(model, UserModel):
+        if model.userid == userid:
+            return True
+    elif isinstance(model, APIKeyModel):
+        if model["userid"] == userid:
+            return True
 
     return rule_from_assignment(
         request=model.request, model=model, permission=permission, identity=identity
