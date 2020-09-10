@@ -69,7 +69,7 @@ def process_login(context, request):
     if not failed:
         username = data["username"].lower()
         password = data["password"]
-        collection = get_user_collection(request)
+        collection = request.get_collection("morpfw.pas.user")
 
         if not collection.authenticate(username, password):
             request.notify(
@@ -82,7 +82,7 @@ def process_login(context, request):
             """Remember the identity of the user logged in."""
             # We pass the extra info to the identity object.
             response.headers.add("Access-Control-Expose-Headers", "Authorization")
-            u = collection.get(username)
+            u = collection.get_by_username(username)
             identity = morepath.Identity(u.userid)
             request.app.remember_identity(response, request, identity)
 
@@ -175,7 +175,7 @@ def process_register(context, request):
 
         username = data["username"].lower()
         email = data["email"]
-        if collection.get(username):
+        if collection.get_by_username(username):
             request.notify(
                 "error", "Username already taken", "Please use a different username"
             )

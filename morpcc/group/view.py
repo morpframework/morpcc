@@ -18,7 +18,8 @@ def member_select_widget(request):
     usercol = request.get_collection("morpfw.pas.user")
     choices = []
     for user in usercol.all():
-        choices.append((user.userid, user["username"]))
+        if user["state"] in ["active", "inactive"]:
+            choices.append((user.userid, user["username"]))
     return deform.widget.Select2Widget(values=choices, multiple=True)
 
 

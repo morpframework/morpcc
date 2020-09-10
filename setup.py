@@ -27,7 +27,8 @@ A meta CMS built on top of MorpFW""",
           "alembic",
           "pygments",
           "html_sanitizer",
-          "nltk"
+          "nltk",
+          "python-ldap",
       ],
       entry_points={
       })
