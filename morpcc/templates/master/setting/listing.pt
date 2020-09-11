@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <metal:master use-macro="load_template('master/page.pt').macros.master">
+        <metal:slot fill-slot="page-title">
+            ${page_title}
+        </metal:slot>
+        <metal:slot metal:fill-slot="page-body">
+            <div class="row">
+                <div class="col-xs-3 col-md-3 col-lg-2">
+                    <ul class="nav nav-tabs tabs-left">
+                        <tal:loop repeat="page pages">
+                            <li tal:attributes="class 'active' if page.name == current_page else None">
+                                <a href="${request.link(context, '+listing?page=%s' % page.name)}">
+                                    ${page.title}
+                                </a>
+                            </li>
+                        </tal:loop>
+                    </ul>
+                </div>
+                <div class="col-xs-9 col-md-9 col-lg-10">
+                    <metal:macro use-macro="load_template('master/simple-form.pt').macros.form_panel" />
+                </div>
+            </div>
+        </metal:slot>
+    </metal:master>
+</body>
+
+</html>

@@ -7,6 +7,7 @@ from .registry.applicationbehavior import ApplicationBehaviorRegistry
 from .registry.behavior import BehaviorRegistry
 from .registry.default_factory import DefaultFactoryRegistry
 from .registry.portlet import PortletProviderRegistry, PortletRegistry
+from .registry.settingpage import SettingPageRegistry
 
 PORTLET_FACTORY_IDS: dict = {}
 
@@ -248,7 +249,29 @@ class BreadcrumbAction(dectate.Action):
 
     def perform(self, obj, app_class):
         app_class.get_breadcrumb.register(
-            reg.methodify(obj),
-            model=self.model,
-            request=morepath.Request,
+            reg.methodify(obj), model=self.model, request=morepath.Request,
         )
+
+
+class SettingPageAction(dectate.Action):
+
+    config = {"setting_page_registry": SettingPageRegistry}
+    app_class_arg = True
+
+    depends = [SettingAction]
+
+    def __init__(self, name, permission, title=None):
+        self.name = name
+        if title is None:
+            title = name.replace("-", " ").title()
+        self.title = title
+        self.permission = permission
+
+    def identifier(self, app_class, setting_page_registry: SettingPageRegistry):
+        return str((app_class, self.name))
+
+    def perform(self, obj, app_class, setting_page_registry: SettingPageRegistry):
+        setting_page_registry.register(
+            obj, name=self.name, title=self.title, permission=self.permission
+        )
+

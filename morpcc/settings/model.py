@@ -1,4 +1,5 @@
 import morpfw
+import rulez
 
 from .modelui import SettingCollectionUI, SettingModelUI
 from .schema import SettingSchema
@@ -16,3 +17,9 @@ class SettingCollection(morpfw.Collection):
 
     def ui(self):
         return SettingCollectionUI(self.request, self)
+
+    def get_by_key(self, key):
+        items = self.search(rulez.field["key"] == key)
+        if items:
+            return items[0]
+        return self.create({"key": key, "value": None})

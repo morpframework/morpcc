@@ -63,6 +63,7 @@ class App(ChameleonApp, morpfw.SQLApp, MorpCCAuthzPolicy):
     default_factory = dectate.directive(directive.DefaultFactoryAction)
     restricted_module = dectate.directive(directive.RestrictedModuleAction)
     breadcrumb = dectate.directive(directive.BreadcrumbAction)
+    setting_page = dectate.directive(directive.SettingPageAction)
 
     @reg.dispatch_method(reg.match_instance("model"), reg.match_key("name"))
     def get_indexer(self, model, name):

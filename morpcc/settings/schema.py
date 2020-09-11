@@ -1,10 +1,11 @@
-import morpfw
-from dataclasses import dataclass
 import typing
+from dataclasses import dataclass
+
+import morpfw
 
 
 @dataclass
 class SettingSchema(morpfw.Schema):
 
     key: typing.Optional[str] = None
-    value: typing.Optional[str] = None
+    data: typing.Optional[dict] = None

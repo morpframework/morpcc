@@ -11,7 +11,7 @@ class Setting(morpfw.sql.Base):
     __tablename__ = "morpcc_setting"
 
     key = sa.Column(sa.String(length=1024), index=True)
-    value = sa.Column(sa.Text())
+    data = sa.Column(sajson.JSONField())
 
 
 class SettingStorage(morpfw.SQLStorage):
