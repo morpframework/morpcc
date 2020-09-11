@@ -5,7 +5,7 @@
     <body metal:use-macro="main_template.macros.master">
         <div metal:fill-slot="main">
 
-            <div class="row page-title">
+            <div class="row page-title" tal:define="hide_title hide_title|False" tal:condition="not:hide_title">
                 <div class="title_left col-md-7 col-sm-7 col-xs-12">
                     <h3>
                         <metal:slot define-slot="page-title" />
