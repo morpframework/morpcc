@@ -1,10 +1,12 @@
 import dataclasses
 
+import colander
 import deform
 import morepath
 from inverter import dc2colander, dc2colanderjson
 from morepath.toposort import Info, toposorted
 from morpfw.crud.errors import AlreadyExistsError, ValidationError
+from morpfw.exc import ConfigurationError
 
 from ..util import permits
 
@@ -13,12 +15,13 @@ class SettingPageRegistry(object):
     def __init__(self):
         self._setting_pages = {}
 
-    def register(self, factory, name, title, permission):
+    def register(self, factory, name, title, permission, order=0):
         self._setting_pages[name] = {
             "factory": factory,
             "title": title,
             "name": name,
             "permission": permission,
+            "order": order,
         }
 
     def get(self, request, name):
@@ -26,7 +29,10 @@ class SettingPageRegistry(object):
         return SettingPage(**info)
 
     def keys(self):
-        return self._setting_pages.keys()
+        return [
+            i["name"]
+            for i in sorted(self._setting_pages.values(), key=lambda x: x["order"])
+        ]
 
     def values(self, request):
         return [self.get(request, k) for k in self.keys()]
@@ -36,11 +42,21 @@ class SettingPageRegistry(object):
 
 
 class SettingPage(object):
-    def __init__(self, factory, name, title, permission):
+    def __init__(self, factory, name, title, permission, order=0):
         self.factory = factory
         self.name = name
         self.title = title
         self.permission = permission
+        self.order = order
+
+    def enabled(self, context, request):
+        if self.factory(request):
+            if self.permission:
+                if request.permits(context, self.permission):
+                    return True
+            else:
+                return True
+        return False
 
     def formschema(self, context, request):
         schema = self.factory(request)
@@ -52,8 +68,19 @@ class SettingPage(object):
 
     def jsonformschema(self, context, request):
         schema = self.factory(request)
+        field_metadata = {}
+        for fname, field in schema.__dataclass_fields__.items():
+            field_factory = field.metadata.get(
+                "morpcc.setting.colander_field_factory", None
+            )
+            if field_factory:
+                field_metadata.setdefault(fname, {})
+                field_metadata[fname]["colander.field_factory"] = field_factory
         formschema = dc2colanderjson.convert(
-            schema, request=request, default_tzinfo=request.timezone()
+            schema,
+            request=request,
+            default_tzinfo=request.timezone(),
+            field_metadata=field_metadata,
         )()
         formschema.bind(context=context, request=request)
         return formschema
@@ -76,7 +103,12 @@ class SettingPage(object):
                     value = field.default
                 elif not isinstance(field.default_factory, dataclasses._MISSING_TYPE):
                     value = field.default_factory()
-            data[name] = form_field.deserialize(value)
+            else:
+                try:
+                    value = form_field.deserialize(value)
+                except colander.Invalid:
+                    value = None
+            data[name] = value
         return data
         # get keys
 

@@ -3,6 +3,7 @@ import morepath
 import reg
 from morepath.directive import SettingAction
 
+from .permission import ManageSite
 from .registry.applicationbehavior import ApplicationBehaviorRegistry
 from .registry.behavior import BehaviorRegistry
 from .registry.default_factory import DefaultFactoryRegistry
@@ -260,18 +261,23 @@ class SettingPageAction(dectate.Action):
 
     depends = [SettingAction]
 
-    def __init__(self, name, permission, title=None):
+    def __init__(self, name, permission=None, title=None, order=0):
         self.name = name
         if title is None:
             title = name.replace("-", " ").title()
         self.title = title
         self.permission = permission
+        self.order = order
 
     def identifier(self, app_class, setting_page_registry: SettingPageRegistry):
         return str((app_class, self.name))
 
     def perform(self, obj, app_class, setting_page_registry: SettingPageRegistry):
         setting_page_registry.register(
-            obj, name=self.name, title=self.title, permission=self.permission
+            obj,
+            name=self.name,
+            title=self.title,
+            permission=self.permission,
+            order=self.order,
         )
 

@@ -120,3 +120,11 @@ div.dataTables_processing .fa-spin {
 .select2-selection--multiple {
     height:auto !important;
 }
+
+.deform div.checkbox label {
+    padding-left: 0;
+}
+
+.switchery {
+    width:42px;
+}

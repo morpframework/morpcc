@@ -35,6 +35,9 @@
     <link href="/__static__/morpcc/gentelella/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css"
       rel="stylesheet">
 
+    <!-- Switchery -->
+    <link href="/__static__/morpcc/gentelella/vendors/switchery/dist/switchery.min.css" rel="stylesheet">
+
     <!-- Custom Theme Style -->
     <link href="/__static__/morpcc/gentelella/build/css/custom.min.css" rel="stylesheet">
 
@@ -281,6 +284,10 @@
 
     <!-- Wizard -->
     <script src="/__static__/morpcc/gentelella/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
+
+    <!-- Switchery -->
+
+    <script src="/__static__/morpcc/gentelella/vendors/switchery/dist/switchery.min.js"></script>
 
 
     <!-- Custom Theme Scripts -->

@@ -14,8 +14,8 @@ from .modelui import SettingCollectionUI
 def listing(context, request):
     page_name = request.GET.get("page", "general")
     page = request.app.config.setting_page_registry.get(request, page_name)
-    pages = request.app.config.setting_page_registry.items(request)
-    pages = [v for k, v in pages if request.permits(context, v.permission)]
+    pages = request.app.config.setting_page_registry.values(request)
+    pages = [v for v in pages if v.enabled(context, request)]
     form = page.form(context, request)
     data = page.form_data(context, request)
     return {
@@ -38,8 +38,8 @@ def listing(context, request):
 def process_listing(context, request):
     page_name = request.GET.get("page", "general")
     page = request.app.config.setting_page_registry.get(request, page_name)
-    pages = request.app.config.setting_page_registry.items(request)
-    pages = [v for k, v in pages if request.permits(context, v.permission)]
+    pages = request.app.config.setting_page_registry.values(request)
+    pages = [v for v in pages if v.enabled(context, request)]
     error = page.process_form(context, request)
     if not error:
         request.notify(

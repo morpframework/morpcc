@@ -1,3 +1,5 @@
+import dataclasses
+
 import morpfw
 import rulez
 
@@ -24,9 +26,17 @@ class SettingCollection(morpfw.Collection):
         items = self.search(rulez.field["key"] == key)
         if items:
             return items[0]
-        return self.create({"key": key, "value": None})
+        return self.create({"key": key, "data": {"value": None}})
+
+    def resolve_raw(self, key, default=_marker):
+        """ return raw serialized settings value """
+        item = self.get_by_key(key)
+        if default is not _marker:
+            return item["data"].get("value", default)
+        return item["data"].get("value")
 
     def resolve(self, key, default=_marker):
+        """ return deserialized settings value """
         item = self.get_by_key(key)
         pages = self.request.app.config.setting_page_registry.values(self.request)
         for p in pages:
@@ -35,7 +45,17 @@ class SettingCollection(morpfw.Collection):
                 if field.metadata.get("morpcc.setting.key", None) == key:
                     fschema = p.jsonformschema(self, self.request)
                     serde = fschema[fname]
-                    return serde.deserialize(item["data"]["value"])
+                    value = item["data"]["value"]
+                    if value is None:
+                        if not isinstance(field.default, dataclasses._MISSING_TYPE):
+                            value = field.default
+                        elif not isinstance(
+                            field.default_factory, dataclasses._MISSING_TYPE
+                        ):
+                            value = field.default_factory()
+                    else:
+                        value = serde.deserialize(value)
+                    return value
         if default is _marker:
             raise KeyError(key)
         return default

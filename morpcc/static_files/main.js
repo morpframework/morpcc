@@ -1,7 +1,7 @@
-$.extend( $.fn.dataTable.defaults, {
-    language: {
-        "processing": "<i class='fa fa-spinner fa-spin'></i>"
-    }
+$.extend($.fn.dataTable.defaults, {
+  language: {
+    "processing": "<i class='fa fa-spinner fa-spin'></i>"
+  }
 });
 
 $(document).ready(function () {
@@ -32,9 +32,9 @@ $(document).ready(function () {
     }
   });
 
-  $('#iframe-modal iframe').on('load', function(event) {
-      $('#iframe-modal-spinner').hide();
-      $(this).show();
+  $('#iframe-modal iframe').on('load', function (event) {
+    $('#iframe-modal-spinner').hide();
+    $(this).show();
   });
 
   $(document).on('click', '.modal-link', function (event) {
@@ -43,6 +43,10 @@ $(document).ready(function () {
     $('#iframe-modal-spinner').show();
     $('#iframe-modal iframe').attr('src', url);
     $('#iframe-modal').modal();
+  });
+
+  $('input[type="checkbox"]').each(function (el) {
+    var a = new Switchery(this, { 'color': '#bbe33d' });
   });
 
 });
