@@ -107,7 +107,7 @@ class ApplicationModel(morpfw.Model):
 
         existing = idxcol.search(
             rulez.and_(
-                rulez.field["application_uuid"] == model.entity().application().uuid,
+                rulez.field["application_uuid"] == model.application().uuid,
                 rulez.field["entity_uuid"] == model.entity().uuid,
                 rulez.field["entity_content_uuid"] == model.uuid,
             )
@@ -142,3 +142,9 @@ class ApplicationCollection(morpfw.Collection):
 
     def ui(self):
         return ApplicationCollectionUI(self.request, self)
+
+    def get_by_name(self, name):
+        results = self.search(rulez.field["name"] == name)
+        if results:
+            return results[0]
+        return None
