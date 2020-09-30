@@ -63,7 +63,7 @@ class SettingPage(object):
         formschema = dc2colander.convert(
             schema, request=request, default_tzinfo=request.timezone()
         )()
-        formschema.bind(context=context, request=request)
+        formschema = formschema.bind(context=context, request=request)
         return formschema
 
     def jsonformschema(self, context, request):
@@ -82,7 +82,7 @@ class SettingPage(object):
             default_tzinfo=request.timezone(),
             field_metadata=field_metadata,
         )()
-        formschema.bind(context=context, request=request)
+        formschema = formschema.bind(context=context, request=request)
         return formschema
 
     def form(self, context, request):
