@@ -22,8 +22,10 @@
                 tal:condition="portletprovider"
                 tal:content="structure:portletprovider.render(context, request, load_template)">
             </div>
-            <metal:slot define-slot="page-body">
-            </metal:slot>
+            <div id="page-body">
+                <metal:slot define-slot="page-body">
+                </metal:slot>
+            </div>
             <!-- /page body -->
         </div>
     </body>
