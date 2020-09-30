@@ -1,3 +1,7 @@
+form p a {
+    border-bottom: 1px dotted;
+}
+
 .panel_toolbox {
     min-width: 10px;
 }
