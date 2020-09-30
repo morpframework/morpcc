@@ -9,7 +9,7 @@ fi
 
 if [ ! -f "./venv/bin/py.test" ];then
     echo "Installing PyTest"
-    ./venv/bin/pip install pytest
+    ./venv/bin/pip install pytest==5.3.5
 fi
 
 if [ ! -f "./bin/buildout" ];then
