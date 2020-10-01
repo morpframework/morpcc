@@ -2,7 +2,13 @@ import typing
 from dataclasses import dataclass, field
 
 import morpfw
-from deform.widget import SelectWidget
+from deform.widget import (
+    AutocompleteInputWidget,
+    HiddenWidget,
+    Select2Widget,
+    SelectWidget,
+)
+from morpfw import request
 from morpfw.validator.field import valid_identifier
 
 from ..deform.referencewidget import ReferenceWidget
@@ -33,6 +39,21 @@ ACCEPTED_TYPES = (
 def valid_type(request, schema, field, value, mode=None):
     if value not in [k for k, v in ACCEPTED_TYPES]:
         return "Invalid type"
+
+
+def get_schemata_widget(request):
+    col = request.get_collection("morpcc.attribute")
+    agg = col.aggregate(
+        group={"schemata": "schemata", "total": {"function": "count", "field": "id"},}
+    )
+    schematas = []
+    for a in agg:
+        if a["schemata"] is not None:
+            schematas.append(a["schemata"])
+    for d in ["default", "hidden"]:
+        if d not in schematas:
+            schematas.append(d)
+    return Select2Widget(values=[(k, k) for k in schematas], tags=True, placeholder="")
 
 
 @dataclass
@@ -106,6 +127,23 @@ class AttributeSchema(morpfw.Schema):
         metadata={
             "title": "Searchable",
             "description": "Make this attribute searchable",
+        },
+    )
+
+    schemata: typing.Optional[str] = field(
+        default="default",
+        metadata={
+            "title": "Field Schemata",
+            "required": True,
+            "deform.widget_factory": get_schemata_widget,
+        },
+    )
+    order: typing.Optional[int] = field(
+        default=0,
+        metadata={
+            "title": "Ordering Index",
+            "editable": False,
+            "deform.widget": HiddenWidget(),
         },
     )
 

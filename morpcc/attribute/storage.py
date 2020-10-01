@@ -21,6 +21,8 @@ class Attribute(morpfw.sql.Base):
     dictionaryelement_uuid = sa.Column(morpfw.sql.GUID(), index=True)
     allow_invalid = sa.Column(sa.Boolean())
     searchable = sa.Column(sa.Boolean())
+    schemata = sa.Column(sa.String())
+    order = sa.Column(sa.Integer())
 
 
 class AttributeStorage(morpfw.SQLStorage):

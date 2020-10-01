@@ -58,13 +58,18 @@
       rel="stylesheet">
     <link href="/__static__/morpcc/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css"
       rel="stylesheet">
+    <link href="/__static__/morpcc/gentelella/vendors/datatables.net/css/jquery.rowReorder.dataTables.min.css"
+      rel="stylesheet">
+
 
     <!-- deform -->
     <link href="/__static__/deform/select2/select2.css" rel="stylesheet">
     <link href="/__static__/deform/tinymce/skins/lightgray/skin.min.css" rel="stylesheet">
+
     <!--    <link href="/__static__/deform/tinymce/skins/lightgray/content.min.css" rel="stylesheet">
     <link href="/__static__/deform/tinymce/skins/lightgray/content.inline.min.css" rel="stylesheet">-->
     <link href="/__static__/deform/tinymce/skins/lightgray/skin.ie7.min.css" rel="stylesheet">
+    <link href="/__static__/deform/css/typeahead.css" rel="stylesheet">
     <link href="/__static__/morpcc/pygments-css/default.css" rel="stylesheet">
     <link href="/__static__/morpcc/main.css" rel="stylesheet">
 
@@ -77,6 +82,7 @@
 
     <script src="/__static__/morpcc/gentelella/vendors/jquery/dist/jquery.min.js"></script>
     <script src="/__static__/morpcc/modernizr/modernizr-min.js"></script>
+    <script src="/__static__/deform/scripts/typeahead.min.js"></script>
     <script src="/__static__/deform/scripts/jquery.form.js"></script>
     <script src="/__static__/deform/scripts/deform.js"></script>
     <tal:block tal:define="portletprovider request.app.get_portletprovider('morpcc.header-script-portlets')"
@@ -253,6 +259,7 @@
 
     <!-- DataTables -->
     <script src="/__static__/morpcc/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/__static__/morpcc/gentelella/vendors/datatables.net/js/jquery.dataTables.rowReorder.min.js"></script>
     <script src="/__static__/morpcc/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
     <script src="/__static__/morpcc/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
     <script src="/__static__/morpcc/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>

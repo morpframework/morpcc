@@ -107,7 +107,9 @@ class EntityModel(morpfw.Model):
     @morpfw.requestmemoize()
     def attributes(self):
         attrcol = self.request.get_collection("morpcc.attribute")
-        attrs = attrcol.search(rulez.field["entity_uuid"] == self.uuid)
+        attrs = attrcol.search(
+            rulez.field["entity_uuid"] == self.uuid, order_by=("order", "asc")
+        )
         result = {}
 
         for attr in attrs:

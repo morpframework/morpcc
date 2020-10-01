@@ -60,6 +60,7 @@
                                 width="100%">
                                 <thead>
                                     <tr>
+                                        <th>Order</th>
                                         <th>Attribute</th>
                                         <th>Type</th>
                                         <th>Title</th>
@@ -185,17 +186,39 @@
                         { 'name': 'structure:buttons' }
                     ]
                 });
-                $('#attribute-listing').DataTable({
+
+                var attrtable = $('#attribute-listing').DataTable({
                     serverSide: true,
+                    rowReorder: {
+                        dataSrc: 1
+                    },
                     processing: true,
                     ajax: "${request.relative_url('/attribute/+datatable.json?filter=entity_uuid%3D%3D' + context.model.uuid)}",
                     columns: [
-                        { 'name': 'name' },
-                        { 'name': 'type' },
-                        { 'name': 'title' },
-                        { 'name': 'description' },
-                        { 'name': 'structure:buttons' }
-                    ]
+                        { 'name': 'order' },
+                        { 'name': 'name', 'orderable': false },
+                        { 'name': 'type', 'orderable': false },
+                        { 'name': 'title', 'orderable': false },
+                        { 'name': 'description', 'orderable': false },
+                        { 'name': 'structure:buttons', 'orderable': false }
+                    ],
+                    order: [[0, 'asc']]
+                });
+
+                attrtable.on('row-reorder', function (e, diff, edit) {
+                    var result = '';
+                    var remap_payload = [];
+                    for (var i = 0, ien = diff.length; i < ien; i++) {
+                        remap_payload.push({ 'old': $(diff[i].oldData).text().trim(), 'new': $(diff[i].newData).text().trim() });
+                    };
+
+                    $.ajax({
+                        url: "${request.relative_url('/attribute/+reorder?entity_uuid=' + context.model.uuid)}",
+                        data: JSON.stringify({ mapping: remap_payload }),
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8'
+                    });
+
                 });
 
                 $('#selattribute-listing').DataTable({
