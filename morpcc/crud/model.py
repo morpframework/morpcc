@@ -1,6 +1,9 @@
 import html
 
+import colander
+import deform
 import morpfw
+from inverter import dc2colander
 
 
 class ModelUI(object):
@@ -140,3 +143,26 @@ class CollectionUI(object):
         if obj:
             return self.modelui_class(self.request, obj, self)
         return None
+
+    def render_column(self, record, name):
+        if getattr(self, "_render_column", None) is None:
+            formschema = dc2colander.convert(
+                self.collection.schema,
+                request=self.request,
+                default_tzinfo=self.request.timezone(),
+            )
+
+            def render_column(rec, colname):
+                fs = formschema()
+                fs = fs.bind(context=rec, request=self.request)
+                form = deform.Form(fs)
+                field = form[colname]
+                value = rec[colname]
+                if value is None:
+                    value = colander.null
+                return field.render(
+                    value, readonly=True, request=self.request, context=rec
+                )
+
+            self._render_column = render_column
+        return self._render_column(record, name)
