@@ -7,6 +7,7 @@ from morpfw.validator.field import valid_identifier
 from ..attribute.form_validator import unique_attribute
 from ..deform.referencewidget import ReferenceWidget
 from ..validator.reference import ReferenceValidator
+from .form_validator import valid_backrelationship
 
 
 def relationship_search_url(widget, context, request):
@@ -61,4 +62,4 @@ class BackRelationshipSchema(morpfw.Schema):
 
     single_relation: typing.Optional[bool] = False
 
-    __validators__ = [unique_attribute]
+    __validators__ = [unique_attribute, valid_backrelationship]
