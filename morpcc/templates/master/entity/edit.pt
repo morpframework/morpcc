@@ -190,7 +190,8 @@
                 var attrtable = $('#attribute-listing').DataTable({
                     serverSide: true,
                     rowReorder: {
-                        dataSrc: 1
+                        dataSrc: 1,
+                        update: false
                     },
                     processing: true,
                     ajax: "${request.relative_url('/attribute/+datatable.json?filter=entity_uuid%3D%3D' + context.model.uuid)}",
@@ -217,6 +218,8 @@
                         data: JSON.stringify({ mapping: remap_payload }),
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8'
+                    }).done(function () {
+                        attrtable.ajax.reload();
                     });
 
                 });

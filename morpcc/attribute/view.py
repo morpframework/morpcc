@@ -32,21 +32,24 @@ def reorder(context, request):
         rulez.field["entity_uuid"] == request.GET.get("entity_uuid"),
         order_by=("order", "asc"),
     )
+    attrs = list(sorted(attrs, key=lambda x: [x["order"], x["name"]]))
     count = 0
     field_orders = {}
     for attr in attrs:
         field_orders[attr["name"]] = {"order": count, "obj": attr}
         count += 1
-    new_orders = []
+    new_mapping = []
     for m in mapping:
-        new_order = field_orders[m["new"]]["order"]
-        new_orders.append((m["old"], new_order))
+        # ord_old = field_orders[m["old"]]["order"]
+        ord_new = field_orders[m["new"]]["order"]
 
-    for no in new_orders:
+        new_mapping.append((m["old"], ord_new))
+
+    for no in new_mapping:
         field_orders[no[0]]["order"] = no[1]
 
     for fo in field_orders.values():
-        if fo["obj"]["order"] != fo["order"]:
+        if fo["order"] != fo["obj"]["order"]:
             fo["obj"].update({"order": fo["order"]}, deserialize=False)
 
     return {}

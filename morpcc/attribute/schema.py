@@ -2,12 +2,8 @@ import typing
 from dataclasses import dataclass, field
 
 import morpfw
-from deform.widget import (
-    AutocompleteInputWidget,
-    HiddenWidget,
-    Select2Widget,
-    SelectWidget,
-)
+from deform.widget import (AutocompleteInputWidget, HiddenWidget,
+                           Select2Widget, SelectWidget)
 from morpfw import request
 from morpfw.validator.field import valid_identifier
 
@@ -15,12 +11,8 @@ from ..deform.referencewidget import ReferenceWidget
 from ..deform.vocabularywidget import VocabularyWidget
 from ..validator.reference import ReferenceValidator
 from ..validator.vocabulary import VocabularyValidator
-from .form_validator import (
-    required_if_primary_key,
-    unique_attribute,
-    valid_dictionary_element,
-    valid_searchable_type,
-)
+from .form_validator import (required_if_primary_key, unique_attribute,
+                             valid_dictionary_element, valid_searchable_type)
 
 ACCEPTED_TYPES = (
     ("string", "String"),
@@ -143,7 +135,6 @@ class AttributeSchema(morpfw.Schema):
         metadata={
             "title": "Ordering Index",
             "editable": False,
-            "deform.widget": HiddenWidget(),
         },
     )
 
