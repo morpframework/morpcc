@@ -3,6 +3,6 @@ def valid_backrelationship(request, schema, data, mode=None, **kw):
     rel = rels.get(data["reference_relationship_uuid"])
     if rel.reference_entity().uuid != data["entity_uuid"]:
         return {
-            "field": "name",
+            "field": "reference_relationship_uuid",
             "message": "Invalid relationship. Relationship did not point to the right entity",
         }
