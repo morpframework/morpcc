@@ -21,7 +21,8 @@ def get_user_sqlstorage(model, request, blobstorage):
     use_tls = settings.resolve_raw("morpcc.ldap.use_tls", None)
     bind_dn = settings.resolve_raw("morpcc.ldap.bind_dn", None)
     bind_password = settings.resolve_raw("morpcc.ldap.bind_password", None)
-    bind_password = request.fernet_decrypt(bind_password)
+    if bind_password:
+        bind_password = request.fernet_decrypt(bind_password)
     base_dn = settings.resolve_raw("morpcc.ldap.user_base_dn", None)
     search_filter = settings.resolve_raw("morpcc.ldap.user_search_filter", None)
     search_scope = settings.resolve_raw("morpcc.ldap.user_search_scope", None)
