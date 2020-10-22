@@ -10,6 +10,7 @@ from morpfw.validator.field import valid_identifier
 from ..attribute.form_validator import required_if_primary_key, unique_attribute
 from ..deform.referencewidget import ReferenceWidget
 from ..validator.reference import ReferenceValidator
+from .form_validator import valid_search_attribute
 
 
 def attribute_search_url(widget, context, request):
@@ -82,4 +83,4 @@ class RelationshipSchema(morpfw.Schema):
     required: typing.Optional[bool] = False
     primary_key: typing.Optional[bool] = False
 
-    __validators__ = [unique_attribute, required_if_primary_key]
+    __validators__ = [unique_attribute, required_if_primary_key, valid_search_attribute]
