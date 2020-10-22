@@ -10,7 +10,11 @@ class RestrictedEntityContent(object):
         def update(data, deserialize=True):
             return context.update(data, deserialize=deserialize)
 
+        def delete():
+            return context.delete()
+
         self.update = update
+        self.delete = delete
         self.save = context.save
         self.as_json = lambda: context.as_json()
 
