@@ -32,7 +32,7 @@ def reorder(context, request):
         rulez.field["entity_uuid"] == request.GET.get("entity_uuid"),
         order_by=("order", "asc"),
     )
-    attrs = list(sorted(attrs, key=lambda x: [x["order"], x["name"]]))
+    attrs = list(sorted(attrs, key=lambda x: [x["order"], x["created"]]))
     count = 0
     field_orders = {}
     for attr in attrs:
