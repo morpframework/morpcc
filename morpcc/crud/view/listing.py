@@ -262,7 +262,17 @@ def datatable_search(
     if data["order"]:
         colidx = data["order"][0]["column"]
         order_col = data["columns"][colidx]["name"]
-        if order_col.startswith("structure:"):
+        order_col_orderable = data["columns"][colidx].get("orderable", "true")
+        if order_col_orderable in ["true"]:
+            order_col_orderable = True
+        elif order_col_orderable in ["false"]:
+            order_col_orderable = False
+        else:
+            order_col_orderable = True
+
+        if not order_col_orderable:
+            order_by = None
+        elif order_col.startswith("structure:"):
             order_by = None
         else:
             order_by = (order_col, data["order"][0]["dir"])
