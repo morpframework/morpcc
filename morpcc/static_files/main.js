@@ -45,8 +45,13 @@ $(document).ready(function () {
     $('#iframe-modal').modal();
   });
 
-  $('input[type="checkbox"]').each(function (el) {
-    var a = new Switchery(this, { 'color': '#bbe33d' });
+  $('input[type="checkbox"]').each(function (idx) {
+    var klass = $(this).attr('class');
+    if (klass && klass.includes('checkbox')) {
+      // enable icheckbox later
+    } else {
+      var a = new Switchery(this, { 'color': '#bbe33d' });
+    }
   });
 
 });
