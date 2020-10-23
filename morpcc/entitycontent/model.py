@@ -97,23 +97,27 @@ class EntityContentCollection(morpfw.Collection):
                 result[name] = [item.as_dict() for item in items if item is not None]
         return result
 
-    def resolve_relationship(self, relationship, data):
+    def resolve_relationship(self, relationship, data, allow_invalid=False):
         """ return the modelcontent of the relationship """
         if not relationship["name"] in data:
             return None
         attr = relationship.reference_attribute()
         entity = attr.entity()
 
-        col = content_collection_factory(entity, self.__application__)
+        col = content_collection_factory(
+            entity, self.__application__, allow_invalid=allow_invalid
+        )
         res = col.search(rulez.field[attr["name"]] == data[relationship["name"]])
         if res:
             return res[0]
         return None
 
-    def resolve_backrelationship(self, backrelationship, data):
+    def resolve_backrelationship(self, backrelationship, data, allow_invalid=False):
         rel = backrelationship.reference_relationship()
         dm = rel.entity()
-        col = content_collection_factory(dm, self.__application__)
+        col = content_collection_factory(
+            dm, self.__application__, allow_invalid=allow_invalid
+        )
 
         attr = rel.reference_attribute()
 
