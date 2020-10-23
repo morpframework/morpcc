@@ -166,21 +166,25 @@ class EntityContentModel(morpfw.Model):
     def entity(self):
         return self.collection.__parent__
 
-    def resolve_relationship(self, relationship):
+    def resolve_relationship(self, relationship, allow_invalid=False):
         """ return the modelcontent of the relationship """
         attr = relationship.reference_attribute()
         entity = attr.entity()
 
-        col = content_collection_factory(entity, self.collection.__application__)
+        col = content_collection_factory(
+            entity, self.collection.__application__, allow_invalid=allow_invalid
+        )
         res = col.search(rulez.field[attr["name"]] == self[relationship["name"]])
         if res:
             return res[0]
         return None
 
-    def resolve_backrelationship(self, backrelationship):
+    def resolve_backrelationship(self, backrelationship, allow_invalid=False):
         rel = backrelationship.reference_relationship()
         dm = rel.entity()
-        col = content_collection_factory(dm, self.collection.__application__)
+        col = content_collection_factory(
+            dm, self.collection.__application__, allow_invalid=allow_invalid
+        )
 
         attr = rel.reference_attribute()
 
@@ -287,7 +291,7 @@ def content_collection_factory(entity, application, allow_invalid=False):
     for appbehavior in application.behaviors():
         entity_behaviors = getattr(appbehavior, "entity_behaviors", {})
         entity_behavior = entity_behaviors.get(entity["name"], None)
-        
+
         all_entity_behavior = entity_behaviors.get("*", None)
         if all_entity_behavior:
             model_markers.append(all_entity_behavior.model_marker)
