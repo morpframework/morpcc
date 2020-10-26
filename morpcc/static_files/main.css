@@ -6,6 +6,10 @@ form p a {
     min-width: 10px;
 }
 
+.panel_toolbox .label {
+    color: #fff;
+}
+
 .alert small.error-msg-detail {
     color: white;
 }
