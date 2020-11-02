@@ -40,8 +40,8 @@
                                 <div class="row" tal:condition="item['params']">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-                                        <label>Job ID:</label>
-                                        <a href="${request.link(item.ui())}">${item.uuid}</a>
+                                        <label>Task ID:</label>
+                                        <a href="${request.link(item.ui())}">${item['task_id']}</a>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -57,7 +57,7 @@
                                 <div class="row" tal:condition="item['params']">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-                                        <label>Job Parameter</label>
+                                        <label>Task Parameter</label>
                                         <div tal:content="structure item.collection.ui().render_column(item, 'params')">
                                         </div>
                                     </div>
