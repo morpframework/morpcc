@@ -173,11 +173,11 @@ def _parse_dtdata(data):
 def _dt_result_render(context, request, columns, objs):
     rows = []
     collection = context.collection
+    formschema = dc2colander.convert(
+        collection.schema, request=request, default_tzinfo=request.timezone()
+    )
     for o in objs:
         row = []
-        formschema = dc2colander.convert(
-            collection.schema, request=request, default_tzinfo=request.timezone()
-        )
         fs = formschema()
         fs = fs.bind(context=o, request=request)
         form = deform.Form(fs)
