@@ -14,6 +14,8 @@ class VocabularyWidget(SelectWidget):
 
     def __init__(self, vocabulary, **kwargs):
         self.vocabulary = vocabulary
+        if "placeholder" not in kwargs:
+            kwargs["placeholder"] = ""
         super().__init__(**kwargs)
 
     def search_url(self, context, request):
