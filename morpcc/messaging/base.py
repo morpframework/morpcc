@@ -51,9 +51,10 @@ def send_email(request_options, obj):
     return {}
 
 
-@App.periodic(name=SIGNAL, seconds=120)
-def retry_send_email(request):
-    return {}
+# @App.periodic(name=SIGNAL, seconds=120)
+# def retry_send_email(request):
+#    return {}
+#
 
 
 @App.messagingprovider("email")
