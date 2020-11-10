@@ -286,6 +286,15 @@ class EntityContentModel(morpfw.Model):
 
 
 def content_collection_factory(entity, application, allow_invalid=False):
+    request = application.request
+    cache_key = "-".join(
+        [application["uuid"], entity["uuid"], "1" if allow_invalid else "0"]
+    )
+    request.environ.setdefault("morpcc.cache.content_collection", {})
+    cachemgr = request.environ["morpcc.cache.content_collection"]
+    if cache_key in cachemgr:
+        return cachemgr[cache_key]
+
     behaviors = entity.behaviors()
     model_markers = []
     modelui_markers = []
@@ -392,9 +401,12 @@ def content_collection_factory(entity, application, allow_invalid=False):
         def session(self):
             return self.request.get_db_session("warehouse")
 
-    return Collection(
+    result = Collection(
         application,
         entity,
         entity.request,
         storage=Storage(entity.request, metadata=application.content_metadata()),
     )
+
+    cachemgr[cache_key] = result
+    return result
