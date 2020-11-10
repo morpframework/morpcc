@@ -24,7 +24,7 @@ def get_chameleon_render(loader, name, original_render):
 
         main_template = loader.load("master/main_template.pt", "xml")
         load_template = functools.partial(loader.load, format="xml")
-        context = resolve_model(request.copy(app=request.app))
+        context = request.resolve_path()
 
         def _permits(permission, request=request, context=context):
             if isinstance(context, str):
