@@ -28,7 +28,8 @@ def periodic_indexing(request_options):
 def index(request_options):
     with morpfw.request_factory(**request_options) as request:
         queue = request.get_collection("morpcc.entitycontentindexqueue")
-        for i in queue.search(rulez.field["action"] == "index", limit=BATCH_SIZE):
+        items = queue.search(rulez.field["action"] == "index", limit=BATCH_SIZE)
+        for i in items:
             app_uuid = i["application_uuid"]
             entity_uuid = i["entity_uuid"]
             uuid = i["record_uuid"]
@@ -40,12 +41,17 @@ def index(request_options):
             context = content_col.get(uuid)
             app.index_sync(context)
 
+        for i in items:
+            i.delete()
+
 
 @App.async_subscribe("morpcc.entitycontent.unindex")
 def index(request_options):
     with morpfw.request_factory(**request_options) as request:
         queue = request.get_collection("morpcc.entitycontentindexqueue")
-        for i in queue.search(rulez.field["action"] == "unindex", limit=BATCH_SIZE):
+        items = queue.search(rulez.field["action"] == "unindex", limit=BATCH_SIZE)
+
+        for i in items:
             app_uuid = i["application_uuid"]
             entity_uuid = i["entity_uuid"]
             uuid = i["record_uuid"]
@@ -56,6 +62,9 @@ def index(request_options):
             content_col = content_collection_factory(entity, app)
             context = content_col.get(uuid)
             app.unindex(context)
+
+        for i in items:
+            i.delete()
 
 
 @App.subscribe(model=EntityContentModel, signal=signals.OBJECT_CREATED)
