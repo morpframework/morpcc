@@ -22,11 +22,23 @@ class SettingCollection(morpfw.Collection):
     def ui(self):
         return SettingCollectionUI(self.request, self)
 
+    @morpfw.requestmemoize()
     def get_by_key(self, key):
-        items = self.search(rulez.field["key"] == key)
-        if items:
-            return items[0]
-        return self.create({"key": key, "data": {"value": None}})
+        self.request.environ.setdefault("morpcc.cache.settings", {})
+        cachemgr = self.request.environ["morpcc.cache.settings"]
+        if key in cachemgr:
+            return cachemgr[key]
+
+        items = self.all()
+        for item in items:
+            cachemgr[item["key"]] = item
+
+        if key in cachemgr:
+            return cachemgr[key]
+
+        result = self.create({"key": key, "data": {"value": None}})
+        cachemgr[key] = result
+        return result
 
     def resolve_raw(self, key, default=_marker):
         """ return raw serialized settings value """
