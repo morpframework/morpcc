@@ -1,3 +1,5 @@
+import json
+
 import rulez
 from morpcc.crud.view.listing import listing as default_listing
 from morpfw.crud import permission as crudperms
@@ -19,19 +21,42 @@ def view(context, request):
     return default_listing(context, request)
 
 
-@App.json(model=ReferenceDataCollectionUI, name="export", permission=crudperms.Search)
+@App.view(model=ReferenceDataCollectionUI, name="export", permission=crudperms.Search)
 def export(context, request):
     result = {}
     for refdata in context.collection.search():
 
         result[refdata["name"]] = refdata.export()
 
+    result = json.dumps(result)
+
+    @request.after
+    def set_header(response):
+        response.headers.add("Content-Type", "application/json")
+        response.headers.add(
+            "Content-Disposition", 'attachment; filename="referencedata.json'
+        )
+        response.headers.add("Content-Length", str(len(result)))
+
     return result
 
 
-@App.json(model=ReferenceDataModelUI, name="export", permission=crudperms.Search)
+@App.view(model=ReferenceDataModelUI, name="export", permission=crudperms.Search)
 def export_model(context, request):
-    return context.model.export()
+
+    result = context.model.export()
+    result = json.dumps(result)
+
+    @request.after
+    def set_header(response):
+        response.headers.add("Content-Type", "application/json")
+        response.headers.add(
+            "Content-Disposition",
+            'attachment; filename="%s.json' % context.model["name"],
+        )
+        response.headers.add("Content-Length", str(len(result)))
+
+    return result
 
 
 @App.json(
