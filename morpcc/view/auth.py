@@ -30,20 +30,19 @@ def login(context, request):
     )
     fs = formschema()
     fs = fs.bind(context=context, request=request)
+    buttons = ["Login"]
+    if request.app.get_config("morpfw.new_registration.enabled", True):
+        buttons.append(
+            deform.Button(
+                "register",
+                title="Register",
+                type="link",
+                value=request.relative_url("/register"),
+            )
+        )
     return {
         "form_title": "Login",
-        "form": deform.Form(
-            fs,
-            buttons=(
-                "Login",
-                deform.Button(
-                    "register",
-                    title="Register",
-                    type="link",
-                    value=request.relative_url("/register"),
-                ),
-            ),
-        ),
+        "form": deform.Form(fs, buttons=buttons),
     }
 
 
@@ -123,7 +122,8 @@ class RegistrationForm(object):
     model=Root, name="register", template="master/anon-form.pt",
 )
 def register(context, request):
-    if not request.app.get_config("morpcc.allow_registration", True):
+    enabled = request.app.get_config("morpfw.new_registration.enabled", True)
+    if not enabled:
         raise HTTPNotFound()
     schema = request.app.get_schemaextender(RegistrationForm)
     formschema = dc2colander.convert(
@@ -150,6 +150,9 @@ def register(context, request):
 
 @App.view(model=Root, name="register", request_method="POST")
 def process_register(context, request):
+    enabled = request.app.get_config("morpfw.new_registration.enabled", True)
+    if not enabled:
+        raise HTTPNotFound()
     controls = list(request.POST.items())
     schema = request.app.get_schemaextender(RegistrationForm)
     formschema = dc2colander.convert(

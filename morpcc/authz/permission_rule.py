@@ -9,8 +9,7 @@ from morpfw.permission import All
 
 from ..crud.model import CollectionUI, ModelUI
 from ..entitycontent.model import EntityContentCollection, EntityContentModel
-from ..entitycontent.modelui import (EntityContentCollectionUI,
-                                     EntityContentModelUI)
+from ..entitycontent.modelui import EntityContentCollectionUI, EntityContentModelUI
 from ..util import permits
 from .policy import MorpCCAuthzPolicy
 
@@ -196,7 +195,7 @@ def rule_from_assignment(request, model, permission, identity):
 
 @Policy.permission_rule(model=UserCollection, permission=authperm.Register)
 def allow_api_registration(identity, model, permission):
-    return rule_from_config(model.request, "morpcc.allow_registration")
+    return model.request.app.get_config("morpfw.new_registration.enabled", True)
 
 
 @Policy.permission_rule(model=Collection, permission=All)
