@@ -115,10 +115,3 @@ def unindex_on_delete(app, request, context, signal):
             "action": "unindex",
         }
     )
-
-
-@App.subscribe(model=ApplicationModel, signal=signals.OBJECT_TOBEDELETED)
-def delete_schema(app, request, context, signal):
-    app_uuid = context.uuid
-    context: ApplicationModel = context
-    context.drop_all()

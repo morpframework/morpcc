@@ -58,7 +58,7 @@ def navigation_portlet(context, request):
 
     appcol = get_app_collection(request)
     apps_nav = []
-    for app in appcol.search():
+    for app in appcol.all():
         appui = app.ui()
         if permits(request, appui, crudperms.View):
             apps_nav.append(

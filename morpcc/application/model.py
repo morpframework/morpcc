@@ -1,3 +1,4 @@
+import warnings
 from dataclasses import field, make_dataclass
 
 import morpfw
@@ -120,6 +121,12 @@ class ApplicationModel(morpfw.Model):
         for ec in self.entity_collections().values():
             ec.drop_all()
 
+    def before_delete(self):
+        sm = self.statemachine()
+        sm.delete()
+        self.request.async_dispatch("morpcc.delete_application")
+        return False
+
 
 class BehaviorableApplicationModel(ApplicationModel):
     def __new__(cls, request, collection, data):
@@ -148,3 +155,23 @@ class ApplicationCollection(morpfw.Collection):
         if results:
             return results[0]
         return None
+
+    def search(self, query=None, offset=0, limit=None, order_by=None, secure=False):
+        if query is None:
+            warnings.warn(
+                "Searching application does not exclude ones that are pending deletion."
+                "Recommended to use .all() to list all applications"
+            )
+        return super().search(query, offset, limit, order_by, secure)
+
+    @morpfw.requestmemoize()
+    def all(self):
+        """
+        Return all applications, excluding ones that are being deleted
+        """
+        return self.search(
+            rulez.and_(
+                rulez.field("state") != "process_delete",
+                rulez.field("state") != "deleting",
+            )
+        )

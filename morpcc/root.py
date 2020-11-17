@@ -16,4 +16,4 @@ def get_root(request):
 
 @App.html(model=Root, permission=ViewHome, template="master/index.pt")
 def index(context, request):
-    return {"applications": request.get_collection("morpcc.application").search()}
+    return {"applications": request.get_collection("morpcc.application").all()}
