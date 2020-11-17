@@ -19,6 +19,7 @@ class DictionaryEntityModel(morpfw.Model):
     def before_delete(self):
         for el in self.dictionary_elements():
             el.delete()
+        return super().before_delete()
 
 
 class DictionaryEntityCollection(morpfw.Collection):

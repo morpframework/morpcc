@@ -49,6 +49,7 @@ class DictionaryElementModel(morpfw.Model):
     def before_delete(self):
         for va in self.validator_assignments():
             va.delete()
+        return super().before_delete()
 
 
 class DictionaryElementCollection(morpfw.Collection):
