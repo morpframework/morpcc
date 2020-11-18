@@ -2,6 +2,8 @@ import typing
 from dataclasses import field, make_dataclass
 
 import morpfw
+import rulez
+from morpcc.entitycontent.model import EntityContentModel
 from morpfw.crud.storage.pgsqlstorage import PgSQLStorage
 from sqlalchemy import MetaData
 
@@ -36,7 +38,45 @@ class IndexContentModel(morpfw.Model):
 
 
 class IndexContentCollection(morpfw.Collection):
-    pass
+    def index(self, model):
+        if isinstance(model, EntityContentModel):
+            existing = self.search(
+                rulez.and_(
+                    rulez.field["application_uuid"] == model.application().uuid,
+                    rulez.field["entity_uuid"] == model.entity().uuid,
+                    rulez.field["entity_content_uuid"] == model.uuid,
+                )
+            )
+
+            data = {}
+            idxes = self.request.get_collection("morpcc.index")
+            for keyidx in [i[0] for i in idxes.index_attrs()]:
+                res = self.request.app.get_indexer(model, keyidx)
+                data[keyidx] = res
+
+            if existing:
+                existing[0].update(data)
+                result = existing[0]
+            else:
+                result = self.create(data, deserialize=False)
+            return result
+
+    def unindex(self, model):
+        if isinstance(model, EntityContentModel):
+            res = self.search(
+                rulez.and_(
+                    rulez.field("application_uuid") == model.application().uuid,
+                    rulez.field("entity_uuid") == model.entity().uuid,
+                    rulez.field("entity_content_uuid") == model.uuid,
+                )
+            )
+            for i in res:
+                i.delete(permanent=True)
+
+    def unindex_raw(self, query):
+        res = self.search(query)
+        for i in res:
+            i.delete(permanent=True)
 
 
 class IndexModel(morpfw.Model):
