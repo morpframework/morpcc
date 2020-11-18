@@ -57,7 +57,7 @@ class SearchForm(object):
 def listing(context, request):
     page = int(request.GET.get("page", 0))
     query = None
-    formschema = dc2colander.convert(SearchForm, request)()
+    formschema = dc2colander.convert(SearchForm, request=request)()
     formschema = formschema.bind(request=request, context=context)
     form = deform.Form(formschema, buttons=("Submit",), method="GET")
     data = {}
