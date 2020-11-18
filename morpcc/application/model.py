@@ -81,41 +81,12 @@ class ApplicationModel(morpfw.Model):
     def index_sync(self, model):
         col = self.request.get_collection("morpcc.index")
         idxcol = col.content_collection()
-        existing = idxcol.search(
-            rulez.and_(
-                rulez.field["application_uuid"]
-                == model.collection.__application__.uuid,
-                rulez.field["entity_uuid"] == model.entity().uuid,
-                rulez.field["entity_content_uuid"] == model.uuid,
-            )
-        )
-
-        data = {}
-        for keyidx in [i[0] for i in col.index_attrs()]:
-            res = self.request.app.get_indexer(model, keyidx)
-            data[keyidx] = res
-
-        if existing:
-            existing[0].update(data)
-            result = existing[0]
-        else:
-            result = idxcol.create(data, deserialize=False)
-
-        return result
+        return idxcol.index(model)
 
     def unindex(self, model):
-        idxcol = self.request.get_collection("morpcc.index").content_collection()
-
-        existing = idxcol.search(
-            rulez.and_(
-                rulez.field["application_uuid"] == model.application().uuid,
-                rulez.field["entity_uuid"] == model.entity().uuid,
-                rulez.field["entity_content_uuid"] == model.uuid,
-            )
-        )
-
-        if existing:
-            existing[0].delete(permanent=True)
+        col = self.request.get_collection("morpcc.index")
+        idxcol = col.content_collection()
+        idxcol.unindex(model)
 
     def drop_all(self):
         for ec in self.entity_collections().values():
@@ -160,7 +131,8 @@ class ApplicationCollection(morpfw.Collection):
         if query is None:
             warnings.warn(
                 "Searching application does not exclude ones that are pending deletion."
-                "Recommended to use .all() to list all applications"
+                "Recommended to use .all() to list all applications",
+                stacklevel=2,
             )
         return super().search(query, offset, limit, order_by, secure)
 
@@ -170,8 +142,11 @@ class ApplicationCollection(morpfw.Collection):
         Return all applications, excluding ones that are being deleted
         """
         return self.search(
-            rulez.and_(
-                rulez.field("state") != "process_delete",
-                rulez.field("state") != "deleting",
+            rulez.or_(
+                rulez.field("state") == None,
+                rulez.and_(
+                    rulez.field("state") != "process_delete",
+                    rulez.field("state") != "deleting",
+                ),
             )
         )
