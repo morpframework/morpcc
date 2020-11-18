@@ -27,12 +27,16 @@ class EntityContentCollection(morpfw.Collection):
 
     def base_avro_schema(self):
         entity = self.__parent__
-        result = dc2avsc.convert(self.schema, self.request, namespace=entity["name"])
+        result = dc2avsc.convert(
+            self.schema, request=self.request, namespace=entity["name"]
+        )
         return result
 
     def avro_schema(self):
         entity = self.__parent__
-        result = dc2avsc.convert(self.schema, self.request, namespace=entity["name"])
+        result = dc2avsc.convert(
+            self.schema, request=self.request, namespace=entity["name"]
+        )
         for name, rel in self.relationships().items():
             ref_entity = rel.reference_attribute().entity()
             item_schema = dc2avsc.convert(
