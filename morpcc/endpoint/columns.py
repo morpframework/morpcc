@@ -10,7 +10,7 @@ def get_buttons_column(model, request, name):
         {
             "icon": "eye",
             "data-url": request.relative_url(
-                "/endpointhandler/+datatable.json?filter=endpoint_uuid%3D%3D{}".format(
+                "/endpointhandler/+datatable.json?filter=endpoint_uuid%3D%3D'{}'".format(
                     model.uuid
                 )
             ),

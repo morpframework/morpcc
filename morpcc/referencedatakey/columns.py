@@ -10,7 +10,7 @@ def get_buttons_column(model, request, name):
         {
             "icon": "eye",
             "data-url": request.relative_url(
-                "/referencedataproperty/+datatable.json?filter=referencedatakey_uuid%3D%3D{}".format(
+                "/referencedataproperty/+datatable.json?filter=referencedatakey_uuid%3D%3D'{}'".format(
                     model.uuid
                 )
             ),

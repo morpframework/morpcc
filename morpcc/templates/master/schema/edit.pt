@@ -56,7 +56,7 @@
                 $('#entity-listing').DataTable({
                     serverSide: true,
                     processing: true,
-                    ajax: "${request.relative_url('/entity/+datatable.json?filter=schema_uuid%3D%3D' + context.model.uuid)}",
+                    ajax: "${request.relative_url(r'/entity/+datatable.json?filter=schema_uuid%3D%3D\"' + context.model.uuid + r'\"')}",
                     columns: [
                         { 'name': 'name' },
                         { 'name': 'title' },
