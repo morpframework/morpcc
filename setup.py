@@ -29,6 +29,7 @@ A meta CMS built on top of MorpFW""",
           "html_sanitizer",
           "nltk",
           "python-ldap",
+          "luigi",
       ],
       entry_points={
       })
