@@ -28,7 +28,7 @@ class EntityContentCollection(morpfw.Collection):
     def base_avro_schema(self):
         entity = self.__parent__
         result = dc2avsc.convert(
-            self.schema, request=self.request, namespace=entity["name"]
+            self.schema, request=self.request, namespace=entity["name"], ignore_required=True
         )
         return result
 
@@ -43,6 +43,7 @@ class EntityContentCollection(morpfw.Collection):
                 content_collection_factory(ref_entity, self.__application__).schema,
                 request=self.request,
                 namespace="%s.%s" % (entity["name"], ref_entity["name"]),
+                ignore_required=True,
             )
 
             field = {"name": name, "type": [item_schema, "null"]}
@@ -57,6 +58,7 @@ class EntityContentCollection(morpfw.Collection):
                 content_collection_factory(ref_entity, self.__application__).schema,
                 request=self.request,
                 namespace="%s.%s" % (entity["name"], ref_entity["name"]),
+                ignore_required=True,
             )
 
             if brel["single_relation"]:
