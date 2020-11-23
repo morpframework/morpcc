@@ -19,7 +19,7 @@ A meta CMS built on top of MorpFW""",
       zip_safe=False,
       install_requires=[
           # -*- Extra requirements: -*-
-          "morpfw",
+          "morpfw>=0.4.0b1<0.5.0",
           "more.chameleon",
           "more.static",
           "deform",

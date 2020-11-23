@@ -2,68 +2,93 @@
 Quick Start Tutorial
 =====================
 
+Dependencies
+=============
+
+MorpCC requires following services for it to function correctly:
+
+ * postgresql database. 3 databases are needed, for following purpose:
+   * main database - for MorpCC application tables
+   * warehouse database - MorpCC provides a Through-The-Web (TTW) data model
+     manager which allows creation of tables and managing data using the Web UI.
+     Tables created by this feature will store its data in this database.
+   * cache database - used by ``beaker`` for caching and session  
+ * rabbitmq message queue - used by background processing engine
+
 Bootstrapping new project
 ===========================
 
 MorpCC requires Python 3.7 or newer to run. Python 3.6 is also supported but
 you will need to install ``dataclasses`` backport into your environment.
 
-The recommended installation method is to use
-`pipenv <http://pipenv.rtfd.org>`_, or you can also use pip or virtualenv.
+The recommended way to install morpfw is to use `buildout <http://www.buildout.org>`_,
+skeleton that is generated using ``mfw-template``. Please head to
+`mfw-template documentation <http://mfw-template.rtfd.org>`_ for tutorial.
 
-If you dont have pipenv installed yet, do:
+Bootstrapping without ``mfw-template``
+=======================================
 
-.. code-block:: bash
+If you prefer to use ``virtualenv``, or other methods, you can follow these
+steps.
 
-   sudo pip install pipenv>=2018.11.26
+First, lets get ``morpfw`` & ``morpcc`` installed
 
-Lets create a new project. You can initialize new project
-using cookiecutter-morpcc:
+.. code-block:: console
 
-.. code-block:: bash
+   $ pip install morpfw morpcc
 
-   sudo pip install cookiecutter
-   cookiecutter https://github.com/morpframework/cookiecutter-morpcc
+If you are using buildout, version locks files are available at
+``mfw_workspace`` repository: https://github.com/morpframework/mfw_workspace/tree/master/versions
 
-And start your project using:
+Lets create an ``app.py``. 
 
-.. code-block:: bash
+.. literalinclude:: _code/app.py
 
-   cd $PROJECTNAME/ # replace with your project directory name
-   pipenv install -e .
-   pipenv run morpfw -s settings.yml register-admin -u admin -e admin@localhost.local
-   pipenv run morpfw -s settings.yml start
+``morpcc`` is built on ``morpfw`` which boot up application using a ``settings.yml`` file, so lets
+create one. You will need a fernet key which have to be generated using following python code:
+
+.. code-block:: console
+
+   $ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+
+Then lets create a ``settings.yml``
+
+.. code-block:: yaml
+
+   application:
+      title: My First App
+      class: app:App
+      factory: morpcc.app:create_morpcc_app
+      
+   configuration:
+      morpfw.authn.policy: morpcc.app:AuthnPolicy
+      morpfw.secret.fernet_key: '<fernet-key>'
+      morpfw.storage.sqlstorage.dburi:  'postgresql://postgres:postgres@localhost:5432/morpcc'
+      morpfw.storage.sqlstorage.dburi.warehouse: 'postgresql://postgres:postgres@localhost:5432/morpcc_warehouse'
+      morpfw.blobstorage.uri: 'fsblob://%(here)s/blobstorage'
+      morpcc.beaker.session.type: ext:database
+      morpcc.beaker.session.url: 'postgresql://postgres:postgres@localhost:5432/morpcc_cache'
+      morpcc.beaker.cache.type: ext:database
+      morpcc.beaker.cache.url: 'postgresql://postgres:postgres@localhost:5432/morpcc_cache'
+      morpfw.celery:
+         broker_url: 'amqps://guest:guest@localhost:5671/'
+         result_backend: 'db+postgresql://postgres:postgres@localhost:5432/morpcc_cache'
+
+You will then need to initialize database migration:
+
+.. code-block:: console
+
+   $ morpfw migration init migrations
+
+Default alembic 
+Afterwards, you can then start the application using:
+
+.. code-block:: console
+
+   $ morpfw -s settings.yml register-admin -u admin -e admin@localhost.local
+   $ morpfw -s settings.yml start
 
 This will start your project at http://localhost:5000/
-
-MorpCC includes a demo CMS for testing purposes, you can start it up through:
-
-.. code-block:: bash
-
-   wget https://raw.githubusercontent.com/morpframework/morpcc/master/morpcc/tests/democms/settings.yml -O democms.yml
-   pipenv run morpfw -s settings.yml register-admin -u admin -e admin@localhost.local
-   pipenv run morpfw -s democms.yml start
-
-
-Creating new resource type
-==========================
-
-MorpCC CRUD management revolves around the concept of resource type. A resource
-type is a definition of a data model and its related components. Resource type
-is usually used to refer to real-world object concepts such as as Page,
-Document, Image, Event, Person, etc.
-
-To create new resource type, first, enter your project module where ``app.py``
-resides, then:
-
-.. code-block:: bash
-
-   pipenv run cookiecutter https://github.com/morpframework/cookiecutter-morpcc-type
-
-This will generate a basic content type to work with. Load the url you provide 
-for the ui mount path to see the collection. (eg: if you specified ``/content``, 
-load http://localhost:5000/content/ )
-
 
 Understanding core framework functionalities
 =============================================
