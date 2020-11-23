@@ -3,11 +3,17 @@ import sys, os
 
 version = '0.1.0a3'
 
+def readfile(name):
+    with open(os.path.join(os.path.dirname(__file__), name)) as f:
+        out = f.read()
+    return out
+
+desc = '\n'.join([readfile('README.rst'), readfile('CHANGELOG.rst')])
+
 setup(name='morpcc',
       version=version,
       description="Morp Control Center",
-      long_description="""\
-A meta CMS built on top of MorpFW""",
+      long_description=desc,
       classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       keywords='framework cms',
       author='Izhar Firdaus',
