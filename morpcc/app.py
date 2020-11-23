@@ -10,12 +10,13 @@ from beaker.middleware import CacheMiddleware as BeakerCacheMiddleware
 from beaker.middleware import SessionMiddleware as BeakerMiddleware
 from more.chameleon import ChameleonApp
 from morepath.publish import resolve_model
-from morpcc.authz.policy import MorpCCAuthzPolicy
 from morpfw.app import DBSessionRequest
-from morpfw.authn.pas.policy import SQLStorageAuthApp, SQLStorageAuthnPolicy
+from morpfw.authn.pas.policy import DefaultAuthnPolicy
 from morpfw.authz.pas import DefaultAuthzPolicy
 from morpfw.main import create_app
 from webob.exc import HTTPException
+
+from morpcc.authz.policy import MorpCCAuthzPolicy
 
 from . import directive
 from .authn import IdentityPolicy
@@ -117,7 +118,8 @@ class App(ChameleonApp, morpfw.SQLApp, MorpCCAuthzPolicy):
         )
 
     @reg.dispatch_method(
-        reg.match_instance("model"), reg.match_instance("request"),
+        reg.match_instance("model"),
+        reg.match_instance("request"),
     )
     def get_breadcrumb(self, model, request):
         return []
@@ -132,7 +134,7 @@ class App(ChameleonApp, morpfw.SQLApp, MorpCCAuthzPolicy):
         return None
 
 
-class AuthnPolicy(SQLStorageAuthnPolicy):
+class AuthnPolicy(DefaultAuthnPolicy):
     def get_identity_policy(self, settings):
         config = settings.configuration.__dict__
         if config.get("app.development_mode", True):
