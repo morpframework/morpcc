@@ -32,6 +32,6 @@ def manage_permission(context, request):
         "application": app,
         "entity": entity,
         "table_filter": urlquote(
-            "application_uuid==%s and entity_uuid==%s" % (app.uuid, entity.uuid)
+            "application_uuid=='%s' and entity_uuid=='%s'" % (app.uuid, entity.uuid)
         ),
     }
