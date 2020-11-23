@@ -13,7 +13,7 @@ from .modelui import (
     IndexContentModelUI,
     IndexModelUI,
 )
-from .schema import IndexSchema
+from .schema import IndexRecordSchema, IndexSchema
 
 
 class IndexContentModel(morpfw.Model):
@@ -169,4 +169,4 @@ class IndexCollection(morpfw.Collection):
 
     def dataclass(self):
         attrs = self.index_attrs()
-        return make_dataclass("morpcc_catalog", attrs, bases=(morpfw.Schema,))
+        return make_dataclass("morpcc_catalog", attrs, bases=(IndexRecordSchema,))

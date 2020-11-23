@@ -2,6 +2,7 @@ import morpfw
 from morpcc.authn import Identity
 
 from ..entitycontent.model import EntityContentModel
+from ..index.schema import IndexRecordSchema
 from .modelui import ActivityLogCollectionUI, ActivityLogModelUI
 from .schema import ActivityLogSchema
 
@@ -31,6 +32,8 @@ class ActivityLogCollection(morpfw.Collection):
     def log(self, context, activity):
         if isinstance(context, ActivityLogModel):
             return
+        if issubclass(context.schema, IndexRecordSchema):
+            return
         request = self.request
         if isinstance(request.identity, Identity):
             userid = request.identity.userid
@@ -45,6 +48,7 @@ class ActivityLogCollection(morpfw.Collection):
                 entity["name"],
             )
         else:
+
             type_name = request.app.get_typeinfo_by_schema(
                 context.schema, request=request
             )["name"]

@@ -27,3 +27,8 @@ class IndexSchema(morpfw.Schema):
         },
     )
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
+
+
+@dataclass
+class IndexRecordSchema(morpfw.Schema):
+    pass
