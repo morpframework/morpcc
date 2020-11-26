@@ -7,13 +7,17 @@ Dependencies
 
 MorpCC requires following services for it to function correctly:
 
- * postgresql database. 3 databases are needed, for following purpose:
-   * main database - for MorpCC application tables
-   * warehouse database - MorpCC provides a Through-The-Web (TTW) data model
-     manager which allows creation of tables and managing data using the Web UI.
-     Tables created by this feature will store its data in this database.
-   * cache database - used by ``beaker`` for caching and session  
- * rabbitmq message queue - used by background processing engine
+* postgresql database. 3 databases are needed, for following purpose:
+
+  * main database - for MorpCC application tables
+
+  * warehouse database - MorpCC provides a Through-The-Web (TTW) data model
+    manager which allows creation of tables and managing data using the Web UI.
+    Tables created by this feature will store its data in this database.
+
+  * cache database - used by ``beaker`` for caching and session  
+
+* rabbitmq message queue - used by background processing engine
 
 Bootstrapping new project
 ===========================
