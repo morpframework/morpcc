@@ -14,7 +14,7 @@ class DictionaryEntityModel(morpfw.Model):
     @morpfw.requestmemoize()
     def dictionary_elements(self):
         col = self.request.get_collection("morpcc.dictionaryelement")
-        return col.search({rulez.field["dictionaryentity_uuid"] == self.uuid})
+        return col.search(rulez.field["dictionaryentity_uuid"] == self.uuid)
 
     def before_delete(self):
         for el in self.dictionary_elements():
