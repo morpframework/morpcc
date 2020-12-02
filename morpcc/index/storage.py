@@ -10,9 +10,9 @@ class Index(morpfw.sql.Base):
 
     __tablename__ = "morpcc_index"
 
-    name = sa.Column(sa.String(1024), index=True)
-    title = sa.Column(sa.String(length=1024))
-    type = sa.Column(sa.String(1024))
+    name = sa.Column(sa.String(256), index=True)
+    title = sa.Column(sa.String(length=256))
+    type = sa.Column(sa.String(256))
     description = sa.Column(sa.Text())
 
 

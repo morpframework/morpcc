@@ -10,7 +10,7 @@ class Setting(morpfw.sql.Base):
 
     __tablename__ = "morpcc_setting"
 
-    key = sa.Column(sa.String(length=1024), index=True)
+    key = sa.Column(sa.String(length=256), index=True)
     data = sa.Column(sajson.JSONField())
 
 

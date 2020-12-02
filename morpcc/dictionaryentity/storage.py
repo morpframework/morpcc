@@ -10,8 +10,8 @@ class DictionaryEntity(morpfw.sql.Base):
 
     __tablename__ = "morpcc_dictionaryentity"
 
-    name = sa.Column(sa.String(length=1024), index=True)
-    title = sa.Column(sa.String(length=1024))
+    name = sa.Column(sa.String(length=256), index=True)
+    title = sa.Column(sa.String(length=256))
     description = sa.Column(sa.Text())
     notes = sa.Column(sa.Text())
 

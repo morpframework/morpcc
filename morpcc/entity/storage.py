@@ -11,10 +11,10 @@ class Entity(morpfw.sql.Base):
 
     __tablename__ = "morpcc_entity"
 
-    name = sa.Column(sa.String(length=1024), index=True)
-    title = sa.Column(sa.String(length=1024))
+    name = sa.Column(sa.String(length=256), index=True)
+    title = sa.Column(sa.String(length=256))
     description = sa.Column(sa.Text())
-    icon = sa.Column(sa.String(length=1024))
+    icon = sa.Column(sa.String(length=64))
 
     allow_invalid = sa.Column(sa.Boolean())
     schema_uuid = sa.Column(morpfw.sql.GUID(), index=True)

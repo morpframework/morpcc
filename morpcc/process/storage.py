@@ -10,7 +10,7 @@ class Process(morpfw.sql.Base):
 
     __tablename__ = "morpcc_process"
 
-    signal = sa.Column(sa.String(length=1024), index=True)
+    signal = sa.Column(sa.String(length=256), index=True)
     task_id = sa.Column(morpfw.sql.GUID(), index=True)
     start = sa.Column(sa.DateTime(timezone=True), index=True)
     end = sa.Column(sa.DateTime(timezone=True), index=True)

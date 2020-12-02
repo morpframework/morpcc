@@ -12,9 +12,9 @@ class ActivityLog(morpfw.sql.Base):
 
     userid = sa.Column(morpfw.sql.GUID())
     resource_uuid = sa.Column(morpfw.sql.GUID())
-    resource_type = sa.Column(sa.String(length=1024))
-    view_name = sa.Column(sa.String(length=1024))
-    source_ip = sa.Column(sa.String(length=1024))
+    resource_type = sa.Column(sa.String(length=256))
+    view_name = sa.Column(sa.String(length=128))
+    source_ip = sa.Column(sa.String(length=64))
     activity = sa.Column(sa.Text())
 
 
