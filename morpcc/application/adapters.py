@@ -1,5 +1,7 @@
 import typing
 
+from RestrictedPython import compile_restricted, safe_globals
+
 import morpfw.crud.storage.sqlstorage
 import rulez
 import sqlalchemy
@@ -12,7 +14,6 @@ from alembic.operations import Operations
 from alembic.operations.ops import UpgradeOps
 from alembic.runtime.migration import MigrationContext
 from inverter import dc2pgsqla
-from RestrictedPython import compile_restricted, safe_globals
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.schema import CreateSchema
 
@@ -77,7 +78,7 @@ class ApplicationDatabaseSyncAdapter(object):
         with self.engine.connect() as conn:
             # conn.dialect.default_schema_name = self.content_metadata.schema
             migration_context = MigrationContext.configure(
-                conn, opts={"include_schemas": False}
+                conn, opts={"include_schemas": False, "compare_type": True}
             )
             self.upgrade_steps = self.get_upgrade_steps(migration_context)
             if len(self.upgrade_steps.ops):
@@ -121,7 +122,7 @@ class ApplicationDatabaseSyncAdapter(object):
 
         with self.engine.connect() as conn:
             migration_context = MigrationContext.configure(
-                conn, opts={"include_schemas": False}
+                conn, opts={"include_schemas": False, "compare_type": True}
             )
             op = Operations(migration_context)
             if not self.engine.dialect.has_schema(self.engine, schema_name):
