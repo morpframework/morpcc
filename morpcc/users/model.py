@@ -29,6 +29,7 @@ class UserCollectionUI(CollectionUI):
         {"title": "Username", "name": "username"},
         {"title": "Created", "name": "created"},
         {"title": "State", "name": "state"},
+        {"title": "Source", "name": "source"},
         {"title": "Actions", "name": "structure:buttons"},
     ]
 
