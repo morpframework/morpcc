@@ -17,36 +17,49 @@ from ..root import Root
 from ..users.model import CurrentUserModelUI, UserModelUI
 
 
-class UserInfoSchema(colander.MappingSchema):
-    username = colander.SchemaNode(
-        colander.String(),
-        oid="userinfo-username",
-        missing="",
-        widget=deform.widget.TextInputWidget(template="readonly/textinput"),
-    )
-    email = colander.SchemaNode(
-        colander.String(),
-        oid="userinfo-email",
-        validator=colander.Email(msg="Invalid e-mail address"),
-    )
-    timezone = colander.SchemaNode(
-        colander.String(),
-        oid="userinfo-timezone",
-        widget=deform.widget.Select2Widget(values=[(x, x) for x in pytz.all_timezones]),
-    )
+def get_user_info_schema(user, request):
+    email_widget = None
+    email_validator = None
+    if user["source"] != "local":
+        email_widget = deform.widget.TextInputWidget(template="readonly/textinput")
+        email_validator = colander.Email(msg="Invalid e-mail address")
 
-    state = colander.SchemaNode(
-        colander.String(),
-        oid="userinfo-state",
-        missing="",
-        widget=deform.widget.TextInputWidget(template="readonly/textinput"),
-    )
-    created = colander.SchemaNode(
-        colander.DateTime(),
-        oid="userinfo-created",
-        missing=None,
-        widget=deform.widget.DateTimeInputWidget(template="readonly/datetimeinput"),
-    )
+    class UserInfoSchema(colander.MappingSchema):
+        username = colander.SchemaNode(
+            colander.String(),
+            oid="userinfo-username",
+            missing="",
+            widget=deform.widget.TextInputWidget(template="readonly/textinput"),
+        )
+        email = colander.SchemaNode(
+            colander.String(),
+            oid="userinfo-email",
+            missing="",
+            validator=email_validator,
+            widget=email_widget,
+        )
+        timezone = colander.SchemaNode(
+            colander.String(),
+            oid="userinfo-timezone",
+            widget=deform.widget.Select2Widget(
+                values=[(x, x) for x in pytz.all_timezones]
+            ),
+        )
+
+        state = colander.SchemaNode(
+            colander.String(),
+            oid="userinfo-state",
+            missing="",
+            widget=deform.widget.TextInputWidget(template="readonly/textinput"),
+        )
+        created = colander.SchemaNode(
+            colander.DateTime(),
+            oid="userinfo-created",
+            missing=None,
+            widget=deform.widget.DateTimeInputWidget(template="readonly/datetimeinput"),
+        )
+
+    return UserInfoSchema()
 
 
 class PasswordSchema(colander.MappingSchema):
@@ -102,8 +115,10 @@ class AdminPasswordSchema(colander.MappingSchema):
             raise colander.Invalid(node["password"], "Password does not match")
 
 
-def userinfo_form(request) -> deform.Form:
-    return deform.Form(UserInfoSchema(), buttons=("Submit",), formid="userinfo-form")
+def userinfo_form(user, request) -> deform.Form:
+    return deform.Form(
+        get_user_info_schema(user, request), buttons=("Submit",), formid="userinfo-form"
+    )
 
 
 def attributes_form(context, request, mode="edit") -> deform.Form:
@@ -167,7 +182,7 @@ def profile(context, request: morepath.Request):
         },
         {
             "form_title": "User Information",
-            "form": userinfo_form(request),
+            "form": userinfo_form(user, request),
             "readonly": False,
             "form_data": user.data.as_dict(),
         },
@@ -198,7 +213,7 @@ def profile(context, request: morepath.Request):
     permission=crudperm.Edit,
 )
 def process_profile(context, request):
-    userinfo_f = userinfo_form(request)
+    userinfo_f = userinfo_form(context.model, request)
     password_f = password_form(request)
     controls = list(request.POST.items())
     controls_dict = dict(controls)
@@ -224,6 +239,8 @@ def process_profile(context, request):
         if not failed:
             updatedata = {}
             for f in ["email", "timezone"]:
+                if user["source"] != "local" and f == "email":
+                    continue
                 updatedata[f] = data[f]
             user.update(updatedata)
 
