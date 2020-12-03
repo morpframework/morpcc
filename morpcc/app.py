@@ -1,22 +1,25 @@
 import functools
 import os
+import time
+import typing
+from datetime import date, datetime
 from uuid import uuid4
 
 import dectate
 import morepath
 import morpfw
 import reg
+from a_un import load_license, validate_license
 from beaker.middleware import CacheMiddleware as BeakerCacheMiddleware
 from beaker.middleware import SessionMiddleware as BeakerMiddleware
 from more.chameleon import ChameleonApp
 from morepath.publish import resolve_model
+from morpcc.authz.policy import MorpCCAuthzPolicy
 from morpfw.app import DBSessionRequest
 from morpfw.authn.pas.policy import DefaultAuthnPolicy
 from morpfw.authz.pas import DefaultAuthzPolicy
 from morpfw.main import create_app
 from webob.exc import HTTPException
-
-from morpcc.authz.policy import MorpCCAuthzPolicy
 
 from . import directive
 from .authn import IdentityPolicy
@@ -37,6 +40,36 @@ class WebAppRequest(DBSessionRequest):
         session["messages"] = []
         session.save()
         return result
+
+    def get_license(self) -> typing.Optional[dict]:
+        cert = self.app.get_license_cert(self)
+        key = self.app.get_license_key(self)
+        license = None
+        license_expired = False
+        if key:
+            license = load_license(key)
+            if license:
+                license["created"] = datetime.fromtimestamp(
+                    license["created"], tz=self.timezone()
+                )
+                license["start"] = datetime.fromtimestamp(
+                    license["start"], tz=self.timezone()
+                )
+                license["end"] = datetime.fromtimestamp(
+                    license["end"], tz=self.timezone()
+                )
+        if key and cert:
+            valid_license = validate_license(cert, key)
+            if not validate_license:
+                license = None
+
+            else:
+                if time.time() > valid_license["end"]:
+                    license_expired = True
+        if license:
+            license["expired"] = license_expired
+            return license
+        return None
 
     @property
     def session(self):
@@ -65,6 +98,9 @@ class App(ChameleonApp, morpfw.SQLApp, MorpCCAuthzPolicy):
     restricted_module = dectate.directive(directive.RestrictedModuleAction)
     breadcrumb = dectate.directive(directive.BreadcrumbAction)
     setting_page = dectate.directive(directive.SettingPageAction)
+    license_cert = dectate.directive(directive.LicenseCertAction)
+    license_key = dectate.directive(directive.LicenseKeyAction)
+    copyright_notice = dectate.directive(directive.CopyrightNoticeAction)
 
     @reg.dispatch_method(reg.match_instance("model"), reg.match_key("name"))
     def get_indexer(self, model, name):
@@ -118,11 +154,26 @@ class App(ChameleonApp, morpfw.SQLApp, MorpCCAuthzPolicy):
         )
 
     @reg.dispatch_method(
-        reg.match_instance("model"),
-        reg.match_instance("request"),
+        reg.match_instance("model"), reg.match_instance("request"),
     )
     def get_breadcrumb(self, model, request):
         return []
+
+    @reg.dispatch_method(reg.match_instance("request"))
+    def get_license_cert(self, request):
+        return None
+
+    @reg.dispatch_method(reg.match_instance("request"))
+    def get_license_key(self, request):
+        return None
+
+    @reg.dispatch_method(reg.match_instance("request"))
+    def get_copyright_notice(self, request):
+        dt = date.today()
+        return (
+            "Morp Control Center. &copy; 2018-%s Mohd Izhar Firdaus Bin Ismail"
+            % dt.year
+        )
 
     def render_view(self, context, request, name=""):
         lookup = self.get_view.by_predicates(model=context.__class__, name=name)

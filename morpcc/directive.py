@@ -281,3 +281,41 @@ class SettingPageAction(dectate.Action):
             order=self.order,
         )
 
+
+class LicenseCertAction(dectate.Action):
+
+    app_class_arg = True
+
+    def identifier(self, app_class):
+        return str(app_class)
+
+    def perform(self, obj, app_class):
+        app_class.get_license_cert.register(
+            reg.methodify(obj), request=morepath.Request,
+        )
+
+
+class LicenseKeyAction(dectate.Action):
+
+    app_class_arg = True
+
+    def identifier(self, app_class):
+        return str(app_class)
+
+    def perform(self, obj, app_class):
+        app_class.get_license_key.register(
+            reg.methodify(obj), request=morepath.Request,
+        )
+
+
+class CopyrightNoticeAction(dectate.Action):
+
+    app_class_arg = True
+
+    def identifier(self, app_class):
+        return str(app_class)
+
+    def perform(self, obj, app_class):
+        app_class.get_copyright_notice.register(
+            reg.methodify(obj), request=morepath.Request,
+        )

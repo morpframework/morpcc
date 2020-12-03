@@ -139,12 +139,17 @@ def topnav_portlet(context, request):
         ),
         group={"count": {"function": "count", "field": "uuid"}},
     )
+    license = request.get_license()
+    license_expired = False
+    if license:
+        license_expired = license["expired"]
     return {
         "displayname": xattr.get("displayname", username) or username,
         "profilephoto_url": photo_url,
         "notifications": notifs,
         "notification_count": unread_notifs[0]["count"],
         "tzinfo": user.model["timezone"] or "UTC",
+        "license_expired": license_expired,
     }
 
 

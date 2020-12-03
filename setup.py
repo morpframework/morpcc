@@ -36,6 +36,8 @@ setup(name='morpcc',
           "nltk",
           "python-ldap",
           "luigi",
+          'pycryptodome',
+          'a_un'
       ],
       entry_points={
       })
