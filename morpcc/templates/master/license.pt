@@ -20,10 +20,10 @@
                         </p>
                         <tal:no_license condition="not:license">
                             <p>The administrator of this application deployment did not acquire
-                                an AGPL Exception License from an authorized licensor. As per AGPLv3 requirements,
-                                you as a user have the rights to request and receive the source code of this
-                                application. If you wish to have access to the source code
-                                of this application, please contact its respective administrator.
+                                an AGPL Exception License from an authorized licensor.
+                                As per AGPLv3 terms and conditions, you as a user have the rights to request and
+                                receive the source code of this application. If you wish to have access to the source
+                                code of this application, please contact its respective administrator.
                             </p>
                         </tal:no_license>
                         <tal:has_license condition="license">
