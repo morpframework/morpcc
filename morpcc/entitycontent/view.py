@@ -58,6 +58,7 @@ def content_view(context, request):
             reldata["title"] = rel["title"]
             reldata["context"] = relmodelui
             reldata["content"] = relmodel
+            validate_form(relmodel, request, reldata["form"], reldata["form_data"])
             result["relationships"].append(reldata)
     result["backrelationships"] = []
     for br, brel in sorted(
