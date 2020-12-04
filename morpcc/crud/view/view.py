@@ -98,12 +98,13 @@ def view(context, request):
     result["references"] = []
     for refname, ref in context.model.references().items():
         refmodel = context.model.resolve_reference(ref)
-        refmodelui = refmodel.ui()
-        refdata = base_view(refmodelui, request)
-        refdata["name"] = ref.name
-        refdata["title"] = ref.get_title(request)
-        refdata["context"] = refmodelui
-        result["references"].append(refdata)
+        if refmodel:
+            refmodelui = refmodel.ui()
+            refdata = base_view(refmodelui, request)
+            refdata["name"] = ref.name
+            refdata["title"] = ref.get_title(request)
+            refdata["context"] = refmodelui
+            result["references"].append(refdata)
 
     result["backreferences"] = []
     for refname, bref in context.model.backreferences().items():
