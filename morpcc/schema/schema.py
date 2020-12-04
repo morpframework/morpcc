@@ -19,6 +19,6 @@ class SchemaSchema(morpfw.Schema):
             "applications", "morpcc.application", "schema_uuid", title="Applications"
         ),
         morpfw.BackReference(
-            "entities", "morpcc.entity", "schema_uuid", title="Entities", single=True
+            "entities", "morpcc.entity", "schema_uuid", title="Entities",
         ),
     ]
