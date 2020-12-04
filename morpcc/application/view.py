@@ -27,12 +27,17 @@ def view(context, request):
     result = default_view(context, request)
     dmcol = get_dm_collection(request)
     dbsync = ApplicationDatabaseSyncAdapter(context.model, request)
+    if dbsync.need_update:
+        if context["state"] == "active":
+            return morpfw.redirect(request.link(context, "+schema-upgrade"))
+        result["pending_upgrade"] = True
+        return result
     entities = dmcol.search(rulez.field["schema_uuid"] == context.model["schema_uuid"])
     entities = [
         content_collection_factory(entity, context.model) for entity in entities
     ]
     result["entities"] = sorted(entities, key=lambda x: x.__parent__["title"])
-    result["need_update"] = dbsync.need_update
+    result["pending_upgrade"] = False
     return result
 
 
@@ -78,10 +83,9 @@ def process_schema_upgrade(context, request):
     if run != "update":
         request.notify("error", "Error", "Invalid operation")
         return morpfw.redirect(request.link(context))
-    dbsync = ApplicationDatabaseSyncAdapter(context.model, request)
-    if dbsync.need_update:
-        dbsync.update()
-    request.notify("success", "Success", "Database updated")
+    sm = context.model.statemachine()
+    sm.upgrade()
+    request.notify("success", "Processing .. ", "Database update triggered")
     return morpfw.redirect(request.link(context))
 
 

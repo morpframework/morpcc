@@ -7,6 +7,7 @@ from ..entitycontent.model import (
     EntityContentModel,
     content_collection_factory,
 )
+from .adapters import ApplicationDatabaseSyncAdapter
 
 BATCH_SIZE = 1000
 
@@ -84,3 +85,15 @@ def delete_application(request_options):
             for ec in app.entity_collections().values():
                 ec.drop_all()
             app.storage.delete(uuid, app)
+
+
+@App.async_subscribe("morpcc.upgrade_application")
+def upgrade_application(request_options, app_name):
+    with morpfw.request_factory(**request_options) as request:
+        app_col = request.get_collection("morpcc.application")
+        app = app_col.get_by_name(app_name)
+        dbsync = ApplicationDatabaseSyncAdapter(app, request)
+        if dbsync.need_update:
+            dbsync.update()
+        sm = app.statemachine()
+        sm.upgrade_complete()
