@@ -17,6 +17,12 @@
                     <div metal:use-macro="load_template('master/panel.pt').macros.panel">
                         <h2 metal:fill-slot="panel-title">Update Database Schema/Structure</h2>
                         <div metal:fill-slot="panel-content">
+                            <p>
+                                Data structure of this application have changed and an update is required to migrate
+                                database to new structure. Following is the summary of database update activities to be
+                                applied.
+                            </p>
+                            <p><b>Note:</b> Depending on data size, this may take a while. </p>
                             <div tal:replace="structure:highlighted_code" tal:condition="need_update">
                             </div>
                             <form action="${request.url}" method="POST">
