@@ -15,7 +15,10 @@
             </li>
             <li>
                 <a tal:attributes="href request.relative_url('/+license')">
-                    <span>License Notice</span>
+                   <span>License</span>
+                   <span class="label label-danger" tal:condition="license_expired">
+                        Expired
+                   </span>
                 </a>
             </li>
             <li>
