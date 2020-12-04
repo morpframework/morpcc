@@ -2,8 +2,12 @@ import typing
 from dataclasses import dataclass, field
 
 import morpfw
-from deform.widget import (AutocompleteInputWidget, HiddenWidget,
-                           Select2Widget, SelectWidget)
+from deform.widget import (
+    AutocompleteInputWidget,
+    HiddenWidget,
+    Select2Widget,
+    SelectWidget,
+)
 from morpfw import request
 from morpfw.validator.field import valid_identifier
 
@@ -11,8 +15,12 @@ from ..deform.referencewidget import ReferenceWidget
 from ..deform.vocabularywidget import VocabularyWidget
 from ..validator.reference import ReferenceValidator
 from ..validator.vocabulary import VocabularyValidator
-from .form_validator import (required_if_primary_key, unique_attribute,
-                             valid_dictionary_element, valid_searchable_type)
+from .form_validator import (
+    required_if_primary_key,
+    unique_attribute,
+    valid_dictionary_element,
+    valid_searchable_type,
+)
 
 ACCEPTED_TYPES = (
     ("string", "String"),
@@ -131,11 +139,7 @@ class AttributeSchema(morpfw.Schema):
         },
     )
     order: typing.Optional[int] = field(
-        default=0,
-        metadata={
-            "title": "Ordering Index",
-            "editable": False,
-        },
+        default=0, metadata={"title": "Ordering Index", "editable": False,},
     )
 
     __unique_constraint__ = ["entity_uuid", "name", "deleted"]
@@ -145,4 +149,9 @@ class AttributeSchema(morpfw.Schema):
         required_if_primary_key,
         valid_dictionary_element,
         valid_searchable_type,
+    ]
+
+    __references__ = [
+        morpfw.Reference("entity_uuid", "morpcc.entity"),
+        morpfw.Reference("dictionaryelement_uuid", "morpcc.dictionaryelement"),
     ]

@@ -28,3 +28,10 @@ class EntityValidatorAssignmentSchema(morpfw.Schema):
             "deform.widget": ReferenceWidget("morpcc.entityvalidator", "title", "name"),
         },
     )
+
+    __references__ = [
+        morpfw.Reference("entity_uuid", "morpcc.enttiy"),
+        morpfw.Reference(
+            "entityvalidator_name", "morpcc.entityvalidator", attribute="name"
+        ),
+    ]

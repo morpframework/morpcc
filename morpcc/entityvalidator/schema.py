@@ -54,3 +54,9 @@ class EntityValidatorSchema(morpfw.Schema):
     error_message: typing.Optional[str] = field(
         default=None, metadata={"required": True}
     )
+
+    __references__ = [
+        morpfw.BackReference(
+            "assignments", "morpcc.entityvalidatorassignment", "entityvalidator_name"
+        )
+    ]
