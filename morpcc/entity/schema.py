@@ -68,3 +68,4 @@ class EntitySchema(morpfw.Schema):
 
     __validators__ = [only_one_primary]
     __unique_constraint__ = ["schema_uuid", "name", "deleted"]
+    __references__ = [morpfw.Reference("schema_uuid", "morpcc.schema")]

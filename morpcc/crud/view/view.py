@@ -1,4 +1,5 @@
 import html
+import json
 
 import deform
 import morepath
@@ -21,13 +22,7 @@ def model_index(context, request):
     return morepath.redirect(request.link(context, "+%s" % context.default_view))
 
 
-@App.html(
-    model=ModelUI,
-    name="view",
-    template="master/crud/view.pt",
-    permission=crudperms.View,
-)
-def view(context, request):
+def base_view(context, request):
     formschema = dc2colander.convert(
         context.model.schema,
         request=request,
@@ -90,6 +85,69 @@ def view(context, request):
         "readonly": True,
         "transitions": triggers,
     }
+
+
+@App.html(
+    model=ModelUI,
+    name="view",
+    template="master/crud/view.pt",
+    permission=crudperms.View,
+)
+def view(context, request):
+    result = base_view(context, request)
+    result["references"] = []
+    for refname, ref in context.model.references().items():
+        refmodel = context.model.resolve_reference(ref)
+        refmodelui = refmodel.ui()
+        refdata = base_view(refmodelui, request)
+        refdata["name"] = ref.name
+        refdata["title"] = ref.get_title(request)
+        refdata["context"] = refmodelui
+        result["references"].append(refdata)
+
+    result["backreferences"] = []
+    for refname, bref in context.model.backreferences().items():
+        columns = []
+        column_options = []
+        collectionui = bref.collection(request).ui()
+        for col in collectionui.columns:
+            columns.append(col["title"])
+            column_options.append(col)
+        brefdata = {
+            "name": bref.name,
+            "resource_type": bref.resource_type,
+            "title": bref.get_title(request),
+            "single_reference": bref.single_reference,
+            "datatable_url": request.link(
+                context,
+                "backreference-search.json?backreference_name={}".format(bref.name),
+            ),
+            "columns": columns,
+            "column_options": json.dumps(column_options),
+        }
+
+        if bref.single_reference:
+            content = context.model.resolve_backreference(bref)
+            brefdata["content"] = content
+            if content:
+                item = content[0]
+                itemui = item.ui()
+                formschema = dc2colander.convert(
+                    item.schema,
+                    request=request,
+                    include_fields=itemui.view_include_fields,
+                    exclude_fields=itemui.view_exclude_fields,
+                    default_tzinfo=request.timezone(),
+                )
+                fs = formschema()
+                fs = fs.bind(context=item, request=request)
+                brefdata["form"] = deform.Form(fs)
+                brefdata["form_data"] = item.as_dict()
+                brefdata["content"] = item
+
+        result["backreferences"].append(brefdata)
+
+    return result
 
 
 @App.html(

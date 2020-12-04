@@ -47,3 +47,4 @@ class ApplicationSchema(morpfw.Schema):
     )
 
     __unique_constraint__ = ["name"]
+    __references__ = [morpfw.Reference("schema_uuid", "morpcc.schema")]

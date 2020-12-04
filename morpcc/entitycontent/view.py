@@ -82,12 +82,12 @@ def content_view(context, request):
             ),
             "columns": columns,
             "column_options": json.dumps(column_options),
-            "content": context.model.resolve_backrelationship(brel),
         }
 
         if brel["single_relation"]:
-            if breldata["content"]:
-                item = breldata["content"][0]
+            content = context.model.resolve_backrelationship(brel)
+            if content:
+                item = content[0]
                 itemui = item.ui()
                 formschema = dc2colander.convert(
                     item.schema,

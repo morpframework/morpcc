@@ -24,6 +24,51 @@
                     </div>
                 </div>
 
+                <div class="row" tal:repeat="ref references">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+                            <h2 metal:fill-slot="panel-title">${ ref['title'] }</h2>
+                            <div metal:fill-slot="panel-content">
+                                <div
+                                    tal:replace="structure:ref['form'].render(ref['form_data'], request=request, context=ref['context'], readonly=True)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" tal:repeat="bref backreferences">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div tal:condition="not:bref['single_reference']"
+                            metal:use-macro="load_template('master/panel.pt').macros.panel">
+                            <h2 metal:fill-slot="panel-title">${ bref['title'] }</h2>
+                            <div metal:fill-slot="panel-content">
+                                <table id="table-${ bref['name'] }"
+                                    class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                                    width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th tal:repeat="c bref['columns']" tal:content="c"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div tal:condition="bref['single_reference'] and bref['content']"
+                            metal:use-macro="load_template('master/panel.pt').macros.panel">
+                            <h2 metal:fill-slot="panel-title">${bref['title']}
+                            </h2>
+                            <div metal:fill-slot="panel-content">
+                                <div
+                                    tal:replace="structure:bref['form'].render(bref['form_data'], request=request, context=context, readonly=True)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div tal:condition="xattrform" metal:use-macro="load_template('master/panel.pt').macros.panel">
                     <h2 metal:fill-slot="panel-title">Extended Attributes</h2>
                     <div metal:fill-slot="panel-content">
@@ -74,6 +119,31 @@
 
             </div>
         </div>
+
+        <div metal:fill-slot="footer_script_slot">
+            <metal:macro define-macro="footer_scripts">
+                <script tal:repeat="bref backreferences">
+
+                    $(document).ready(function () {
+                        $('#table-${bref["name"]}').DataTable({
+                            serverSide: true,
+                            processing: true,
+                            ajax: "${bref['datatable_url']}",
+                            columns: eval('${ bref["column_options"] }')
+                        });
+
+                        $('#iframe-modal').on('hidden.bs.modal', function () {
+                            var el = $("#table-${bref['name']}");
+                            if ($.fn.DataTable.isDataTable(el)) {
+                                el.DataTable().ajax.reload();
+                            }
+                        });
+
+                    });
+                </script>
+            </metal:macro>
+        </div>
+
     </body>
 </metal:master>
 
