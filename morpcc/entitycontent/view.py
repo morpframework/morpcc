@@ -131,7 +131,9 @@ def validate_form(context, request, form, form_data):
         if de:
             for validator in de.validators():
                 validate = validator.field_validator()
-                if not validate(field_value):
+                if not validate(request, None, None, field_value):
+                    # FIXME: ideally pass the right value in schema and field in this
+                    # function call
                     field_errors.append(validator["error_message"])
 
             if field_value and de["referencedata_name"]:
