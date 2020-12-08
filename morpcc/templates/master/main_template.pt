@@ -138,8 +138,8 @@
                   <i class="fa fa-bars"></i>
                 </a>
               </div>
-              <div class="logo-portlets"
-                tal:define="portletprovider request.app.get_portletprovider('morpcc.logo-portlets')"
+              <div class="topleft-portlets"
+                tal:define="portletprovider request.app.get_portletprovider('morpcc.topleft-portlets')"
                 tal:condition="portletprovider"
                 tal:replace="structure:portletprovider.render(context, request, load_template)">
                 >

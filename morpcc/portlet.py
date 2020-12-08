@@ -11,7 +11,7 @@ from .util import permits
 
 @App.portletprovider(name="morpcc.left-portlets")
 def left_portlets(context, request):
-    return ["morpcc.profile", "morpcc.main_navigation"]
+    return ["morpcc.logo", "morpcc.profile", "morpcc.main_navigation"]
 
 
 @App.portletprovider(name="morpcc.top-navigation")
@@ -24,9 +24,9 @@ def abovecontent_portlets(context, request):
     return ["morpcc.timezone", "morpcc.breadcrumb"]
 
 
-@App.portletprovider(name="morpcc.logo-portlets")
-def logo_portlets(context, request):
-    return ["morpcc.logo"]
+@App.portletprovider(name="morpcc.topleft-portlets")
+def topleft_portlets(context, request):
+    return []
 
 
 @App.portletprovider(name="morpcc.style-portlets")
