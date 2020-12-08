@@ -79,6 +79,7 @@ def delete_application(request_options):
 
     with morpfw.request_factory(**request_options) as request:
         app_col = request.get_collection("morpcc.application")
+        request.environ["morpfw.sqlstorage.include_deleted"] = True
         for uuid in to_delete:
             app = app_col.get(uuid)
             print("Deleting %s" % app["name"])

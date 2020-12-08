@@ -40,11 +40,6 @@ class ReferenceDataKeyModel(morpfw.Model):
             return res[0]
         return None
 
-    def before_delete(self):
-        for p in self.referencedataproperties():
-            p.delete()
-        return super().before_delete()
-
 
 class ReferenceDataKeyCollection(morpfw.Collection):
     schema = ReferenceDataKeySchema

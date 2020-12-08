@@ -34,3 +34,9 @@ class ReferenceDataKeySchema(morpfw.Schema):
     )
 
     __unique_constraint__ = ["name", "referencedata_uuid"]
+    __references__ = [morpfw.Reference("referencedata_uuid", "morpcc.referencedata")]
+    __backreferences__ = [
+        morpfw.BackReference(
+            "properties", "morpcc.referencedataproperty", "referencedatakey_uuid"
+        )
+    ]

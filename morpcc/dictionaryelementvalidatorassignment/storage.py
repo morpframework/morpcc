@@ -11,7 +11,7 @@ class DictionaryElementValidatorAssignment(morpfw.sql.Base):
     __tablename__ = "morpcc_dictionaryelementvalidatorassignment"
 
     dictionaryelement_uuid = sa.Column(morpfw.sql.GUID(), index=True)
-    attributevalidator_name = sa.Column(sa.String(length=256), index=True)
+    attributevalidator_name = sa.Column(sa.String(length=1024), index=True)
 
 
 class DictionaryElementValidatorAssignmentStorage(morpfw.SQLStorage):

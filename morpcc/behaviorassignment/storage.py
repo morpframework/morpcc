@@ -10,7 +10,7 @@ class BehaviorAssignment(morpfw.sql.Base):
 
     __tablename__ = "morpcc_behaviorassignment"
 
-    behavior = sa.Column(sa.String(length=256))
+    behavior = sa.Column(sa.String(length=1024))
     entity_uuid = sa.Column(morpfw.sql.GUID(), index=True)
 
 

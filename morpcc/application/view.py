@@ -28,7 +28,7 @@ def view(context, request):
     dmcol = get_dm_collection(request)
     dbsync = ApplicationDatabaseSyncAdapter(context.model, request)
     if dbsync.need_update:
-        if context["state"] == "active":
+        if context["state"] in ["active", None]:
             return morpfw.redirect(request.link(context, "+schema-upgrade"))
         result["pending_upgrade"] = True
         return result

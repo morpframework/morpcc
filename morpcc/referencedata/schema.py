@@ -20,3 +20,8 @@ class ReferenceDataSchema(morpfw.Schema):
     description: typing.Optional[str] = field(default=None, metadata={"format": "text"})
 
     __unique_constraint__ = ["name"]
+    __backreferences__ = [
+        morpfw.BackReference(
+            "properties", "morpcc.referencedatakey", "referencedata_uuid"
+        )
+    ]

@@ -50,11 +50,6 @@ class ReferenceDataModel(morpfw.Model):
 
         return refdata_validate
 
-    def before_delete(self):
-        for k in self.referencedatakeys():
-            k.delete()
-        return super().before_delete()
-
 
 class ReferenceDataCollection(morpfw.Collection):
     schema = ReferenceDataSchema

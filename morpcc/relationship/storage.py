@@ -10,8 +10,8 @@ class Relationship(morpfw.sql.Base):
 
     __tablename__ = "morpcc_relationship"
 
-    name = sa.Column(sa.String(length=256), index=True)
-    title = sa.Column(sa.String(length=256))
+    name = sa.Column(sa.String(length=1024), index=True)
+    title = sa.Column(sa.String(length=1024))
     description = sa.Column(sa.Text())
     entity_uuid = sa.Column(morpfw.sql.GUID(), index=True)
     reference_attribute_uuid = sa.Column(morpfw.sql.GUID())
