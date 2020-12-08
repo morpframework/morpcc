@@ -129,13 +129,6 @@ def validate_form(context, request, form, form_data):
         de = attr.dictionaryelement()
 
         if de:
-            for validator in de.validators():
-                validate = validator.field_validator()
-                if not validate(request, None, None, field_value):
-                    # FIXME: ideally pass the right value in schema and field in this
-                    # function call
-                    field_errors.append(validator["error_message"])
-
             if field_value and de["referencedata_name"]:
                 validate = ReferenceDataValidator(
                     de["referencedata_name"], de["referencedata_property"]
