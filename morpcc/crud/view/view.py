@@ -1,5 +1,6 @@
 import html
 import json
+from urllib.parse import urlencode
 
 import deform
 import morepath
@@ -111,9 +112,16 @@ def view(context, request):
         columns = []
         column_options = []
         collectionui = bref.collection(request).ui()
+        ref = bref.get_reference(request)
         for col in collectionui.columns:
             columns.append(col["title"])
             column_options.append(col)
+        create_default = {bref.reference_name: context[ref.attribute]}
+        create_default_qs = urlencode(create_default)
+        create_link = request.link(collectionui, "+create?%s" % create_default_qs)
+        modal_create_link = request.link(
+            collectionui, "+modal-create?%s" % create_default_qs
+        )
         brefdata = {
             "name": bref.name,
             "resource_type": bref.resource_type,
@@ -125,6 +133,8 @@ def view(context, request):
             ),
             "columns": columns,
             "column_options": json.dumps(column_options),
+            "create_link": create_link,
+            "modal_create_link": modal_create_link,
         }
 
         if bref.single_reference:

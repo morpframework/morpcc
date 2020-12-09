@@ -105,6 +105,12 @@
                                 <tbody>
                                 </tbody>
                             </table>
+                            <div>
+                                <a class="modal-link" tal:attributes="data-url bref['modal_create_link']" href="#">
+                                    <button class="btn btn-primary">
+                                        <i class="fa fa-plus"></i>Add</button>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div tal:condition="bref['single_reference'] and bref['content']"
