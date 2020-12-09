@@ -11,9 +11,7 @@
     </head>
 
     <body>
-        <h1 metal:fill-slot="page-title">
-            User Information
-        </h1>
+
         <div metal:fill-slot="page-actions">
             <a href="${request.link(context,'+edit')}" class="btn btn-default">
                 <i class="fa fa-edit"></i> Edit Profile

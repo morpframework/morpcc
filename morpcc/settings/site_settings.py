@@ -144,4 +144,4 @@ def site_settings(context, request):
                 "href": request.relative_url("/activitylog"),
             }
         )
-    return {"setting_modules": modules}
+    return {"page_title": "Site Settings", "setting_modules": modules}

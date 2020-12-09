@@ -94,9 +94,10 @@ def search_json(context, request):
 )
 def search(context, request):
     return {
+        "page_title": "Search",
         "search_url": request.link(
             context, "+search.json?{}".format(request.query_string)
-        )
+        ),
     }
 
 

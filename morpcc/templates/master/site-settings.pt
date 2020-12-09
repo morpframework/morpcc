@@ -3,9 +3,7 @@
 
 <body>
     <metal:master use-macro="load_template('master/page.pt').macros.master">
-        <metal:slot fill-slot="page-title">
-            Site Settings
-        </metal:slot>
+
         <metal:slot metal:fill-slot="page-body">
             <div class="container-fluid site-settings">
                 <tal:loop repeat="mod setting_modules">
