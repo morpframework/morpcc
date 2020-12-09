@@ -80,7 +80,7 @@ def navigation_portlet(context, request):
             types_nav.append(
                 {
                     "title": typeinfo["title"],
-                    "icon": "database",
+                    "icon": typeinfo.get("icon", "database"),
                     "href": request.link(
                         collectionui, "+%s" % collectionui.default_view
                     ),
