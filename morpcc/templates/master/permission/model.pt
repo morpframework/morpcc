@@ -5,9 +5,7 @@
 
 
     <body>
-        <span metal:fill-slot="page-title">
-            Manage Permissions
-        </span>
+
         <div metal:fill-slot="page-body">
 
             <div class='row'>

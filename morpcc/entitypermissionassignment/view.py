@@ -29,6 +29,7 @@ def manage_permission(context, request):
     app = context.collection.application()
     entity = context.collection.entity()
     return {
+        "page_title": "Manage Permissions",
         "application": app,
         "entity": entity,
         "table_filter": urlquote(

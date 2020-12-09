@@ -18,7 +18,9 @@ from .path import get_collection as get_refdata_collection
     permission=crudperms.Search,
 )
 def view(context, request):
-    return default_listing(context, request)
+    result = default_listing(context, request)
+    result["page_title"] = "Reference Data Manager"
+    return result
 
 
 @App.view(model=ReferenceDataCollectionUI, name="export", permission=crudperms.Search)

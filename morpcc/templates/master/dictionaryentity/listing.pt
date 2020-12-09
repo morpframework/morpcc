@@ -15,9 +15,7 @@
             }
         </style>
     </metal:slot>
-    <metal:slot fill-slot="page-title">
-        Data Dictionary
-    </metal:slot>
+
     <metal:slot fill-slot="page-body">
         <div id="datadictionarymgr">
             <div class='row'>

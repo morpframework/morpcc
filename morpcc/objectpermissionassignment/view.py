@@ -25,4 +25,4 @@ from .modelui import (
     permission=ManagePermission,
 )
 def manage_permission(context, request):
-    return {}
+    return {"page_title": "Manage Permissions"}
