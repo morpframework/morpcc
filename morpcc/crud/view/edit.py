@@ -31,7 +31,7 @@ def edit(context, request):
     fs = formschema()
     fs = fs.bind(context=context, request=request)
     return {
-        "page_title": "Edit %s" % html.escape(str(context.model.__class__.__name__)),
+        "page_title": "Edit: %s" % html.escape(context.model.title()),
         "form_title": "Edit",
         "form": deform.Form(fs, buttons=("Submit",)),
         "form_data": data,
@@ -96,7 +96,7 @@ def process_edit(context, request):
         response.headers.add("X-MORP-FORM-FAILED", "True")
 
     return {
-        "page_title": "Edit %s" % html.escape(str(context.model.__class__.__name__)),
+        "page_title": "Edit: %s" % html.escape(context.model.title()),
         "form_title": "Edit",
         "form": form,
         "form_data": data,
@@ -135,8 +135,7 @@ def xattredit(context, request):
 
     data = xattrprovider.as_dict()
     return {
-        "page_title": "Edit %s Extended Attributes"
-        % html.escape(str(context.model.__class__.__name__)),
+        "page_title": "Edit: %s" % html.escape(context.model.title()),
         "form_title": "Edit Extended Attributes",
         "form": deform.Form(xattrformschema(), buttons=("Submit",)),
         "form_data": data,
@@ -188,7 +187,7 @@ def process_xattredit(context, request):
         return morepath.redirect(request.link(context))
 
     return {
-        "page_title": "Edit %s" % html.escape(str(context.model.__class__.__name__)),
+        "page_title": "Edit: %s" % html.escape(context.model.title()),
         "form_title": "Edit",
         "form": form,
         "form_data": data,

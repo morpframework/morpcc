@@ -48,7 +48,9 @@ def view(context, request):
     permission=crudperm.Edit,
 )
 def edit(context, request):
-    return default_edit(context, request)
+    result = default_edit(context, request)
+    result["page_title"] = "Edit: %s" % (context.model["title"])
+    return result
 
 
 @App.html(

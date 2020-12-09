@@ -76,7 +76,7 @@ def base_view(context, request):
         xfs = xfs.bind(context=context, request=request)
 
     return {
-        "page_title": "View %s" % html.escape(str(context.model.__class__.__name__)),
+        "page_title": "View: %s" % html.escape(context.model.title()),
         "form_title": "View",
         "metadataform": deform.Form(mfs),
         "form": deform.Form(fs),
