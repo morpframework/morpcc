@@ -15,9 +15,7 @@
             }
         </style>
     </metal:slot>
-    <metal:slot fill-slot="page-title">
-        Endpoints
-    </metal:slot>
+
     <metal:slot fill-slot="page-body">
         <div id="endpointmgr">
             <div class='row'>

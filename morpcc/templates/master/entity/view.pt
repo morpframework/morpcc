@@ -5,9 +5,7 @@
 
 
     <body>
-        <span metal:fill-slot="page-title">
-            Edit: ${context.model['title']}
-        </span>
+
         <div metal:fill-slot="page-body">
             <div class="row">
                 <div class="col-md-12">
