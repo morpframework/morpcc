@@ -8,7 +8,9 @@
             <div class="row page-title" tal:define="hide_title hide_title|False" tal:condition="not:hide_title">
                 <div class="title_left col-md-7 col-sm-7 col-xs-12">
                     <h3>
-                        <metal:slot define-slot="page-title" />
+                        <metal:slot define-slot="page-title">
+                            ${page_title}
+                        </metal:slot>
                     </h3>
                 </div>
                 <div class="title_right col-md-5 col-sm-5 col-xs-12 text-right top_search">

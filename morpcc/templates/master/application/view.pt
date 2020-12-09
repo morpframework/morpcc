@@ -6,11 +6,7 @@
     </metal:slot>
 
     <body>
-        <h3>
-            <span metal:fill-slot="page-title">
-                ${page_title}
-            </span>
-        </h3>
+
         <metal:body fill-slot="page-body">
             <div class="row" tal:condition="pending_upgrade">
                 <div class="col-md-12 col-sm-12 col-xs-12 text-center jumbotron">

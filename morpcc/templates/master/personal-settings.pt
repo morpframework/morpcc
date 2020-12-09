@@ -2,11 +2,7 @@
 <html metal:use-macro="load_template('master/page.pt').macros.master">
 
 <body>
-    <h3>
-        <span metal:fill-slot="page-title">
-            ${page_title}
-        </span>
-    </h3>
+
 
     <div metal:fill-slot="page-body">
         <div class="row">
