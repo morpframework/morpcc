@@ -52,7 +52,7 @@
                                                 <p class="form-control-static">
                                                     <tal:cond condition="blob">
                                                         <a
-                                                            href="${request.link(context, '+download?field=%s' % blobfield)}">
+                                                            href="${request.link(context, '+download?field=%s#sha256sum=%s' % (blobfield, blob.sha256sum))}">
                                                             <i class="fa fa-download"></i> <span
                                                                 tal:content="blob.filename"></span>
                                                         </a>
