@@ -29,6 +29,7 @@ def schema_upgrade(context, request):
     formatter = HtmlFormatter()
     highlighted = highlight(code, PythonLexer(), formatter)
     return {
+        "hide_title": True,
         "need_update": dbsync.need_update,
         "code": code,
         "highlighted_code": highlighted,
