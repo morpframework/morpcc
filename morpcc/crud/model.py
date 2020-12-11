@@ -95,11 +95,13 @@ class CollectionUI(object):
 
     @property
     def page_title(self):
-        typeinfo = self.request.app.get_typeinfo_by_schema(
-            schema=self.collection.schema, request=self.request
-        )
-        if typeinfo:
+        try:
+            typeinfo = self.request.app.get_typeinfo_by_schema(
+                schema=self.collection.schema, request=self.request
+            )
             return typeinfo["title"]
+        except KeyError:
+            pass
         return str(self.collection.__class__.__name__)
 
     @property
