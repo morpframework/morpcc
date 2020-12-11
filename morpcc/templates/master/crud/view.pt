@@ -133,6 +133,7 @@
                         $('#table-${bref["name"]}').DataTable({
                             serverSide: true,
                             processing: true,
+                            searching: false,
                             ajax: "${bref['datatable_url']}",
                             columns: eval('${ bref["column_options"] }'),
                             order: eval('${ bref["columns_order"] }')

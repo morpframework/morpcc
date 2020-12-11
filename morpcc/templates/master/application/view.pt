@@ -2,7 +2,7 @@
 <html>
 <metal:master metal:use-macro="load_template('master/page.pt').macros.master">
     <metal:slot fill-slot="header_script_slot">
-        <meta http-equiv="refresh" content="30" tal:condition="pending_upgrade" />
+        <meta http-equiv="refresh" content="15" tal:condition="pending_upgrade" />
     </metal:slot>
 
     <body>
