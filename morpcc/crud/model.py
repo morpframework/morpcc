@@ -112,13 +112,15 @@ class CollectionUI(object):
         if "created" in self.collection.schema.__dataclass_fields__.keys():
             n = "created"
             field = morpfw.Schema.__dataclass_fields__["created"]
-            title = field.metadata.get("title", n)
+            default_title = n.replace("_", " ").title()
+            title = field.metadata.get("title", default_title)
             columns.append({"title": title, "name": n})
 
         for n, field in self.collection.schema.__dataclass_fields__.items():
             if n in morpfw.Schema.__dataclass_fields__.keys():
                 continue
-            title = field.metadata.get("title", n)
+            default_title = n.replace("_", " ").title()
+            title = field.metadata.get("title", default_title)
             columns.append({"title": title, "name": n})
 
         columns.append({"title": "Actions", "name": "structure:buttons"})
