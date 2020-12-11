@@ -19,13 +19,14 @@ from morpfw.app import DBSessionRequest
 from morpfw.authn.pas.policy import DefaultAuthnPolicy
 from morpfw.authz.pas import DefaultAuthzPolicy
 from morpfw.main import create_app
+from morpfw.request import ESCapableRequest
 from webob.exc import HTTPException
 
 from . import directive
 from .authn import IdentityPolicy
 
 
-class WebAppRequest(DBSessionRequest):
+class WebAppRequest(ESCapableRequest):
     def notify(self, category, title, message):
         session = self.environ["beaker.session"]
         session.setdefault("messages", [])
