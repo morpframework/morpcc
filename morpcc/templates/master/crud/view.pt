@@ -134,7 +134,8 @@
                             serverSide: true,
                             processing: true,
                             ajax: "${bref['datatable_url']}",
-                            columns: eval('${ bref["column_options"] }')
+                            columns: eval('${ bref["column_options"] }'),
+                            order: eval('${ bref["columns_order"] }')
                         });
 
                         $('#iframe-modal').on('hidden.bs.modal', function () {

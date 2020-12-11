@@ -116,6 +116,7 @@ def view(context, request):
         for col in collectionui.columns:
             columns.append(col["title"])
             column_options.append(col)
+        columns_order = collectionui.columns_order
         create_default = {bref.reference_name: context[ref.attribute]}
         create_default_qs = urlencode(create_default)
         create_link = request.link(collectionui, "+create?%s" % create_default_qs)
@@ -133,6 +134,7 @@ def view(context, request):
             ),
             "columns": columns,
             "column_options": json.dumps(column_options),
+            "columns_order": json.dumps(columns_order),
             "create_link": create_link,
             "modal_create_link": modal_create_link,
         }
