@@ -243,7 +243,10 @@ def datatable_search(
                     mfw_search.append({"field": sfn, "operator": "==", "value": val})
         search.append(rulez.and_(*mfw_search))
     if search:
-        search = rulez.or_(*search)
+        if len(search) > 1:
+            search = rulez.or_(*search)
+        else:
+            search = search[0]
     else:
         search = None
     if data["filter"]:
