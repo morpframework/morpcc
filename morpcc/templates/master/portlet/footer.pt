@@ -1,5 +1,5 @@
 <div class="pull-right">
-      <a href="http://morpcc.rtfd.org">Morp Control Center</a>.
-      Licensed under <a href="https://www.gnu.org/licenses/agpl-3.0.txt">AGPLv3+</a>.
-      <a href="http://github.com/morpframework/morpcc"><i class="fa fa-github"></i> GitHub</a>
+      <span tal:condition="copyright_notice" tal:content="structure copyright_notice">
+      </span> |
+      Licensed under <a href="${request.relative_url('/+license')}">AGPLv3+</a>.
 </div>

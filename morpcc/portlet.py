@@ -180,7 +180,8 @@ def logo_portlet(context, request):
 
 @App.portlet(name="morpcc.footer", template="master/portlet/footer.pt")
 def footer_portlet(context, request):
-    return {}
+    copyright_notice = request.app.get_copyright_notice(request)
+    return {"copyright_notice": copyright_notice}
 
 
 @App.portlet(name="morpcc.custom_styles", template="master/portlet/custom_styles.pt")
