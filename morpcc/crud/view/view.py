@@ -104,7 +104,7 @@ def view(context, request):
             refdata = base_view(refmodelui, request)
             refdata["name"] = ref.name
             refdata["title"] = ref.get_title(request)
-            refdata["context"] = refmodelui
+            refdata["content"] = refmodelui
             result["references"].append(refdata)
 
     result["backreferences"] = []
@@ -140,7 +140,6 @@ def view(context, request):
 
         if bref.single_reference:
             content = context.model.resolve_backreference(bref)
-            brefdata["content"] = content
             if content:
                 item = content[0]
                 itemui = item.ui()
@@ -155,7 +154,7 @@ def view(context, request):
                 fs = fs.bind(context=item, request=request)
                 brefdata["form"] = deform.Form(fs)
                 brefdata["form_data"] = item.as_dict()
-                brefdata["content"] = item
+                brefdata["content"] = item.ui()
 
         result["backreferences"].append(brefdata)
 

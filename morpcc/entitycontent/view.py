@@ -59,9 +59,7 @@ def content_view(context, request):
             reldata["title"] = rel["title"]
             reldata["context"] = relmodelui
             reldata["content"] = relmodel
-            validate_form(
-                request, relmodel.schema, reldata["form"], relmodel.validation_dict()
-            )
+            validate_form(request, relmodel, relmodel.schema, reldata["form"])
             result["relationships"].append(reldata)
     result["backrelationships"] = []
     for br, brel in sorted(
@@ -105,9 +103,7 @@ def content_view(context, request):
                 breldata["form"] = deform.Form(fs)
                 breldata["form_data"] = item.as_dict()
                 breldata["content"] = item
-                validate_form(
-                    request, item.schema, breldata["form"], item.validation_dict()
-                )
+                validate_form(request, item, item.schema, breldata["form"])
         result["backrelationships"].append(breldata)
     result["backrelationships"] = sorted(
         result["backrelationships"],
@@ -115,7 +111,7 @@ def content_view(context, request):
     )
 
     validate_form(
-        request, context.model.schema, result["form"], context.model.validation_dict()
+        request, context.model, context.model.schema, result["form"],
     )
     return result
 
@@ -131,7 +127,7 @@ def _entity_dt_result_render(context, request, columns, objs):
         fs = formschema()
         fs = fs.bind(context=o, request=request)
         form = deform.Form(fs)
-        validate_form(request, o.schema, form, o.validation_dict())
+        validate_form(request, o, o.schema, form)
         for c in columns:
             if c["name"].startswith("structure:"):
                 row.append(context.get_structure_column(o, request, c["name"]))

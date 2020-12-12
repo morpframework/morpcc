@@ -22,7 +22,9 @@ def permits(request, context, permission):
 
 
 
-def validate_form(request, schema, form, form_data):
+def validate_form(request, obj, schema, form):
+    form_data = obj.as_dict()
+    validation_dict = obj.validation_dict()
     form_errors = []
     for attrname, attr in schema.__dataclass_fields__.items():
         field_errors = []
@@ -44,7 +46,7 @@ def validate_form(request, schema, form, form_data):
             form[attrname].widget.handle_error(form[attrname], field_error)
 
     for validate in schema.__validators__:
-        error_msg = validate(request, schema, form_data)
+        error_msg = validate(request, schema, validation_dict)
         if error_msg:
             form_errors.append(error_msg)
 

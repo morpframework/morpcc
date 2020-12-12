@@ -77,7 +77,7 @@
                         <h2 metal:fill-slot="panel-title">${ ref['title'] }</h2>
                         <div metal:fill-slot="panel-content">
                             <div
-                                tal:replace="structure:ref['form'].render(ref['form_data'], request=request, context=ref['context'], readonly=True)">
+                                tal:replace="structure:ref['form'].render(ref['form_data'], request=request, context=ref['content'], readonly=True)">
                             </div>
                         </div>
                     </div>
@@ -115,7 +115,7 @@
                         </h2>
                         <div metal:fill-slot="panel-content">
                             <div
-                                tal:replace="structure:bref['form'].render(bref['form_data'], request=request, context=context, readonly=True)">
+                                tal:replace="structure:bref['form'].render(bref['form_data'], request=request, context=bref['content'], readonly=True)">
                             </div>
                         </div>
                     </div>
