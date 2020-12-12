@@ -78,6 +78,7 @@ def base_view(context, request):
     return {
         "page_title": "View: %s" % html.escape(context.model.title()),
         "form_title": "View",
+        "content": context,
         "metadataform": deform.Form(mfs),
         "form": deform.Form(fs),
         "form_data": data,

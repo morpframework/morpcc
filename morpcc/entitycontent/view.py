@@ -41,78 +41,23 @@ def term_search(context, request):
 @App.html(
     model=EntityContentModelUI,
     name="view",
-    template="master/entity/content/view.pt",
+    template="master/crud/view.pt",
     permission=crudperm.View,
 )
 def content_view(context, request):
     result = default_view(context, request)
-    entity = context.model.entity()
-    result["entity_name"] = entity["name"]
-    result["entity_title"] = entity["title"]
-    result["relationships"] = []
-    for r, rel in sorted(context.model.relationships().items(), key=lambda x: x[0]):
-        relmodel = context.model.resolve_relationship(rel)
-        if relmodel:
-            colui = EntityContentCollectionUI(request, relmodel.collection)
-            relmodelui = EntityContentModelUI(request, relmodel, colui)
-            reldata = default_view(relmodelui, request)
-            reldata["title"] = rel["title"]
-            reldata["context"] = relmodelui
-            reldata["content"] = relmodel
-            validate_form(request, relmodel, relmodel.schema, reldata["form"])
-            result["relationships"].append(reldata)
-    result["backrelationships"] = []
-    for br, brel in sorted(
-        context.model.backrelationships().items(), key=lambda x: x[0]
-    ):
-        refmodel = brel.reference_relationship().entity()
-        columns = []
-        column_options = []
-        for colname, col in refmodel.effective_attributes().items():
-            columns.append(col["title"])
-            column_options.append({"name": colname, "orderable": True})
-        breldata = {
-            "name": brel["name"],
-            "uuid": brel["uuid"],
-            "title": brel["title"],
-            "single_relation": brel["single_relation"] or False,
-            "datatable_url": request.link(
-                context,
-                "backrelationship-search.json?backrelationship_uuid={}".format(
-                    brel["uuid"]
-                ),
-            ),
-            "columns": columns,
-            "column_options": json.dumps(column_options),
-        }
+    for refdata in result["references"]:
+        item = refdata["content"].model
+        validate_form(request, item, item.schema, refdata["form"])
+    for brefdata in result["backreferences"]:
+        if brefdata.get("single_reference", False):
+            item = brefdata["content"].model
+            validate_form(
+                request, item, item.schema, brefdata["form"],
+            )
 
-        if brel["single_relation"]:
-            content = context.model.resolve_backrelationship(brel)
-            if content:
-                item = content[0]
-                itemui = item.ui()
-                formschema = dc2colander.convert(
-                    item.schema,
-                    request=request,
-                    include_fields=itemui.view_include_fields,
-                    exclude_fields=itemui.view_exclude_fields,
-                    default_tzinfo=request.timezone(),
-                )
-                fs = formschema()
-                fs = fs.bind(context=item, request=request)
-                breldata["form"] = deform.Form(fs)
-                breldata["form_data"] = item.as_dict()
-                breldata["content"] = item
-                validate_form(request, item, item.schema, breldata["form"])
-        result["backrelationships"].append(breldata)
-    result["backrelationships"] = sorted(
-        result["backrelationships"],
-        key=lambda x: (0 if x["single_relation"] else 1, x["name"]),
-    )
-
-    validate_form(
-        request, context.model, context.model.schema, result["form"],
-    )
+    item = result["content"].model
+    validate_form(request, item, item.schema, result["form"])
     return result
 
 
@@ -153,24 +98,27 @@ def _entity_dt_result_render(context, request, columns, objs):
 
 @App.json(
     model=EntityContentModelUI,
-    name="backrelationship-search.json",
+    name="backreference-search.json",
     permission=crudperm.View,
 )
 def relationship_content_search(context, request):
-    brel_uuid = request.GET.get("backrelationship_uuid", "").strip()
-    if not brel_uuid:
+    bref_name = request.GET.get("backreference_name", "").strip()
+    if not bref_name:
         return {}
 
-    brel = request.get_collection("morpcc.backrelationship").get(brel_uuid)
-    rel = brel.reference_relationship()
-    attr = rel.reference_attribute()
-    collectionui = content_collection_factory(
-        brel.reference_entity(), context.model.collection.__application__
-    ).ui()
+    bref = None
+    for br in context.schema.__backreferences__:
+        if br.name == bref_name:
+            bref = br
+            break
+
+    ref = bref.get_reference(request)
+    collection = bref.collection(request)
+    collectionui = collection.ui()
 
     return datatable_search(
         collectionui,
         request,
-        additional_filters=rulez.field[rel["name"]] == context.model[attr["name"]],
+        additional_filters=rulez.field(ref.name) == context.model[ref.attribute],
         renderer=_entity_dt_result_render,
     )

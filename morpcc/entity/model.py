@@ -112,7 +112,7 @@ class EntityModel(morpfw.Model):
                 Reference(
                     rn,
                     application_uuid,
-                    self["uuid"],
+                    rel.reference_entity().uuid,
                     attribute=rel.reference_attribute()["name"],
                     title=rel["title"],
                 )
