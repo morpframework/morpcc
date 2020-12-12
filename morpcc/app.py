@@ -10,8 +10,6 @@ import morepath
 import morpfw
 import reg
 from a_un import load_license, validate_license
-from beaker.middleware import CacheMiddleware as BeakerCacheMiddleware
-from beaker.middleware import SessionMiddleware as BeakerMiddleware
 from more.chameleon import ChameleonApp
 from morepath.publish import resolve_model
 from morpcc.authz.policy import MorpCCAuthzPolicy
@@ -28,7 +26,7 @@ from .authn import IdentityPolicy
 
 class WebAppRequest(ESCapableRequest):
     def notify(self, category, title, message):
-        session = self.environ["beaker.session"]
+        session = self.session
         session.setdefault("messages", [])
         session["messages"].append(
             {"category": category, "title": title, "message": message}
@@ -36,7 +34,7 @@ class WebAppRequest(ESCapableRequest):
         session.save()
 
     def messages(self):
-        session = self.environ["beaker.session"]
+        session = self.session
         result = session.get("messages", [])
         session["messages"] = []
         session.save()
@@ -71,14 +69,6 @@ class WebAppRequest(ESCapableRequest):
             license["expired"] = license_expired
             return license
         return None
-
-    @property
-    def session(self):
-        return self.environ["beaker.session"]
-
-    @property
-    def cache(self):
-        return self.environ["beaker.cache"]
 
 
 class App(ChameleonApp, morpfw.SQLApp, MorpCCAuthzPolicy):
@@ -214,15 +204,4 @@ class AuthnPolicy(DefaultAuthnPolicy):
 
 App.hook_auth_models(prefix="/api/v1/auth")
 
-
-def create_morpcc_app(settings, scan=True, **kwargs):
-    application = create_app(settings=settings, scan=scan, **kwargs)
-    beaker_settings = {}
-
-    for k, v in settings["configuration"].items():
-        if k.startswith("morpcc.beaker."):
-            beaker_settings[k[len("morpcc.beaker.") :]] = v
-
-    sessionized = BeakerMiddleware(application, beaker_settings)
-    cached = BeakerCacheMiddleware(sessionized, beaker_settings)
-    return cached
+create_morpcc_app = create_app

@@ -70,10 +70,10 @@ Then lets create a ``settings.yml``
       morpfw.storage.sqlstorage.dburi:  'postgresql://postgres:postgres@localhost:5432/morpcc'
       morpfw.storage.sqlstorage.dburi.warehouse: 'postgresql://postgres:postgres@localhost:5432/morpcc_warehouse'
       morpfw.blobstorage.uri: 'fsblob://%(here)s/blobstorage'
-      morpcc.beaker.session.type: ext:database
-      morpcc.beaker.session.url: 'postgresql://postgres:postgres@localhost:5432/morpcc_cache'
-      morpcc.beaker.cache.type: ext:database
-      morpcc.beaker.cache.url: 'postgresql://postgres:postgres@localhost:5432/morpcc_cache'
+      morpfw.beaker.session.type: ext:database
+      morpfw.beaker.session.url: 'postgresql://postgres:postgres@localhost:5432/morpcc_cache'
+      morpfw.beaker.cache.type: ext:database
+      morpfw.beaker.cache.url: 'postgresql://postgres:postgres@localhost:5432/morpcc_cache'
       morpfw.celery:
          broker_url: 'amqps://guest:guest@localhost:5671/'
          result_backend: 'db+postgresql://postgres:postgres@localhost:5432/morpcc_cache'

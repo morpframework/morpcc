@@ -11,8 +11,8 @@ configuration:
   morpfw.storage.sqlstorage.dburi.warehouse: 'postgresql://postgres:postgres@localhost:5432/morpcc_democms_warehouse'
   morpfw.blobstorage.uri: 'fsblob://%(here)s/blobstorage'
   morpfw.secret.fernet_key: ghVRZXc-6nijmxqmcn5SnkAwjdCo39hCC9cH9SSUKPE=
-  morpcc.beaker.session.type: ext:database
-  morpcc.beaker.session.url: 'postgresql://postgres:postgres@localhost:5432/morpcc_democms_cache'
+  morpfw.beaker.session.type: ext:database
+  morpfw.beaker.session.url: 'postgresql://postgres:postgres@localhost:5432/morpcc_democms_cache'
 
 application:
   title: Demo CMS
