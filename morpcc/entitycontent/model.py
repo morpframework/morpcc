@@ -11,6 +11,12 @@ from .modelui import EntityContentCollectionUI, EntityContentModelUI
 
 
 class EntityContentCollection(morpfw.Collection):
+    @property
+    def name(self):
+        app = self.application()
+        entity = self.entity()
+        return "morpcc.application.%s.%s" % (app["name"], entity["name"])
+
     def __init__(self, application, parent, request, storage, data=None):
         self.__application__ = application
         self.__parent__ = parent
