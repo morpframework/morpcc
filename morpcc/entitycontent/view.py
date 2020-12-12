@@ -58,7 +58,9 @@ def content_view(context, request):
             reldata["title"] = rel["title"]
             reldata["context"] = relmodelui
             reldata["content"] = relmodel
-            validate_form(relmodel, request, reldata["form"], reldata["form_data"])
+            validate_form(
+                relmodel, request, reldata["form"],
+            )
             result["relationships"].append(reldata)
     result["backrelationships"] = []
     for br, brel in sorted(
@@ -102,58 +104,46 @@ def content_view(context, request):
                 breldata["form"] = deform.Form(fs)
                 breldata["form_data"] = item.as_dict()
                 breldata["content"] = item
-                validate_form(item, request, breldata["form"], breldata["form_data"])
+                validate_form(item, request, breldata["form"])
         result["backrelationships"].append(breldata)
     result["backrelationships"] = sorted(
         result["backrelationships"],
         key=lambda x: (0 if x["single_relation"] else 1, x["name"]),
     )
 
-    validate_form(context.model, request, result["form"], result["form_data"])
+    validate_form(
+        context.model, request, result["form"],
+    )
     return result
 
 
-def validate_form(context, request, form, form_data):
-    entity = context.entity()
-
-    # FIXME: we need to derive this validation from the formschema
-
+def validate_form(context, request, form):
+    form_data = context.validation_dict()
+    schema = context.schema
     form_errors = []
-    for attrname, attr in entity.attributes().items():
+    for attrname, attr in schema.__dataclass_fields__.items():
         field_errors = []
         field_value = form_data.get(attrname, None)
-        if attr["required"]:
+
+        metadata = attr.metadata
+        if metadata.get("required", True):
             if form_data.get(attrname, None) is None:
                 field_errors.append("Field is required")
 
-        de = attr.dictionaryelement()
+        validators = metadata.get("validators", [])
+        for validate in validators:
+            error_msg = validate(request, schema, attr, field_value)
+            if error_msg:
+                field_errors.append(error_msg)
 
-        if de:
-            if field_value and de["referencedata_name"]:
-                validate = ReferenceDataValidator(
-                    de["referencedata_name"], de["referencedata_property"]
-                )
-                # FIXME: ideally pass the right value in schema and field in this
-                # function call
-                error_msg = validate(request, None, None, field_value)
-                if error_msg:
-                    field_errors.append(error_msg)
-
-        validators = attr.validators()
-
-        for validator in validators:
-            validate = validator.function()
-            if not validate(field_value):
-                field_errors.append(validator["error_message"])
-
-        if field_errors:
+        if field_errors and attrname in form:
             field_error = colander.Invalid(form[attrname].widget, field_errors)
             form[attrname].widget.handle_error(form[attrname], field_error)
 
-    for validator in entity.entity_validators():
-        validate = validator.function()
-        if not validate(context.validation_dict()):
-            form_errors.append(validator["error_message"])
+    for validate in schema.__validators__:
+        error_msg = validate(request, schema, form_data)
+        if error_msg:
+            form_errors.append(error_msg)
 
     if form_errors:
         form_error = colander.Invalid(form.widget, form_errors)
@@ -171,7 +161,7 @@ def _entity_dt_result_render(context, request, columns, objs):
         fs = formschema()
         fs = fs.bind(context=o, request=request)
         form = deform.Form(fs)
-        validate_form(o, request, form, o.as_dict())
+        validate_form(o, request, form)
         for c in columns:
             if c["name"].startswith("structure:"):
                 row.append(context.get_structure_column(o, request, c["name"]))
