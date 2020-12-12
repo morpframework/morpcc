@@ -1,7 +1,5 @@
 import typing
 
-from RestrictedPython import compile_restricted, safe_globals
-
 import morpfw.crud.storage.sqlstorage
 import rulez
 import sqlalchemy
@@ -14,6 +12,7 @@ from alembic.operations import Operations
 from alembic.operations.ops import UpgradeOps
 from alembic.runtime.migration import MigrationContext
 from inverter import dc2pgsqla
+from RestrictedPython import compile_restricted, safe_globals
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.schema import CreateSchema
 
@@ -94,7 +93,7 @@ class ApplicationDatabaseSyncAdapter(object):
         for dm in dmcol.search(
             rulez.field["schema_uuid"] == self.context["schema_uuid"]
         ):
-            dc = dm.dataclass()
+            dc = dm.dataclass(self.context.uuid)
             tbl = dc2pgsqla.convert(dc, content_metadata)
         upgrade_ops = UpgradeOps([])
         autogen_context = AutogenContext(migration_context, content_metadata)

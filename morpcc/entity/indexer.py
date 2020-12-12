@@ -35,7 +35,9 @@ def index_resolver(context, name):
 def searchabletext(context, name):
     entity = context.collection.__parent__
     text = []
-    for name, attr in entity.dataclass().__dataclass_fields__.items():
+    for name, attr in entity.dataclass(
+        context.application().uuid
+    ).__dataclass_fields__.items():
         dctype = dataclass_get_type(attr)
         if dctype["type"] == str:
             dformat = dctype["metadata"].get("format", None)

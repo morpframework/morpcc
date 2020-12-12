@@ -28,7 +28,10 @@ class EntityContentCollection(morpfw.Collection):
     def base_avro_schema(self):
         entity = self.__parent__
         result = dc2avsc.convert(
-            self.schema, request=self.request, namespace=entity["name"], ignore_required=True
+            self.schema,
+            request=self.request,
+            namespace=entity["name"],
+            ignore_required=True,
         )
         return result
 
@@ -364,7 +367,10 @@ def content_collection_factory(entity, application, allow_invalid=False):
         )
 
     dc_schema = entity.dataclass(
-        validators=field_validators, widgets=field_widgets, allow_invalid=allow_invalid
+        application.uuid,
+        validators=field_validators,
+        widgets=field_widgets,
+        allow_invalid=allow_invalid,
     )
 
     class ContentCollectionUI(EntityContentCollectionUI):

@@ -125,7 +125,6 @@ def view(context, request):
         )
         brefdata = {
             "name": bref.name,
-            "resource_type": bref.resource_type,
             "title": bref.get_title(request),
             "single_reference": bref.single_reference,
             "datatable_url": request.link(

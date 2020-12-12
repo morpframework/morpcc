@@ -8,6 +8,7 @@ from sqlalchemy import MetaData
 
 from ..deform.refdatawidget import ReferenceDataWidget
 from ..deform.referencewidget import ReferenceWidget
+from ..entitycontent.relationship import BackReference, Reference
 from ..validator.reference import ReferenceValidator
 from .modelui import EntityCollectionUI, EntityModelUI
 from .schema import EntitySchema
@@ -25,7 +26,9 @@ class EntityModel(morpfw.Model):
     def icon(self):
         return self["icon"] or "database"
 
-    def dataclass(self, validators=None, widgets=None, allow_invalid=False):
+    def dataclass(
+        self, application_uuid, validators=None, widgets=None, allow_invalid=False
+    ):
         validators = validators or {}
         widgets = widgets or {}
         attrs = []
@@ -102,6 +105,33 @@ class EntityModel(morpfw.Model):
             dc.__validators__ = [
                 ev.schema_validator() for ev in self.entity_validators()
             ]
+
+        references = []
+        for rn, rel in self.relationships().items():
+            references.append(
+                Reference(
+                    rn,
+                    application_uuid,
+                    self["uuid"],
+                    attribute=rel.reference_attribute()["name"],
+                    title=rel["title"],
+                )
+            )
+        dc.__references__ = references
+
+        backreferences = []
+        for rn, brel in self.backrelationships().items():
+            backreferences.append(
+                BackReference(
+                    brel["name"],
+                    application_uuid,
+                    brel.reference_entity().uuid,
+                    brel.reference_relationship()["name"],
+                    title=brel["title"],
+                    single=brel["single_relation"],
+                )
+            )
+        dc.__backreferences__ = backreferences
         return dc
 
     @morpfw.requestmemoize()
