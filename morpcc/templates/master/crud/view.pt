@@ -6,6 +6,14 @@
 
         <div metal:fill-slot="page-body">
             <div class="row">
+                <tal:block
+                    tal:define="portletprovider request.app.get_contextportletprovider(context, 'morpcc.context.before_content_body')"
+                    tal:condition="portletprovider"
+                    tal:replace="structure:portletprovider.render(context, request, load_template)">
+                    >
+                </tal:block>
+            </div>
+            <div class="row">
                 <div class="col-md-8 col-sm-12 col-xs-12">
                     <div metal:use-macro="load_template('master/panel.pt').macros.panel">
                         <h2 metal:fill-slot="panel-title">${form_title}</h2>
@@ -71,6 +79,15 @@
                 </div>
             </div>
 
+            <div class="row">
+                <tal:block
+                    tal:define="portletprovider request.app.get_contextportletprovider(context, 'morpcc.context.before_references')"
+                    tal:condition="portletprovider"
+                    tal:replace="structure:portletprovider.render(context, request, load_template)">
+                    >
+                </tal:block>
+            </div>
+
             <div class="row" tal:repeat="ref references">
                 <div class="col-xs-12 col-md-12 col-lg-12">
                     <div metal:use-macro="load_template('master/panel.pt').macros.panel">
@@ -96,6 +113,15 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="row">
+                <tal:block
+                    tal:define="portletprovider request.app.get_contextportletprovider(context, 'morpcc.context.before_backreferences')"
+                    tal:condition="portletprovider"
+                    tal:replace="structure:portletprovider.render(context, request, load_template)">
+                    >
+                </tal:block>
             </div>
 
             <div class="row" tal:repeat="bref backreferences">
@@ -134,7 +160,14 @@
                     </div>
                 </div>
             </div>
-
+            <div class="row">
+                <tal:block
+                    tal:define="portletprovider request.app.get_contextportletprovider(context, 'morpcc.context.after_content_body')"
+                    tal:condition="portletprovider"
+                    tal:replace="structure:portletprovider.render(context, request, load_template)">
+                    >
+                </tal:block>
+            </div>
 
         </div>
 

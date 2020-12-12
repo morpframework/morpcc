@@ -77,6 +77,9 @@ class App(ChameleonApp, morpfw.SQLApp, MorpCCAuthzPolicy):
 
     portlet = dectate.directive(directive.PortletFactoryAction)
     portletprovider = dectate.directive(directive.PortletProviderFactoryAction)
+    contextportletprovider = dectate.directive(
+        directive.ContextPortletProviderFactoryAction
+    )
     structure_column = dectate.directive(directive.StructureColumnAction)
     schemaextender = dectate.directive(directive.SchemaExtenderAction)
     messagingprovider = dectate.directive(directive.MessagingProviderAction)
@@ -109,6 +112,10 @@ class App(ChameleonApp, morpfw.SQLApp, MorpCCAuthzPolicy):
 
     def get_portletprovider(self, name):
         return self.config.portletprovider_registry.get_provider(name)
+
+    @reg.dispatch_method(reg.match_instance("model"), reg.match_key("name"))
+    def get_contextportletprovider(self, model, name):
+        return None
 
     @reg.dispatch_method(reg.match_class("schema"))
     def get_schemaextender(self, schema):

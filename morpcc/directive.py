@@ -7,7 +7,7 @@ from .permission import ManageSite
 from .registry.applicationbehavior import ApplicationBehaviorRegistry
 from .registry.behavior import BehaviorRegistry
 from .registry.default_factory import DefaultFactoryRegistry
-from .registry.portlet import PortletProviderRegistry, PortletRegistry
+from .registry.portlet import PortletProvider, PortletProviderRegistry, PortletRegistry
 from .registry.settingpage import SettingPageRegistry
 
 PORTLET_FACTORY_IDS: dict = {}
@@ -49,6 +49,27 @@ class PortletProviderFactoryAction(dectate.Action):
     def perform(self, obj, portletprovider_registry: PortletProviderRegistry):
         portletprovider_registry.register(
             obj, name=self.name, permission=self.permission
+        )
+
+
+class ContextPortletProviderFactoryAction(dectate.Action):
+
+    app_class_arg = True
+
+    def __init__(self, model, name, permission=None) -> None:
+        self.model = model
+        self.name = name
+        self.permission = permission
+
+    def identifier(self, app_class):
+        return str((app_class, self.model, self.name))
+
+    def perform(self, obj, app_class):
+        def get_provider(model, name):
+            return PortletProvider(obj, self.permission, self.name)
+
+        app_class.get_contextportletprovider.register(
+            reg.methodify(get_provider), model=self.model, name=self.name,
         )
 
 
