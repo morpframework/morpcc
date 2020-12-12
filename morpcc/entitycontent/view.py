@@ -4,14 +4,15 @@ import colander
 import deform
 import rulez
 from inverter import dc2colander
-from morpcc.crud.view.edit import edit as default_edit
-from morpcc.crud.view.listing import datatable_search
-from morpcc.crud.view.listing import listing as default_listing
-from morpcc.crud.view.view import view as default_view
 from morpfw.crud import permission as crudperm
 
 from ..app import App
 from ..application.model import ApplicationModel
+from ..crud.view.edit import edit as default_edit
+from ..crud.view.listing import datatable_search
+from ..crud.view.listing import listing as default_listing
+from ..crud.view.view import view as default_view
+from ..util import validate_form
 from ..validator.refdata import ReferenceDataValidator
 from .model import content_collection_factory
 from .modelui import EntityContentCollectionUI, EntityContentModelUI
@@ -59,7 +60,7 @@ def content_view(context, request):
             reldata["context"] = relmodelui
             reldata["content"] = relmodel
             validate_form(
-                relmodel, request, reldata["form"],
+                request, relmodel.schema, reldata["form"], relmodel.validation_dict()
             )
             result["relationships"].append(reldata)
     result["backrelationships"] = []
@@ -104,7 +105,9 @@ def content_view(context, request):
                 breldata["form"] = deform.Form(fs)
                 breldata["form_data"] = item.as_dict()
                 breldata["content"] = item
-                validate_form(item, request, breldata["form"])
+                validate_form(
+                    request, item.schema, breldata["form"], item.validation_dict()
+                )
         result["backrelationships"].append(breldata)
     result["backrelationships"] = sorted(
         result["backrelationships"],
@@ -112,42 +115,9 @@ def content_view(context, request):
     )
 
     validate_form(
-        context.model, request, result["form"],
+        request, context.model.schema, result["form"], context.model.validation_dict()
     )
     return result
-
-
-def validate_form(context, request, form):
-    form_data = context.validation_dict()
-    schema = context.schema
-    form_errors = []
-    for attrname, attr in schema.__dataclass_fields__.items():
-        field_errors = []
-        field_value = form_data.get(attrname, None)
-
-        metadata = attr.metadata
-        if metadata.get("required", True):
-            if form_data.get(attrname, None) is None:
-                field_errors.append("Field is required")
-
-        validators = metadata.get("validators", [])
-        for validate in validators:
-            error_msg = validate(request, schema, attr, field_value)
-            if error_msg:
-                field_errors.append(error_msg)
-
-        if field_errors and attrname in form:
-            field_error = colander.Invalid(form[attrname].widget, field_errors)
-            form[attrname].widget.handle_error(form[attrname], field_error)
-
-    for validate in schema.__validators__:
-        error_msg = validate(request, schema, form_data)
-        if error_msg:
-            form_errors.append(error_msg)
-
-    if form_errors:
-        form_error = colander.Invalid(form.widget, form_errors)
-        form.widget.handle_error(form, form_error)
 
 
 def _entity_dt_result_render(context, request, columns, objs):
@@ -161,7 +131,7 @@ def _entity_dt_result_render(context, request, columns, objs):
         fs = formschema()
         fs = fs.bind(context=o, request=request)
         form = deform.Form(fs)
-        validate_form(o, request, form)
+        validate_form(request, o.schema, form, o.validation_dict())
         for c in columns:
             if c["name"].startswith("structure:"):
                 row.append(context.get_structure_column(o, request, c["name"]))

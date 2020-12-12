@@ -4,12 +4,11 @@ from dataclasses import field
 from datetime import date, datetime
 from importlib import import_module
 
-from pkg_resources import resource_filename
-
 import colander
 from deform.widget import HiddenWidget
 from inverter.common import dataclass_check_type, dataclass_get_type
 from morpfw.interfaces import ISchema
+from pkg_resources import resource_filename
 
 
 def permits(request, context, permission):
@@ -20,3 +19,36 @@ def permits(request, context, permission):
     else:
         klass = permission
     return request.app._permits(request.identity, context, klass)
+
+
+
+def validate_form(request, schema, form, form_data):
+    form_errors = []
+    for attrname, attr in schema.__dataclass_fields__.items():
+        field_errors = []
+        field_value = form_data.get(attrname, None)
+
+        metadata = attr.metadata
+        if metadata.get("required", True):
+            if form_data.get(attrname, None) is None:
+                field_errors.append("Field is required")
+
+        validators = metadata.get("validators", [])
+        for validate in validators:
+            error_msg = validate(request, schema, attr, field_value)
+            if error_msg:
+                field_errors.append(error_msg)
+
+        if field_errors and attrname in form:
+            field_error = colander.Invalid(form[attrname].widget, field_errors)
+            form[attrname].widget.handle_error(form[attrname], field_error)
+
+    for validate in schema.__validators__:
+        error_msg = validate(request, schema, form_data)
+        if error_msg:
+            form_errors.append(error_msg)
+
+    if form_errors:
+        form_error = colander.Invalid(form.widget, form_errors)
+        form.widget.handle_error(form, form_error)
+
