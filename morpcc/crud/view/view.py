@@ -108,6 +108,7 @@ def view(context, request):
             refdata["content"] = refmodelui
             result["references"].append(refdata)
 
+    result['single_backreferences'] = []
     result["backreferences"] = []
     for refname, bref in context.model.backreferences().items():
         columns = []
@@ -156,8 +157,9 @@ def view(context, request):
                 brefdata["form"] = deform.Form(fs)
                 brefdata["form_data"] = item.as_dict()
                 brefdata["content"] = item.ui()
-
-        result["backreferences"].append(brefdata)
+            result['single_backreferences'].append(brefdata)
+        else:
+            result["backreferences"].append(brefdata)
 
     return result
 

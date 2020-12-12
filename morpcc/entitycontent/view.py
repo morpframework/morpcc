@@ -49,12 +49,11 @@ def content_view(context, request):
     for refdata in result["references"]:
         item = refdata["content"].model
         validate_form(request, item, item.schema, refdata["form"])
-    for brefdata in result["backreferences"]:
-        if brefdata.get("single_reference", False):
-            item = brefdata["content"].model
-            validate_form(
-                request, item, item.schema, brefdata["form"],
-            )
+    for brefdata in result["single_backreferences"]:
+        item = brefdata["content"].model
+        validate_form(
+            request, item, item.schema, brefdata["form"],
+        )
 
     item = result["content"].model
     validate_form(request, item, item.schema, result["form"])

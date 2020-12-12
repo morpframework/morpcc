@@ -84,10 +84,23 @@
                 </div>
             </div>
 
+            <div class="row" tal:repeat="sbref single_backreferences">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+                        <h2 metal:fill-slot="panel-title">${sbref['title']}
+                        </h2>
+                        <div metal:fill-slot="panel-content">
+                            <div
+                                tal:replace="structure:sbref['form'].render(sbref['form_data'], request=request, context=sbref['content'], readonly=True)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row" tal:repeat="bref backreferences">
                 <div class="col-xs-12 col-md-12 col-lg-12">
-                    <div tal:condition="not:bref['single_reference']"
-                        metal:use-macro="load_template('master/panel.pt').macros.panel">
+                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
                         <h2 metal:fill-slot="panel-title">${ bref['title'] }</h2>
                         <div metal:fill-slot="panel-content">
                             <table id="table-${ bref['name'] }"
