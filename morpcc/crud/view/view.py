@@ -3,6 +3,7 @@ import json
 from urllib.parse import urlencode
 
 import deform
+import deform.widget
 import morepath
 import morpfw
 from inverter import dc2colander
@@ -67,7 +68,12 @@ def base_view(context, request):
     fs = formschema()
     fs = fs.bind(context=context, request=request)
 
-    mfs = metadataschema()
+    mfs = metadataschema(
+        widget=deform.widget.FormWidget(
+            readonly_template="readonly/form_inline",
+            readonly_item_template="readonly/mapping_item_inline",
+        )
+    )
     mfs = mfs.bind(context=context, request=request)
 
     xfs = None
@@ -108,7 +114,7 @@ def view(context, request):
             refdata["content"] = refmodelui
             result["references"].append(refdata)
 
-    result['single_backreferences'] = []
+    result["single_backreferences"] = []
     result["backreferences"] = []
     for refname, bref in context.model.backreferences().items():
         columns = []
@@ -157,7 +163,7 @@ def view(context, request):
                 brefdata["form"] = deform.Form(fs)
                 brefdata["form_data"] = item.as_dict()
                 brefdata["content"] = item.ui()
-            result['single_backreferences'].append(brefdata)
+            result["single_backreferences"].append(brefdata)
         else:
             result["backreferences"].append(brefdata)
 

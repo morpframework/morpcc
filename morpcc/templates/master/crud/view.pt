@@ -14,7 +14,29 @@
                 </tal:block>
             </div>
             <div class="row">
-                <div class="col-md-8 col-sm-12 col-xs-12">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div metal:use-macro="load_template('master/panel.pt').macros.panel"
+                        tal:define="collapse_panel True">
+                        <h2 metal:fill-slot="panel-title">Metadata</h2>
+                        <div metal:fill-slot="panel-content">
+                            <div
+                                tal:replace="structure:metadataform.render(appstruct=form_data, readonly=True, request=request, context=context)">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <tal:block
+                    tal:define="portletprovider request.app.get_contextportletprovider(context, 'morpcc.context.before_content_main')"
+                    tal:condition="portletprovider"
+                    tal:replace="structure:portletprovider.render(context, request, load_template)">
+                    >
+                </tal:block>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
                     <div metal:use-macro="load_template('master/panel.pt').macros.panel">
                         <h2 metal:fill-slot="panel-title">${form_title}</h2>
                         <ul>
@@ -38,32 +60,31 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-12 col-xs-12">
-                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
-                        <h2 metal:fill-slot="panel-title">Metadata</h2>
-                        <div metal:fill-slot="panel-content">
-                            <div
-                                tal:replace="structure:metadataform.render(appstruct=form_data, readonly=True, request=request, context=context)">
-                            </div>
-                        </div>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
                     <div metal:use-macro="load_template('master/panel.pt').macros.panel"
                         tal:condition="context.model.blob_fields">
-                        <h2 metal:fill-slot="panel-title">Blobs</h2>
+                        <h2 metal:fill-slot="panel-title">File Attachments</h2>
                         <div metal:fill-slot="panel-content">
                             <form class="form-horizontal">
                                 <tal:loop repeat="blobfield context.model.blob_fields">
                                     <div class="form-group">
-                                        <label class="control-label col-md-5 col-sm-5 col-xs-12">${blobfield} </label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">${blobfield.title()}
+                                        </label>
                                         <tal:def define="blob context.model.get_blob(blobfield)">
-                                            <div class="col-md-7 col-sm-7 col-xs-12">
+                                            <div class="col-md-9 col-sm-9 col-xs-12">
                                                 <p class="form-control-static">
                                                     <tal:cond condition="blob">
                                                         <a
                                                             href="${request.link(context, '+download?field=%s#sha256sum=%s' % (blobfield, blob.sha256sum))}">
                                                             <i class="fa fa-download"></i> <span
                                                                 tal:content="blob.filename"></span>
-                                                        </a>
+
+                                                        </a><br />
+                                                        <small condition="blob.sha256sum">
+                                                            ( SHA256SUM: ${blob.sha256sum} )
+                                                        </small>
                                                     </tal:cond>
                                                     <tal:cond condition="not:blob">
                                                         No blob uploaded
@@ -90,7 +111,8 @@
 
             <div class="row" tal:repeat="ref references">
                 <div class="col-xs-12 col-md-12 col-lg-12">
-                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+                    <div metal:use-macro="load_template('master/panel.pt').macros.panel"
+                        tal:define="collapse_panel True">
                         <h2 metal:fill-slot="panel-title">${ ref['title'] }</h2>
                         <div metal:fill-slot="panel-content">
                             <div
@@ -103,7 +125,8 @@
 
             <div class="row" tal:repeat="sbref single_backreferences">
                 <div class="col-xs-12 col-md-12 col-lg-12">
-                    <div metal:use-macro="load_template('master/panel.pt').macros.panel">
+                    <div metal:use-macro="load_template('master/panel.pt').macros.panel"
+                        tal:define="collapse_panel True">
                         <h2 metal:fill-slot="panel-title">${sbref['title']}
                         </h2>
                         <div metal:fill-slot="panel-content">
