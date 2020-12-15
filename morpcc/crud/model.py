@@ -36,6 +36,14 @@ class ModelUI(object):
     default_view = "view"
 
     @property
+    def update_view_enabled(self):
+        return self.model.update_view_enabled
+
+    @property
+    def delete_view_enabled(self):
+        return self.model.delete_view_enabled
+
+    @property
     def identifier(self):
         return self.model.identifier
 
@@ -92,6 +100,10 @@ class CollectionUI(object):
     ]
 
     default_view = "listing"
+
+    @property
+    def create_view_enabled(self):
+        return self.collection.create_view_enabled
 
     @property
     def page_title(self):

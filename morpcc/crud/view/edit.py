@@ -19,6 +19,8 @@ from ..model import CollectionUI, ModelUI
     permission=crudperms.Edit,
 )
 def edit(context, request):
+    if not context.update_view_enabled:
+        raise HTTPNotFound()
     formschema = dc2colander.convert(
         context.model.schema,
         request=request,
@@ -56,6 +58,8 @@ def modal_edit(context, request):
     request_method="POST",
 )
 def process_edit(context, request):
+    if not context.update_view_enabled:
+        raise HTTPNotFound()
     formschema = dc2colander.convert(
         context.model.schema,
         request=request,
@@ -124,7 +128,8 @@ def modal_process_edit(context, request):
     permission=crudperms.Edit,
 )
 def xattredit(context, request):
-
+    if not context.update_view_enabled:
+        raise HTTPNotFound()
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
         xattrformschema = dc2colander.convert(
@@ -160,7 +165,8 @@ def modal_xattredit(context, request):
     request_method="POST",
 )
 def process_xattredit(context, request):
-
+    if not context.update_view_enabled:
+        raise HTTPNotFound()
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
         xattrformschema = dc2colander.convert(

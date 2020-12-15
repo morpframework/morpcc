@@ -47,12 +47,12 @@ def get_buttons_column(model, request, name):
             }
         )
 
-    if permits(request, uiobj, crudperm.Edit):
+    if permits(request, uiobj, crudperm.Edit) and uiobj.update_view_enabled:
         buttons.append(
             {"icon": "edit", "url": request.link(uiobj, "+edit"), "title": "Edit"}
         )
 
-    if permits(request, uiobj, crudperm.Delete):
+    if permits(request, uiobj, crudperm.Delete) and uiobj.delete_view_enabled:
         buttons.append(
             {
                 "icon": "trash",

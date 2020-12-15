@@ -57,7 +57,7 @@
                                 <tbody>
                                 </tbody>
                             </table>
-                            <div>
+                            <div tal:condition="context.create_view_enabled">
                                 <a class="modal-link" tal:attributes="data-url request.link(context, '+modal-create')"
                                     href="#">
                                     <button class="btn btn-primary">

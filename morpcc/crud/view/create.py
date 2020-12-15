@@ -7,7 +7,7 @@ from deform.widget import HiddenWidget
 from inverter import dc2colander
 from morpfw.crud import permission as crudperms
 from morpfw.crud.errors import AlreadyExistsError, ValidationError
-from webob.exc import HTTPFound
+from webob.exc import HTTPFound, HTTPNotFound
 
 from ...app import App
 from ..model import CollectionUI, ModelUI
@@ -20,6 +20,8 @@ from ..model import CollectionUI, ModelUI
     permission=crudperms.Create,
 )
 def create(context, request):
+    if not context.create_view_enabled:
+        raise HTTPNotFound()
     default_value_fields = list(request.GET.keys())
     formschema = dc2colander.convert(
         context.collection.schema,
@@ -65,6 +67,8 @@ def modal_create(context, request):
     request_method="POST",
 )
 def process_create(context, request):
+    if not context.create_view_enabled:
+        raise HTTPNotFound()
     default_value_fields = list(request.GET.keys())
     formschema = dc2colander.convert(
         context.collection.schema,

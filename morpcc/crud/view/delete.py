@@ -4,6 +4,7 @@ import deform
 import morepath
 from inverter import dc2colander
 from morpfw.crud import permission as crudperms
+from webob.exc import HTTPNotFound
 
 from ...app import App
 from ..model import CollectionUI, ModelUI
@@ -16,7 +17,8 @@ from ..model import CollectionUI, ModelUI
     permission=crudperms.Delete,
 )
 def delete(context, request):
-
+    if not context.delete_view_enabled:
+        raise HTTPNotFound()
     formschema = dc2colander.convert(
         context.model.schema,
         request=request,
@@ -51,6 +53,8 @@ def modal_delete(context, request):
     request_method="POST",
 )
 def process_delete(context, request):
+    if not context.delete_view_enabled:
+        raise HTTPNotFound()
     context.model.delete()
     return morepath.redirect(request.link(context.collection_ui))
 
@@ -63,5 +67,7 @@ def process_delete(context, request):
     request_method="POST",
 )
 def modal_process_delete(context, request):
+    if not context.delete_view_enabled:
+        raise HTTPNotFound()
     context.model.delete()
     return morepath.redirect(request.link(context.collection_ui, "+modal-close"))
