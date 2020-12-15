@@ -2,7 +2,7 @@ import rulez
 
 
 class ReferenceValidator(object):
-    def __init__(self, resource_type, attribute):
+    def __init__(self, resource_type, attribute="uuid"):
         self.resource_type = resource_type
         self.attribute = attribute
 
