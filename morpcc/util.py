@@ -21,7 +21,6 @@ def permits(request, context, permission):
     return request.app._permits(request.identity, context, klass)
 
 
-
 def validate_form(request, obj, schema, form):
     form_data = obj.as_dict()
     validation_dict = obj.validation_dict()
@@ -54,3 +53,13 @@ def validate_form(request, obj, schema, form):
         form_error = colander.Invalid(form.widget, form_errors)
         form.widget.handle_error(form, form_error)
 
+
+def typeinfo_link(request, type_name):
+    typeinfo = request.get_typeinfo(type_name)
+    collection = typeinfo["collection_factory"](request)
+    collectionui = collection.ui()
+    return {
+        "title": typeinfo["title"],
+        "icon": typeinfo["icon"],
+        "href": request.link(collectionui, "+{}".format(collectionui.default_view)),
+    }
