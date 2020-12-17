@@ -35,6 +35,10 @@ def listing(context, request):
             sortable = False
         column_options.append({"name": c["name"], "orderable": sortable})
 
+    query_request_method = "GET"
+    if len(context.columns) > 7:
+        query_request_method = "POST"
+
     search_attrs = []
     for attrname, attr in context.collection.schema.__dataclass_fields__.items():
         searchable = attr.metadata.get("searchable", None)
@@ -73,6 +77,7 @@ def listing(context, request):
         "columns": columns,
         "column_options": json.dumps(column_options),
         "order": json.dumps(order),
+        "datatable_method": query_request_method,
     }
 
 
@@ -197,10 +202,14 @@ def _dt_result_render(context, request, columns, objs):
 
 
 def datatable_search(
-    context, request, additional_filters=None, renderer=_dt_result_render
+    context,
+    request,
+    additional_filters=None,
+    renderer=_dt_result_render,
+    request_method="GET",
 ):
     collection = context.collection
-    data = list(request.GET.items())
+    data = list(getattr(request, request_method).items())
     data = _parse_dtdata(data)
     search = []
     if data["search"] and data["search"]["value"]:
@@ -309,3 +318,14 @@ def datatable_search(
 @App.json(model=CollectionUI, name="datatable.json", permission=crudperms.Search)
 def datatable(context, request):
     return datatable_search(context, request)
+
+
+@App.json(
+    model=CollectionUI,
+    name="datatable.json",
+    request_method="POST",
+    permission=crudperms.Search,
+)
+def datatable(context, request):
+    return datatable_search(context, request, request_method="POST")
+

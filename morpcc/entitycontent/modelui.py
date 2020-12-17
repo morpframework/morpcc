@@ -20,8 +20,6 @@ class EntityContentCollectionUI(CollectionUI):
         for n, rel in rels.items():
             columns.append({"title": rel["title"], "name": n})
 
-        # limit to 9 columns because HTTP have GET request size limit
-        columns = columns[:9]
         columns.append({"title": "Actions", "name": "structure:buttons"})
 
         return columns
