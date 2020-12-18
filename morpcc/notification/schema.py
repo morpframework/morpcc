@@ -11,6 +11,7 @@ class NotificationSchema(morpfw.Schema):
 
     message: typing.Optional[str] = None
     userid: typing.Optional[str] = field(
-        default=None, metadata={"deform.widget": UserReferenceWidget()}
+        default=None,
+        metadata={"format": "uuid", "deform.widget": UserReferenceWidget()},
     )
     read: typing.Optional[datetime] = None
