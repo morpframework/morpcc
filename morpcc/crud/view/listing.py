@@ -211,6 +211,11 @@ def datatable_search(
     collection = context.collection
     data = list(getattr(request, request_method).items())
     data = _parse_dtdata(data)
+    # Data coming in explicitly from GET
+    qs_data = list(request.GET.items())
+    qs_data = _parse_dtdata(qs_data)
+    if "mfw_search" in qs_data:
+        data["mfw_search"] = qs_data["mfw_search"]
     search = []
     if data["search"] and data["search"]["value"]:
         for fn, field in context.collection.schema.__dataclass_fields__.items():
