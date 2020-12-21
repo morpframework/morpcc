@@ -95,12 +95,7 @@ def _entity_dt_result_render(context, request, columns, objs):
     return rows
 
 
-@App.json(
-    model=EntityContentModelUI,
-    name="backreference-search.json",
-    permission=crudperm.View,
-)
-def relationship_content_search(context, request):
+def _relationship_content_search(context, request, request_method="GET"):
     bref_name = request.GET.get("backreference_name", "").strip()
     if not bref_name:
         return {}
@@ -120,4 +115,25 @@ def relationship_content_search(context, request):
         request,
         additional_filters=rulez.field(ref.name) == context.model[ref.attribute],
         renderer=_entity_dt_result_render,
+        request_method=request_method,
     )
+
+
+@App.json(
+    model=EntityContentModelUI,
+    name="backreference-search.json",
+    permission=crudperm.View,
+)
+def relationship_content_search(context, request):
+    return _relationship_content_search(context, request)
+
+
+@App.json(
+    model=EntityContentModelUI,
+    name="backreference-search.json",
+    request_method="POST",
+    permission=crudperm.View,
+)
+def relationship_content_search_post(context, request):
+    return _relationship_content_search(context, request, request_method="POST")
+

@@ -203,7 +203,10 @@
                             serverSide: true,
                             processing: true,
                             searching: false,
-                            ajax: "${bref['datatable_url']}",
+                            ajax: {
+                                url: "${bref['datatable_url']}",
+                                type: "${bref['datatable_method']}"
+                            },
                             columns: eval('${ bref["column_options"] }'),
                             order: eval('${ bref["columns_order"] }')
                         });

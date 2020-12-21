@@ -131,6 +131,9 @@ def view(context, request):
         modal_create_link = request.link(
             collectionui, "+modal-create?%s" % create_default_qs
         )
+        datatable_method = "GET"
+        if len(columns) > 7:
+            datatable_method = "POST"
         brefdata = {
             "name": bref.name,
             "title": bref.get_title(request),
@@ -139,6 +142,7 @@ def view(context, request):
                 context,
                 "backreference-search.json?backreference_name={}".format(bref.name),
             ),
+            "datatable_method": datatable_method,
             "columns": columns,
             "column_options": json.dumps(column_options),
             "columns_order": json.dumps(columns_order),
