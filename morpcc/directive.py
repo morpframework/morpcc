@@ -6,6 +6,7 @@ from morepath.directive import SettingAction
 from .permission import ManageSite
 from .registry.applicationbehavior import ApplicationBehaviorRegistry
 from .registry.behavior import BehaviorRegistry
+from .registry.datasource import DataSourceRegistry
 from .registry.default_factory import DefaultFactoryRegistry
 from .registry.portlet import PortletProvider, PortletProviderRegistry, PortletRegistry
 from .registry.settingpage import SettingPageRegistry
@@ -340,3 +341,29 @@ class CopyrightNoticeAction(dectate.Action):
         app_class.get_copyright_notice.register(
             reg.methodify(obj), request=morepath.Request,
         )
+
+
+class DataSourceAction(dectate.Action):
+
+    config = {"datasource_registry": DataSourceRegistry}
+
+    app_class_arg = True
+
+    depends = [SettingAction]
+
+    def __init__(self, name, **cache_config):
+        self.name = name
+        self.cache_config = cache_config
+
+    def identifier(self, app_class, datasource_registry: DataSourceRegistry):
+        return self.name
+
+    def perform(self, obj, app_class, datasource_registry: DataSourceRegistry):
+        def factory(name):
+            return obj
+
+        app_class.get_datasource_factory.register(
+            reg.methodify(factory), name=self.name
+        )
+        datasource_registry.register(name=self.name, **self.cache_config)
+

@@ -95,6 +95,7 @@ class App(ChameleonApp, morpfw.SQLApp, MorpCCAuthzPolicy):
     license_cert = dectate.directive(directive.LicenseCertAction)
     license_key = dectate.directive(directive.LicenseKeyAction)
     copyright_notice = dectate.directive(directive.CopyrightNoticeAction)
+    datasource = dectate.directive(directive.DataSourceAction)
 
     @reg.dispatch_method(reg.match_instance("model"), reg.match_key("name"))
     def get_indexer(self, model, name):
@@ -172,6 +173,13 @@ class App(ChameleonApp, morpfw.SQLApp, MorpCCAuthzPolicy):
             "Morp Control Center. &copy; 2018-%s Mohd Izhar Firdaus Bin Ismail"
             % dt.year
         )
+
+    @reg.dispatch_method(reg.match_key("name"))
+    def get_datasource_factory(self, name):
+        raise NotImplementedError()
+
+    def get_datasource(self, name, request):
+        return self.config.datasource_registry.get(name=name, request=request)
 
     def render_view(self, context, request, name=""):
         lookup = self.get_view.by_predicates(model=context.__class__, name=name)
