@@ -9,6 +9,10 @@
 - validate reference data in display form
 - added AGPL license notification page
 - added AGPL exception agreement license enforcement hooks
+- added type referencing/backreferencing UI
+- added initial data visualization library
+- use ESCapableRequest by default
+- various UI fixes
 
 
 0.1.0a4 (2020-11-23)
