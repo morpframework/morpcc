@@ -1,4 +1,4 @@
-0.1.0a5 (unreleased)
+0.1.0a5 (2020-12-24)
 --------------------
 
 - improve documentation
