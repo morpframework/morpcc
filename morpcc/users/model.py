@@ -24,6 +24,7 @@ class UserCollectionUI(CollectionUI):
 
     page_title = "Users"
     listing_title = "Registered Users"
+    create_view_enabled = True
 
     columns = [
         {"title": "Username", "name": "username"},
