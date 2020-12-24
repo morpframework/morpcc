@@ -2,11 +2,8 @@ import morpfw
 import rulez
 
 from ..app import App
-from ..entitycontent.model import (
-    EntityContentCollection,
-    EntityContentModel,
-    content_collection_factory,
-)
+from ..entitycontent.model import (EntityContentCollection, EntityContentModel,
+                                   content_collection_factory)
 from .adapters import ApplicationDatabaseSyncAdapter
 
 BATCH_SIZE = 1000
@@ -35,6 +32,8 @@ def index(request_options):
             entitycol = request.get_collection("morpcc.entity")
             app = appcol.get(app_uuid)
             entity = entitycol.get(entity_uuid)
+            if not app:
+                continue
             content_col = content_collection_factory(entity, app)
             context = content_col.get(uuid)
             if context:

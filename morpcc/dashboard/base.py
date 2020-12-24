@@ -150,7 +150,10 @@ class Widget(Column):
         self.datasource = datasource
         for k, v in self.default_opts.items():
             if k not in kwargs:
-                kwargs[k] = v
+                if hasattr(self, k):
+                    setattr(self, k, v)
+                else:
+                    kwargs[k] = v
         super().__init__(**kwargs)
 
     def get_css_class(self):
@@ -171,7 +174,7 @@ class Widget(Column):
             widget=self,
             data=data,
             css_class=self.get_css_class(),
-            style=self.get_css_style(),
+            css_style=self.get_css_style(),
             load_template=load_template,
         )
         return html

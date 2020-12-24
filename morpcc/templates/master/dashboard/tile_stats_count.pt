@@ -4,6 +4,8 @@
         <div class="count">${cdata['value']}</div>
         <span class="count_bottom" tal:condition="cdata['increment']">
             <i class="green"><i class="fa fa-${cdata['increment_icon']}"></i>
-                ${cdata['increment']}${widget.increment_unit} </i> From ${widget.increment_from}</span>
+                ${cdata['increment']}% </i>
+            <span tal:condition="widget.increment_from">
+                ${widget.increment_from}</span></span>
     </div>
 </div>

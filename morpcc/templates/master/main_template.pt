@@ -221,6 +221,7 @@
     <script src="/__static__/morpcc/chartjs/moment.js"></script>
     <script src="/__static__/morpcc/chartjs/Chart.js"></script>
     <script src="/__static__/morpcc/chartjs/Chart.Financial.js"></script>
+    <script src="/__static__/morpcc/echarts/echarts.min.js"></script>
     <!-- gauge.js -->
     <script src="/__static__/morpcc/gentelella/vendors/gauge.js/dist/gauge.min.js"></script>
     <!-- bootstrap-progressbar -->

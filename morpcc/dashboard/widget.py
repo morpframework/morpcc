@@ -27,31 +27,36 @@ class TileStatsCount(Widget):
         datasource,
         *,
         title=None,
-        increment_from="Period",
+        increment_from=None,
         icon="database",
         value_col="value",
         increment_col="increment",
-        increment_unit="%",
         **kwargs
     ):
         self.title = title
         self.increment_from = increment_from
         self.value_col = value_col
         self.increment_col = increment_col
-        self.increment_unit = increment_unit
         self.icon = icon
         super().__init__(datasource, **kwargs)
 
     def chart_data(self, data):
-        increment = data[0][self.increment_col]
+        increment = data[0].get(self.increment_col, 0)
+        value = data[0][self.value_col]
+        before_inc = value - increment
+        if before_inc <= 0:
+            increment_percentage = 0
+        else:
+            increment_percentage = int((increment / before_inc) * 100)
+
         increment_icon = None
-        if increment > 0:
+        if increment_percentage > 0:
             increment_icon = "sort-asc"
-        if increment < 0:
+        elif increment_percentage < 0:
             increment_icon = "sort-desc"
         return {
-            "value": data[0][self.value_col],
-            "increment": abs(increment),
+            "value": value,
+            "increment": abs(increment_percentage),
             "increment_icon": increment_icon,
         }
 
@@ -82,7 +87,9 @@ class PercentChart(Widget):
 
     def chart_data(self, data):
         result = []
-        for r in data:
+        for idx, r in enumerate(data):
+            if idx > self.limit:
+                break
             value = r[self.value_col]
             total = r[self.total_col]
             row = {
@@ -105,9 +112,9 @@ class PercentChart(Widget):
         return "%s" % value
 
 
-class ChartJS(Widget):
+class EChart(Widget):
 
-    template = "master/dashboard/chartjs.pt"
+    template = "master/dashboard/echarts.pt"
 
     def __init__(
         self,
@@ -115,14 +122,14 @@ class ChartJS(Widget):
         *,
         title=None,
         title_small=None,
-        canvas_height=80,
+        chart_height=200,
         label_col="label",
         value_col="value",
         **kwargs
     ):
         self.title = title
         self.title_small = title_small
-        self.canvas_height = canvas_height
+        self.chart_height = chart_height
         self.label_col = label_col
         self.value_col = value_col
         super().__init__(datasource, **kwargs)
@@ -130,13 +137,17 @@ class ChartJS(Widget):
     def render_script(self, context, request, load_template):
         source = self.get_datasource(request)
         chart_config = self.chart_config(source.compute())
-        chart_config["responsive"] = True
-        chart_config["maintainAspectRatio"] = False
         script = """
         <script>
             $(document).ready(function () { 
                 var ctx = document.getElementById("%s");
-                var chart = new Chart(ctx, %s)
+                var chart = echarts.init(ctx);
+                chart.setOption(%s);
+                $(window).on('resize', function(){
+                    if(chart != null && chart != undefined){
+                        chart.resize();
+                    }
+                });
             })
         </script>
         """ % (
@@ -145,84 +156,65 @@ class ChartJS(Widget):
         )
         return script
 
+    def get_css_style(self):
+        style = super().get_css_style() or ""
+        if self.chart_height:
+            style += "height:%spx;" % self.chart_height
+        return style
+
     def chart_config(self, data):
         raise NotImplementedError()
 
 
-class PieChart(ChartJS):
+class PieChart(EChart):
     def __init__(self, datasource, *, max_items=4, **kwargs):
         self.max_items = max_items
         super().__init__(datasource, **kwargs)
 
-    def chart_data(self, data):
+    def chart_config(self, data):
         labels = []
-        bgcolors = []
-        hovcolors = []
         chart_data = []
         max_items = self.max_items
         for idx, row in enumerate(sorted(data, key=lambda x: x[self.value_col])):
 
-            cidx = idx % len(default_color_stack)
-            default_color = default_color_stack[cidx]
             if idx < max_items:
-                labels.append(row[self.label_col])
-                color = row.get("color", default_color)
-                hover_color = row.get("hover_color", color)
-                bgcolors.append(color)
-                hovcolors.append(hover_color)
-                chart_data.append(row[self.value_col])
+                chart_data.append(
+                    {"name": row[self.label_col], "value": row[self.value_col]}
+                )
             else:
                 if "Others" not in labels:
                     labels.append("Others")
                 if len(chart_data) <= max_items:
-                    chart_data.append(0)
-                    bgcolors.append(default_color)
-                    hovcolors.append(default_color)
-                chart_data[-1] += row[self.value_col]
+                    chart_data.append({"name": "Others", "value": 0})
+                chart_data[-1]["value"] += row[self.value_col]
 
-        return {
-            "labels": labels,
-            "datasets": [
-                {
-                    "data": chart_data,
-                    "backgroundColor": bgcolors,
-                    "hoverBackgroundColor": hovcolors,
-                }
-            ],
-        }
-
-    def chart_config(self, data):
-        return {
-            "type": "pie",
-            "tooltipFillColor": "rgba(51, 51, 51, 0.55)",
-            "data": self.chart_data(data),
-            "options": {"legend": {"position": "right"}},
-        }
+        return {"series": [{"type": "pie", "data": chart_data,}], "legend": {}}
 
 
 class DoughnutChart(PieChart):
     def chart_config(self, data):
         result = super().chart_config(data)
-        result["type"] = "doughnut"
+        for s in result["series"]:
+            s["radius"] = ["50%", "70%"]
         return result
 
 
-class LineChart(ChartJS):
+class LineChart(EChart):
 
-    default_opts = {"sm_size": 12, "md_size": 12, "lg_size": 12}
+    default_opts = {"sm_size": 12, "md_size": 12, "lg_size": 12, "chart_height": 300}
 
     def __init__(self, datasource, *, series_col=None, default_label="Count", **kwargs):
         self.series_col = series_col
         self.default_label = default_label
         super().__init__(datasource, **kwargs)
 
-    def chart_data(self, data):
+    def chart_config(self, data):
         series_data = {}
         labels = []
         for row in data:
             if row["label"] not in labels:
                 labels.append(row[self.label_col])
-            if self.series:
+            if self.series_col:
                 series_key = row[self.series_col]
             else:
                 series_key = None
@@ -236,14 +228,38 @@ class LineChart(ChartJS):
             cidx = idx % len(default_color_stack)
             default_color = default_color_stack[cidx]
             if k:
-                ds["label"] = k
+                ds["name"] = k
             else:
-                ds["label"] = self.default_label
-            ds["borderColor"] = default_color
+                ds["name"] = self.default_label
+            ds["type"] = "line"
             ds["data"] = v
             datasets.append(ds)
-        return {"labels": labels, "datasets": datasets}
+        return {
+            "xAxis": {"type": "category", "boundaryGap": False, "data": labels},
+            "yAxis": {"type": "value"},
+            "series": datasets,
+            "legend": {},
+        }
+
+
+class HorizontalBar(LineChart):
+
+    default_opts = {"sm_size": 12, "md_size": 6, "lg_size": 6, "chart_height": 300}
 
     def chart_config(self, data):
-        data = self.chart_data(data)
-        return {"type": "line", "data": data}
+        conf = super().chart_config(data)
+        for s in conf["series"]:
+            s["type"] = "bar"
+        return {
+            "xAxis": {"type": "value"},
+            "yAxis": {"type": "category", "data": conf["xAxis"]["data"]},
+            "series": conf["series"],
+            "legend": {},
+            "grid": {
+                "left": "10%",
+                "right": "4%",
+                "bottom": "3%",
+                "containLabel": True,
+            },
+        }
+
