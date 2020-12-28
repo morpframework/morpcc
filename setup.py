@@ -33,7 +33,6 @@ setup(name='morpcc',
           "pygments",
           "html_sanitizer",
           "nltk",
-          "python-ldap",
           "luigi",
           'pycryptodome',
           'a_un'
