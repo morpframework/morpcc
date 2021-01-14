@@ -1,19 +1,19 @@
-from ..crud.model import ModelUI, CollectionUI
+from ..crud.model import CollectionUI, ModelUI
 
 
 class APIKeyModelUI(ModelUI):
 
-    edit_include_fields = ['label']
+    edit_include_fields = ["name"]
 
 
 class APIKeyCollectionUI(CollectionUI):
 
     modelui_class = APIKeyModelUI
 
-    create_include_fields = ['label']
+    create_include_fields = ["name"]
 
     columns = [
-        {'title': 'Label', 'name': 'label'},
-        {'title': 'Identity', 'name': 'api_identity'},
-        {'title': 'Actions', 'name': 'structure:buttons'}
+        {"title": "Name", "name": "name"},
+        {"title": "Identity", "name": "api_identity"},
+        {"title": "Actions", "name": "structure:buttons"},
     ]
