@@ -1,4 +1,4 @@
-0.1.0a6 (unreleased)
+0.1.0a6 (2021-01-14)
 --------------------
 
 - fix issue with apikey model have renamed 'label' field to 'name'
