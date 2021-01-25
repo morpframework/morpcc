@@ -17,4 +17,5 @@ def get_typeinfo(request):
         "model_factory": get_model,
         "model_ui": PageModelUI,
         "schema": PageSchema,
+        "icon": 'file'
     }

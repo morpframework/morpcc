@@ -1,4 +1,8 @@
+from datetime import datetime
+
+import pytz
 import rulez
+import timeago
 from morpfw.authn.pas.user.path import get_user_collection
 from morpfw.crud import permission as crudperms
 from webob.exc import HTTPUnauthorized
@@ -116,6 +120,7 @@ def profile_portlet(context, request):
 
 @App.portlet(name="morpcc.topnav", template="master/portlet/topnav.pt")
 def topnav_portlet(context, request):
+    now = datetime.now(tz=pytz.UTC)
     user = get_current_user_model_ui(request)
     username = user.model["username"]
     xattr = user.model.xattrprovider()
@@ -141,6 +146,19 @@ def topnav_portlet(context, request):
     license_expired = False
     if license:
         license_expired = license["expired"]
+
+    def _timeago(dt):
+        return timeago.format(dt, now)
+
+    def get_icon_url(txt):
+        if not txt:
+            return None
+        if txt.lower().startswith("http"):
+            return txt
+        elif txt.startswith("/"):
+            return request.relative_url(txt)
+        return None
+
     return {
         "displayname": xattr.get("displayname", username) or username,
         "profilephoto_url": photo_url,
@@ -148,6 +166,8 @@ def topnav_portlet(context, request):
         "notification_count": unread_notifs[0]["count"],
         "tzinfo": user.model["timezone"] or "UTC",
         "license_expired": license_expired,
+        "timeago": _timeago,
+        "get_icon_url": get_icon_url,
     }
 
 

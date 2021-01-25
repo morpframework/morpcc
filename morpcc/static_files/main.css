@@ -177,3 +177,15 @@ table.dataTable>tbody>tr.child span.dtr-title {
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
     box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
 }
+
+#notification .image {
+    height: 40px;
+    width: 40px;
+    float: left;
+    line-height: 40px;
+    font-size: 25px;
+}
+
+#notification li .image i {
+    font-size: 25px;
+}

@@ -15,10 +15,10 @@
             </li>
             <li>
                 <a tal:attributes="href request.relative_url('/+license')">
-                   <span>License</span>
-                   <span class="label label-danger" tal:condition="license_expired">
+                    <span>License</span>
+                    <span class="label label-danger" tal:condition="license_expired">
                         Expired
-                   </span>
+                    </span>
                 </a>
             </li>
             <li>
@@ -33,18 +33,22 @@
             <i class="fa fa-bell-o"></i>
             <span class="badge bg-red" tal:condition="notification_count">${notification_count}</span>
         </a>
-        <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+        <ul id="notification" class="dropdown-menu list-unstyled msg_list" role="menu">
             <tal:loop repeat="notif notifications">
                 <li tal:attributes="class 'read' if notif.model['read'] else ''">
                     <a href="${request.link(notif)}">
-                        <span class="image">
-                            <i class="fa fa-bell"></i>
-                        </span>
-                        <span>
-                            <span>&nbsp;</span>
-                            <span class="time">${notif.model['created']}</span>
-                        </span>
-                        <span class="message"> ${notif.model['message']}</span>
+                        <div class="image" tal:define="icon_url get_icon_url(notif['icon'])">
+                            <i tal:condition="not:icon_url" class="fa fa-${notif['icon'] or 'bell'}"></i>
+                            <img tal:condition="icon_url" src="${icon_url}" />
+                        </div>
+                        <div>
+
+                            <span class="subject"><b>${notif['subject']}</b></span>
+                            <span class="message">${notif.model['message']}</span>
+                            <p style="text-align: right;">
+                                <span class="time">${timeago(notif.model['created'])}</span>
+                            </p>
+                        </div>
                     </a>
                 </li>
             </tal:loop>

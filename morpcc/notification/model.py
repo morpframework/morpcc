@@ -1,3 +1,5 @@
+import typing
+
 import morpfw
 import rulez
 
@@ -10,6 +12,12 @@ class NotificationModel(morpfw.Model):
 
     def ui(self):
         return NotificationModelUI(self.request, self, self.collection.ui())
+
+    def title(self):
+        return self["subject"]
+
+
+CURRENT_USER = object()
 
 
 class NotificationCollection(morpfw.Collection):

@@ -35,7 +35,8 @@ setup(name='morpcc',
           "nltk",
           "luigi",
           'pycryptodome',
-          'a_un'
+          'a_un',
+          'timeago',
       ],
       entry_points={
       })
