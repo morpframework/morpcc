@@ -189,3 +189,23 @@ table.dataTable>tbody>tr.child span.dtr-title {
 #notification li .image i {
     font-size: 25px;
 }
+
+#notification-listing .batch-items .image {
+    height: 50px;
+    width: 50px;
+    float: left;
+    line-height: 50px;
+    font-size: 30px;
+}
+
+#notification-listing .batch-items .image i {
+    font-size: 30px;
+}
+
+#notification-listing .batch-items .x_panel {
+    background: #fbfbfb;
+}
+
+#notification-listing .batch-items .x_panel.read {
+    background: #fff;
+}

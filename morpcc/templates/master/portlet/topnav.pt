@@ -43,7 +43,7 @@
                         </div>
                         <div>
 
-                            <span class="subject"><b>${notif['subject']}</b></span>
+                            <span class="subject"><b>${notif['subject']}</b></span><br />
                             <span class="message">${notif.model['message']}</span>
                             <p style="text-align: right;">
                                 <span class="time">${timeago(notif.model['created'])}</span>
