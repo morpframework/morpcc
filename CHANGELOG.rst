@@ -1,4 +1,4 @@
-0.1.0a7 (unreleased)
+0.1.0a7 (2021-01-27)
 --------------------
 
 - removed Through-the-web development components
