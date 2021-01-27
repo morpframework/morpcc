@@ -1,7 +1,9 @@
 0.1.0a7 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- removed Through-the-web development components
+- relicense to GPLv3 considering TTW components no longer in this package
+- notification system is functional with normally expected views now
 
 
 0.1.0a6 (2021-01-14)
