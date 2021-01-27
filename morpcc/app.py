@@ -183,6 +183,11 @@ class App(ChameleonApp, morpfw.SQLApp, MorpCCAuthzPolicy):
     def get_datasource(self, name, request):
         return self.config.datasource_registry.get(name=name, request=request)
 
+    def resolve_permissionassignment(self, request, model, permission, identity):
+        return self.config.permissionresolver_registry.resolve(
+            request, model, permission, identity
+        )
+
     def render_view(self, context, request, name=""):
         lookup = self.get_view.by_predicates(model=context.__class__, name=name)
         if lookup and lookup.component:
