@@ -13,6 +13,13 @@ from ..root import Root
 )
 def site_settings(context, request):
     modules = []
+    modules = request.app.config.setting_module_registry.modules(request)
+    return {"page_title": "Site Settings", "setting_modules": modules}
+
+
+@App.setting_modules(name="morpcc", title="Core Settings")
+def get_modules(request):
+    modules = []
     if request.permits("/site-settings/setting", crudperm.Search):
         modules.append(
             {
@@ -56,69 +63,6 @@ def site_settings(context, request):
             }
         )
 
-    if request.permits("/schema", crudperm.Search):
-        modules.append(
-            {
-                "title": "Manage Schemas",
-                "icon": "file-code-o",
-                "href": request.relative_url("/schema/+listing"),
-            }
-        )
-
-    if request.permits("/referencedata", crudperm.Search):
-        modules.append(
-            {
-                "title": "Manage Reference Data",
-                "icon": "book",
-                "href": request.relative_url("/referencedata/+listing"),
-            }
-        )
-
-    if request.permits("/attributevalidator", crudperm.Search):
-        modules.append(
-            {
-                "title": "Manage Attribute Validators",
-                "icon": "check-circle",
-                "href": request.relative_url("/attributevalidator/+listing"),
-            },
-        )
-
-    if request.permits("/entityvalidator", crudperm.Search):
-        modules.append(
-            {
-                "title": "Manage Entity Validators",
-                "icon": "check-square",
-                "href": request.relative_url("/entityvalidator/+listing"),
-            }
-        )
-
-    if request.permits("/dictionaryentity", crudperm.Search):
-        modules.append(
-            {
-                "title": "Manage Data Dictionary",
-                "icon": "book",
-                "href": request.relative_url("/dictionaryentity/+listing"),
-            }
-        )
-
-    if request.permits("/application", crudperm.Search):
-        modules.append(
-            {
-                "title": "Manage Applications",
-                "icon": "cubes",
-                "href": request.relative_url("/application/+listing"),
-            }
-        )
-
-    if request.permits("/endpoint", crudperm.Search):
-        modules.append(
-            {
-                "title": "Manage API Endpoints",
-                "icon": "code",
-                "href": request.relative_url("/endpoint/+listing"),
-            }
-        )
-
     if request.permits("/index", crudperm.Search):
         modules.append(
             {
@@ -144,4 +88,4 @@ def site_settings(context, request):
                 "href": request.relative_url("/activitylog"),
             }
         )
-    return {"page_title": "Site Settings", "setting_modules": modules}
+    return modules

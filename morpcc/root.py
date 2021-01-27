@@ -1,7 +1,10 @@
 import html
 
+from morpfw.crud import permission as crudperms
+
 from .app import App
 from .permission import ViewHome
+from .util import permits, typeinfo_link, types_navigation
 
 
 class Root(object):
@@ -17,6 +20,6 @@ def get_root(request):
 @App.html(model=Root, permission=ViewHome, template="master/index.pt")
 def index(context, request):
     return {
-        "page_title": "Applications",
-        "applications": request.get_collection("morpcc.application").all(),
+        "page_title": "Collections",
+        "typeinfos": types_navigation(request),
     }

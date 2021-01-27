@@ -1,7 +1,6 @@
 import morpfw
 from morpcc.authn import Identity
 
-from ..entitycontent.model import EntityContentModel
 from ..index.schema import IndexRecordSchema
 from .modelui import ActivityLogCollectionUI, ActivityLogModelUI
 from .schema import ActivityLogSchema
@@ -39,26 +38,16 @@ class ActivityLogCollection(morpfw.Collection):
             userid = request.identity.userid
         else:
             userid = None
-        if isinstance(context, EntityContentModel):
-            app = context.application()
-            entity = context.entity()
-            type_name = "morpcc.application.%s.%s.%s" % (
-                app.uuid,
-                app["name"],
-                entity["name"],
-            )
-        else:
 
-            type_name = request.app.get_typeinfo_by_schema(
-                context.schema, request=request
-            )["name"]
-        view_name = getattr(request, "view_name", None)
+        link = self.request.metalink(
+            context, view_name=getattr(request, "view_name", None)
+        )
         self.create(
             {
                 "userid": userid,
                 "resource_uuid": context.uuid,
-                "resource_type": type_name,
-                "view_name": view_name,
+                "resource_type": "dummy",
+                "view_name": "dummy",
                 "activity": activity,
                 "source_ip": request.client_addr,
             }

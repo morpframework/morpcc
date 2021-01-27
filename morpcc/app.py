@@ -92,10 +92,12 @@ class App(ChameleonApp, morpfw.SQLApp, MorpCCAuthzPolicy):
     restricted_module = dectate.directive(directive.RestrictedModuleAction)
     breadcrumb = dectate.directive(directive.BreadcrumbAction)
     setting_page = dectate.directive(directive.SettingPageAction)
+    setting_modules = dectate.directive(directive.SettingModuleAction)
     license_cert = dectate.directive(directive.LicenseCertAction)
     license_key = dectate.directive(directive.LicenseKeyAction)
     copyright_notice = dectate.directive(directive.CopyrightNoticeAction)
     datasource = dectate.directive(directive.DataSourceAction)
+    permission_resolver = dectate.directive(directive.PermissionResolverAction)
 
     @reg.dispatch_method(reg.match_instance("model"), reg.match_key("name"))
     def get_indexer(self, model, name):

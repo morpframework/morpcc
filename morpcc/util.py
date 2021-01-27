@@ -7,6 +7,7 @@ from importlib import import_module
 import colander
 from deform.widget import HiddenWidget
 from inverter.common import dataclass_check_type, dataclass_get_type
+from morpfw.crud import permission as crudperms
 from morpfw.interfaces import ISchema
 from pkg_resources import resource_filename
 
@@ -63,3 +64,19 @@ def typeinfo_link(request, type_name):
         "icon": typeinfo["icon"],
         "href": request.link(collectionui, "+{}".format(collectionui.default_view)),
     }
+
+
+def types_navigation(request):
+    types = request.app.config.type_registry.get_typeinfos(request)
+    types_nav = []
+    for typeinfo in types.values():
+        if typeinfo.get("internal", False):
+            continue
+        collection = typeinfo["collection_factory"](request)
+        collectionui = collection.ui()
+        if permits(request, collectionui, crudperms.View):
+            types_nav.append(typeinfo_link(request, typeinfo["name"]))
+
+    types_nav.sort(key=lambda x: x["title"])
+    return types_nav
+

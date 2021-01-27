@@ -10,3 +10,4 @@ pgsql_proc = factories.postgresql_proc(
 )
 pgsql_db = factories.postgresql("pgsql_proc", db_name="morpcc_tests")
 pgsql_db_warehouse = factories.postgresql("pgsql_proc", db_name="morpcc_warehouse")
+pgsql_db_cache = factories.postgresql("pgsql_proc", db_name="morpcc_cache")

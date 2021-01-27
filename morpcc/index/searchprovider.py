@@ -5,9 +5,7 @@ import rulez
 from morpfw.crud.searchprovider.base import SearchProvider
 
 from ..app import App
-from ..entity.path import get_collection as get_dm_collection
 from .model import IndexContentCollection
-
 
 
 class IndexSearchProvider(SearchProvider):

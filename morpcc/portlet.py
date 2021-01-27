@@ -8,9 +8,8 @@ from morpfw.crud import permission as crudperms
 from webob.exc import HTTPUnauthorized
 
 from .app import App
-from .application.path import get_collection as get_app_collection
 from .users.path import get_current_user_model_ui
-from .util import permits, typeinfo_link
+from .util import permits, typeinfo_link, types_navigation
 
 
 @App.portletprovider(name="morpcc.left-portlets")
@@ -53,21 +52,6 @@ def footer_portlets(context, request):
     return ["morpcc.footer"]
 
 
-def types_navigation(request):
-    types = request.app.config.type_registry.get_typeinfos(request)
-    types_nav = []
-    for typeinfo in types.values():
-        if typeinfo.get("internal", False):
-            continue
-        collection = typeinfo["collection_factory"](request)
-        collectionui = collection.ui()
-        if permits(request, collectionui, crudperms.View):
-            types_nav.append(typeinfo_link(request, typeinfo["name"]))
-
-    types_nav.sort(key=lambda x: x["title"])
-    return types_nav
-
-
 @App.portlet(name="morpcc.main_navigation", template="master/portlet/navigation.pt")
 def navigation_portlet(context, request):
 
@@ -75,25 +59,10 @@ def navigation_portlet(context, request):
         {"title": "Home", "icon": "home", "href": request.relative_url("/")},
     ]
 
-    appcol = get_app_collection(request)
-    apps_nav = []
-    for app in appcol.all():
-        appui = app.ui()
-        if permits(request, appui, crudperms.View):
-            apps_nav.append(
-                {
-                    "title": app["title"],
-                    "icon": app["icon"] or "cubes",
-                    "href": request.link(appui, "+{}".format(appui.default_view)),
-                }
-            )
-
     types_nav = types_navigation(request)
 
     navtree = []
     navtree.append({"section": "General", "children": general_children})
-    if apps_nav:
-        navtree.append({"section": "Applications", "children": apps_nav})
     if types_nav:
         navtree.append({"section": "Collections", "children": types_nav})
 

@@ -8,7 +8,9 @@ from .registry.applicationbehavior import ApplicationBehaviorRegistry
 from .registry.behavior import BehaviorRegistry
 from .registry.datasource import DataSourceRegistry
 from .registry.default_factory import DefaultFactoryRegistry
+from .registry.permissionresolver import PermissionResolverRegistry
 from .registry.portlet import PortletProvider, PortletProviderRegistry, PortletRegistry
+from .registry.settingmodule import SettingModuleRegistry
 from .registry.settingpage import SettingPageRegistry
 
 PORTLET_FACTORY_IDS: dict = {}
@@ -366,4 +368,62 @@ class DataSourceAction(dectate.Action):
             reg.methodify(factory), name=self.name
         )
         datasource_registry.register(name=self.name, **self.cache_config)
+
+
+permissionresolver_factory_id = 0
+
+
+class PermissionResolverAction(dectate.Action):
+    config = {"permissionresolver_registry": PermissionResolverRegistry}
+
+    depends = [SettingAction]
+
+    filter_convert = {
+        "under": dectate.convert_dotted_name,
+        "over": dectate.convert_dotted_name,
+    }
+
+    def __init__(self, under=None, over=None, name=None):
+        global permissionresolver_factory_id
+        self.under = under
+        self.over = over
+        if name is None:
+            name = u"permissionresolver_factory_%s" % permissionresolver_factory_id
+            permissionresolver_factory_id += 1
+        self.name = name
+
+    def identifier(self, permissionresolver_registry):
+        return self.name
+
+    def perform(self, obj, permissionresolver_registry):
+        permissionresolver_registry.register_factory(
+            obj, over=self.over, under=self.under
+        )
+
+
+class SettingModuleAction(dectate.Action):
+
+    config = {"setting_module_registry": SettingModuleRegistry}
+    app_class_arg = True
+
+    filter_convert = {
+        "under": dectate.convert_dotted_name,
+        "over": dectate.convert_dotted_name,
+    }
+
+    depends = [SettingAction]
+
+    def __init__(self, name, title, under=None, over=None):
+        self.name = name
+        self.title = title
+        self.over = over
+        self.under = under
+
+    def identifier(self, app_class, setting_module_registry: SettingModuleRegistry):
+        return str((app_class, self.name))
+
+    def perform(self, obj, app_class, setting_module_registry: SettingModuleRegistry):
+        setting_module_registry.register(
+            obj, name=self.name, title=self.title, under=self.under, over=self.over
+        )
 
