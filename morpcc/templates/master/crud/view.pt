@@ -130,7 +130,7 @@
                         <h2 metal:fill-slot="panel-title">${sbref['title']}
                         </h2>
                         <div metal:fill-slot="panel-content">
-                            <div
+                            <div tal:condition="sbref['content']|nothing"
                                 tal:replace="structure:sbref['form'].render(sbref['form_data'], request=request, context=sbref['content'], readonly=True)">
                             </div>
                         </div>
