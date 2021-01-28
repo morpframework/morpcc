@@ -21,17 +21,15 @@ class ModelUI(object):
         "blobs",
     ]
     edit_include_fields: list = []
-    edit_exclude_fields: list = [
-        "id",
-        "uuid",
-        "creator",
-        "created",
-        "modified",
-        "state",
-        "deleted",
-        "xattrs",
-        "blobs",
-    ]
+
+    @property
+    def edit_exclude_fields(self) -> list:
+        protected = self.model.schema.__protected_fields__ + []
+        noneditable = []
+        for fn, fo in self.model.schema.__dataclass_fields__.items():
+            if not fo.metadata.get("editable", True):
+                noneditable.append(fn)
+        return protected + noneditable
 
     default_view = "view"
 
@@ -87,17 +85,15 @@ class CollectionUI(object):
     modelui_class = ModelUI
 
     create_include_fields: list = []
-    create_exclude_fields: list = [
-        "id",
-        "uuid",
-        "creator",
-        "created",
-        "modified",
-        "state",
-        "deleted",
-        "xattrs",
-        "blobs",
-    ]
+
+    @property
+    def create_exclude_fields(self) -> list:
+        protected = self.collection.schema.__protected_fields__ + []
+        noninitializable = []
+        for fn, fo in self.collection.schema.__dataclass_fields__.items():
+            if not fo.metadata.get("initializable", True):
+                noninitializable.append(fn)
+        return protected + noninitializable
 
     default_view = "listing"
 
