@@ -1,6 +1,6 @@
 import os
 
-from morpfw.authn.pas.user.model import UserModel
+from morpfw.authn.pas.user.model import UserCollection, UserModel
 from morpfw.crud.blobstorage.fsblobstorage import FSBlobStorage
 
 from ..app import App
@@ -37,3 +37,19 @@ class UserCollectionUI(CollectionUI):
 
 class CurrentUserModelUI(UserModelUI):
     pass
+
+
+def get_usercol_ui(self):
+    return UserCollectionUI(self.request, self)
+
+
+def get_usermodel_ui(self):
+    return UserModelUI(self.request, self, self.collection.ui())
+
+
+if not hasattr(UserModel, "ui"):
+    UserModel.ui = get_usermodel_ui
+
+if not hasattr(UserCollection, "ui"):
+    UserCollection.ui = get_usercol_ui
+
