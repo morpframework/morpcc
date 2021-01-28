@@ -1,8 +1,12 @@
+import json
+import typing
+
 import rulez
 from colander import Invalid, null
+from morpfw.authn.pas.user.path import get_user_collection
+
 from deform.compat import string_types
 from deform.widget import SelectWidget, Widget
-from morpfw.authn.pas.user.path import get_user_collection
 
 from ..users.model import UserModelUI
 from ..users.path import get_user_collection_ui
@@ -21,12 +25,15 @@ class ReferenceWidget(SelectWidget):
         term_field="title",
         value_field="uuid",
         get_search_url=None,
+        filter_fields: dict = None,  # key=field to filter, value=field to take value from
         **kwargs
     ):
         self.resource_type = resource_type
         self.term_field = term_field
         self.value_field = value_field
         self.get_search_url = get_search_url
+        self.filter_fields = filter_fields or {}
+        self.filter_fields_json = json.dumps(filter_fields or {})
         if kwargs.get("placeholder", None) is None:
             kwargs["placeholder"] = " "
         super().__init__(**kwargs)

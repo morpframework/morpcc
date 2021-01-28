@@ -1,4 +1,5 @@
 import html
+import re
 
 import deform
 import morepath
@@ -9,6 +10,18 @@ from ...app import App
 from ...root import Root
 from ...util import permits
 from ..model import CollectionUI, ModelUI
+
+filter_pattern = re.compile(r"filter\[(.*?)\]")
+
+
+def get_filters(data):
+    result = []
+    for k in data.keys():
+        match = filter_pattern.match(k)
+        if match:
+            f = match.groups()[0]
+            result.append(rulez.field[f] == data.get(k))
+    return rulez.and_(*result)
 
 
 def _term_search(context, request):
@@ -30,7 +43,10 @@ def _term_search(context, request):
         name=resource_type, request=request
     )
     col = typeinfo["collection_factory"](request)
-    objs = col.search(query={"field": term_field, "operator": "~", "value": term})
+    filters = get_filters(request.GET)
+    objs = col.search(
+        query=rulez.and_({"field": term_field, "operator": "~", "value": term}, filters)
+    )
     result = {"results": []}
     for obj in objs:
         if permits(request, obj, crudperms.View):
