@@ -12,13 +12,14 @@ import reg
 from a_un import load_license, validate_license
 from more.chameleon import ChameleonApp
 from morepath.publish import resolve_model
-from morpcc.authz.policy import MorpCCAuthzPolicy
 from morpfw.app import DBSessionRequest
 from morpfw.authn.pas.policy import DefaultAuthnPolicy
 from morpfw.authz.pas import DefaultAuthzPolicy
 from morpfw.main import create_app
 from morpfw.request import ESCapableRequest
 from webob.exc import HTTPException
+
+from morpcc.authz.policy import MorpCCAuthzPolicy
 
 from . import directive
 from .authn import IdentityPolicy
@@ -224,6 +225,6 @@ class AuthnPolicy(DefaultAuthnPolicy):
         )
 
 
-App.hook_auth_models(prefix="/api/v1/auth")
+App.hook_auth_models(prefix="/api/auth")
 
 create_morpcc_app = create_app
