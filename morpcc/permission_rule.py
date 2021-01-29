@@ -1,10 +1,12 @@
 import rulez
-from morpcc.authz import rule_from_assignment
 from morpfw.crud import permission as crudperm
 from morpfw.crud.model import Collection, Model
 from morpfw.permission import All as MFWAll
 
+from morpcc.authz import rule_from_assignment
+
 from .app import App
+from .authz.permission_rule import eval_permissions
 from .crud.model import CollectionUI, ModelUI
 from .root import Root
 from .users.model import CurrentUserModelUI
@@ -25,7 +27,7 @@ def resolve_model_permission(request, model, permission, identity):
         for role in roles:
             role_ref = "%s::%s" % (gid, role)
             user_roles.append(role_ref)
-            
+
     permission_name = "%s:%s" % (permission.__module__, permission.__name__,)
     opcol = request.get_collection("morpcc.objectpermissionassignment")
     # find object permission
@@ -40,12 +42,6 @@ def resolve_model_permission(request, model, permission, identity):
         ):
             found_perms.append(perm)
 
-        for perm in sorted(
-            found_perms, key=lambda x: 0 if x["rule"] == "reject" else 1
-        ):
-            for role in user_roles:
-                if role in (perm["roles"] or []):
-                    if perm["rule"] == "allow":
-                        return True
-                    return False
-
+        res = eval_permissions(request, model, found_perms, identity)
+        if res is not None:
+            return res

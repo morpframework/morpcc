@@ -26,6 +26,16 @@ class ObjectPermissionAssignmentSchema(morpfw.Schema):
         },
     )
 
+    is_creator: typing.Optional[bool] = field(default=False,)
+
+    users: typing.Optional[list] = field(
+        default_factory=list, metadata={"deform.widget_factory": user_select_widget},
+    )
+
+    groups: typing.Optional[list] = field(
+        default_factory=list, metadata={"deform.widget_factory": group_select_widget},
+    )
+
     roles: typing.Optional[list] = field(
         default_factory=list, metadata={"deform.widget_factory": roles_select_widget}
     )

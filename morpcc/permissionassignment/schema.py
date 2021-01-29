@@ -41,7 +41,7 @@ def model_select_widget(request):
 
 def group_select_widget(request):
     groups = request.get_collection("morpfw.pas.group").all()
-    choices = [(g["groupname"], g["groupname"]) for g in groups]
+    choices = [(g.uuid, g["groupname"]) for g in groups]
     return deform.widget.Select2Widget(values=choices, multiple=True)
 
 
@@ -85,8 +85,14 @@ class PermissionAssignmentSchema(morpfw.Schema):
         },
     )
 
-    is_creator: typing.Optional[bool] = field(
-        default=False,
+    is_creator: typing.Optional[bool] = field(default=False,)
+
+    users: typing.Optional[list] = field(
+        default_factory=list, metadata={"deform.widget_factory": user_select_widget},
+    )
+
+    groups: typing.Optional[list] = field(
+        default_factory=list, metadata={"deform.widget_factory": group_select_widget},
     )
 
     roles: typing.Optional[list] = field(

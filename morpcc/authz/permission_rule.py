@@ -23,6 +23,49 @@ def rule_from_config(request, key, default=True):
     return value
 
 
+def eval_permissions(request, model, permissions, identity):
+    usercol = request.get_collection("morpfw.pas.user")
+    user = usercol.get_by_userid(identity.userid)
+
+    user_roles = []
+    for gid, roles in user.group_roles().items():
+        for role in roles:
+            role_ref = "%s::%s" % (gid, role)
+            user_roles.append(role_ref)
+
+    if isinstance(model, Model):
+        is_creator = model["creator"] == identity.userid
+    else:
+        is_creator = False
+    for perm in sorted(permissions, key=lambda x: 0 if x["rule"] == "reject" else 1):
+
+        if is_creator and perm["is_creator"]:
+            if perm["rule"] == "allow":
+                return True
+            else:
+                return False
+        if identity.userid in (perm["users"] or []):
+            if perm["rule"] == "allow":
+                return True
+            else:
+                return False
+
+        for g in user.groups():
+            if g.uuid in (perm["groups"] or []):
+                if perm["rule"] == "allow":
+                    return True
+                else:
+                    return False
+
+        for role in user_roles:
+            if role in (perm["roles"] or []):
+                if perm["rule"] == "allow":
+                    return True
+                return False
+
+    pass
+
+
 def rule_from_assignment(request, model, permission, identity):
     cache = request.cache.get_cache("morpcc.permission_rule", expire=3600)
     permission_name = "%s:%s" % (permission.__module__, permission.__name__,)
@@ -70,25 +113,9 @@ def _rule_from_assignment(request, model, permission, identity):
         for perm in pcol.lookup_permission(model_name, permission_name, True):
             found_perms.append(perm)
 
-        if isinstance(model, Model):
-            is_creator = model["creator"] == identity.userid
-        else:
-            is_creator = False
-        for perm in sorted(
-            found_perms, key=lambda x: 0 if x["rule"] == "reject" else 1
-        ):
-
-            if is_creator and perm["is_creator"]:
-                if perm["rule"] == "allow":
-                    return True
-                else:
-                    return False
-
-            for role in user_roles:
-                if role in (perm["roles"] or []):
-                    if perm["rule"] == "allow":
-                        return True
-                    return False
+        res = eval_permissions(request, model, found_perms, identity)
+        if res is not None:
+            return res
 
     return False
 
