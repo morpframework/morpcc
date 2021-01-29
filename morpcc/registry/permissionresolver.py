@@ -20,7 +20,7 @@ class PermissionResolverRegistry(object):
 
     def resolve(self, request, model, permission, identity):
         for factory in self.sorted_factories():
-            result = factory(model, request, permission, identity)
+            result = factory(request, model, permission, identity)
             if result is not None:
                 return result
         return None

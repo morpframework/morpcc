@@ -226,7 +226,10 @@ def collection_modal_close(context, request):
 
 
 @App.view(
-    model=ModelUI, name="statemachine", permission=crudperms.Edit, request_method="POST"
+    model=ModelUI,
+    name="statemachine",
+    permission=crudperms.StateUpdate,
+    request_method="POST",
 )
 def statemachine(context, request):
     transition = request.POST.get("transition", None)

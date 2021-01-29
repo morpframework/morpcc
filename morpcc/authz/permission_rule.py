@@ -1,3 +1,6 @@
+from collections import OrderedDict
+from time import time
+
 import morepath
 import rulez
 from morpfw.authn.pas import permission as authperm
@@ -21,13 +24,28 @@ def rule_from_config(request, key, default=True):
 
 
 def rule_from_assignment(request, model, permission, identity):
+    cache = request.cache.get_cache("morpcc.permission_rule", expire=3600)
+    permission_name = "%s:%s" % (permission.__module__, permission.__name__,)
+    model_name = "%s:%s" % (model.__class__.__module__, model.__class__.__name__)
+    if isinstance(model, Model):
+        cache_key = str([identity.userid, model_name, model.uuid, permission_name,])
+    else:
+        cache_key = str([identity.userid, model_name, permission_name])
+
+    def create():
+        ret = _rule_from_assignment(request, model, permission, identity)
+        return ret
+
+    return cache.get(cache_key, createfunc=create)
+
+
+def _rule_from_assignment(request, model, permission, identity):
+    permission_name = "%s:%s" % (permission.__module__, permission.__name__,)
     usercol = request.get_collection("morpfw.pas.user")
     user = usercol.get_by_userid(identity.userid)
     if user["is_administrator"]:
         return True
     pcol = request.get_collection("morpcc.permissionassignment")
-
-    permission_name = "%s:%s" % (permission.__module__, permission.__name__,)
 
     user_roles = []
     for gid, roles in user.group_roles().items():
@@ -35,7 +53,11 @@ def rule_from_assignment(request, model, permission, identity):
             role_ref = "%s::%s" % (gid, role)
             user_roles.append(role_ref)
 
-    request.app.resolve_permissionassignment(request, model, permission, identity)
+    resolved = request.app.resolve_permissionassignment(
+        request, model, permission, identity
+    )
+    if resolved is not None:
+        return resolved
 
     # find global/site permission
     model_hierarchy = []
@@ -45,18 +67,23 @@ def rule_from_assignment(request, model, permission, identity):
 
     for model_name in model_hierarchy:
         found_perms = []
-        for perm in pcol.search(
-            rulez.and_(
-                rulez.field["model"] == model_name,
-                rulez.field["permission"] == permission_name,
-                rulez.field["enabled"] == True,
-            )
-        ):
+        for perm in pcol.lookup_permission(model_name, permission_name, True):
             found_perms.append(perm)
 
+        if isinstance(model, Model):
+            is_creator = model["creator"] == identity.userid
+        else:
+            is_creator = False
         for perm in sorted(
             found_perms, key=lambda x: 0 if x["rule"] == "reject" else 1
         ):
+
+            if is_creator and perm["is_creator"]:
+                if perm["rule"] == "allow":
+                    return True
+                else:
+                    return False
+
             for role in user_roles:
                 if role in (perm["roles"] or []):
                     if perm["rule"] == "allow":

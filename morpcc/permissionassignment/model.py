@@ -1,7 +1,11 @@
 import morpfw
-from .schema import PermissionAssignmentSchema
+import rulez
+
 # 
-from .modelui import PermissionAssignmentModelUI, PermissionAssignmentCollectionUI
+from .modelui import (PermissionAssignmentCollectionUI,
+                      PermissionAssignmentModelUI)
+from .schema import PermissionAssignmentSchema
+
 # 
 
 class PermissionAssignmentModel(morpfw.Model):
@@ -22,3 +26,12 @@ class PermissionAssignmentCollection(morpfw.Collection):
         return PermissionAssignmentCollectionUI(self.request, self)
 # 
 
+    @morpfw.requestmemoize()
+    def lookup_permission(self, model_name, permission_name, enabled):
+        return self.search(
+            rulez.and_(
+                rulez.field["model"] == model_name,
+                rulez.field["permission"] == permission_name,
+                rulez.field["enabled"] == True,
+            )
+        )

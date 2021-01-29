@@ -53,7 +53,7 @@
                                     </a>
                                 </li>
                                 <li class="dropdown" tal:define="transitions context.transitions()"
-                                    tal:condition="transitions and permits('morpfw.crud.permission:Edit')">
+                                    tal:condition="transitions and permits('morpfw.crud.permission:StateUpdate')">
 
                                     <a class="dropdown-toggle" data-toggle="dropdown" role="button"
                                         aria-expanded="false">

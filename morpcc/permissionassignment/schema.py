@@ -85,6 +85,10 @@ class PermissionAssignmentSchema(morpfw.Schema):
         },
     )
 
+    is_creator: typing.Optional[bool] = field(
+        default=False,
+    )
+
     roles: typing.Optional[list] = field(
         default_factory=list, metadata={"deform.widget_factory": roles_select_widget},
     )

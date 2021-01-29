@@ -12,6 +12,7 @@ class PermissionAssignment(morpfw.sql.Base):
 
     model = sa.Column(sa.String(length=256))
     permission = sa.Column(sa.String(length=256))
+    is_creator = sa.Column(sa.Boolean())
     roles = sa.Column(sajson.JSONField())
     rule = sa.Column(sa.String(length=24))
     enabled = sa.Column(sa.Boolean())

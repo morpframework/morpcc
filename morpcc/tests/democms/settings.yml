@@ -13,6 +13,10 @@ configuration:
   morpfw.secret.fernet_key: ghVRZXc-6nijmxqmcn5SnkAwjdCo39hCC9cH9SSUKPE=
   morpfw.beaker.session.type: ext:database
   morpfw.beaker.session.url: 'postgresql://postgres:postgres@localhost:5432/morpcc_democms_cache'
+  morpfw.beaker.cache.type: ext:database
+  morpfw.beaker.cache.url: 'postgresql://postgres:postgres@localhost:5432/morpcc_democms_cache'
+
+
 
 application:
   title: Demo CMS

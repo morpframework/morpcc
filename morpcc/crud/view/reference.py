@@ -44,12 +44,18 @@ def _term_search(context, request):
     )
     col = typeinfo["collection_factory"](request)
     filters = get_filters(request.GET)
-    objs = col.search(
-        query=rulez.and_({"field": term_field, "operator": "~", "value": term}, filters)
-    )
+    if filters:
+        objs = col.search(
+            query=rulez.and_(
+                {"field": term_field, "operator": "~", "value": term}, filters
+            )
+        )
+    else:
+        objs = col.search(query={"field": term_field, "operator": "~", "value": term})
     result = {"results": []}
     for obj in objs:
-        if permits(request, obj, crudperms.View):
+        allowed = permits(request, obj, crudperms.View)
+        if allowed:
             result["results"].append({"id": obj[value_field], "text": obj[term_field]})
     return result
 
