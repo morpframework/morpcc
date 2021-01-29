@@ -1,3 +1,4 @@
+import importlib
 from collections import OrderedDict
 from time import time
 
@@ -23,7 +24,39 @@ def rule_from_config(request, key, default=True):
     return value
 
 
-def eval_permissions(request, model, permissions, identity):
+def eval_config_grouppermissions(request, model, permission, identity):
+    usercol = request.get_collection("morpfw.pas.user")
+    user = usercol.get_by_userid(identity.userid)
+    config = request.app.get_config("morpcc.authz.group_permissions", {})
+    for g in user.groups():
+        group_conf = config.get(g["groupname"], {})
+        if not group_conf:
+            continue
+
+        model_conf = None
+        for model_name in group_conf.keys():
+            model_klass = import_name(model_name)
+            if isinstance(model, model_klass):
+                model_conf = group_conf[model_name]
+                break
+
+        if not model_conf:
+            continue
+
+        for permission_name in model_conf.keys():
+            perm_klass = import_name(permission_name)
+            if issubclass(permission, perm_klass) or permission == perm_klass:
+                return model_conf[permission_name]
+    return None
+
+
+def import_name(name):
+    modname, objname = name.split(":")
+    mod = importlib.import_module(modname)
+    return getattr(mod, objname)
+
+
+def eval_permissions(request, model, permission, permissions, identity):
     usercol = request.get_collection("morpfw.pas.user")
     user = usercol.get_by_userid(identity.userid)
 
@@ -38,6 +71,16 @@ def eval_permissions(request, model, permissions, identity):
     else:
         is_creator = False
     for perm in sorted(permissions, key=lambda x: 0 if x["rule"] == "reject" else 1):
+        model_klass = perm.model_class()
+        perm_klass = perm.permission_class()
+
+        if not isinstance(model, model_klass):
+            continue
+
+        if (not issubclass(permission, perm_klass)) and (
+            not (permission == perm_klass)
+        ):
+            continue
 
         if is_creator and perm["is_creator"]:
             if perm["rule"] == "allow":
@@ -79,7 +122,8 @@ def rule_from_assignment(request, model, permission, identity):
         ret = _rule_from_assignment(request, model, permission, identity)
         return ret
 
-    return cache.get(cache_key, createfunc=create)
+    # return cache.get(cache_key, createfunc=create)
+    return create()
 
 
 def _rule_from_assignment(request, model, permission, identity):
@@ -88,6 +132,10 @@ def _rule_from_assignment(request, model, permission, identity):
     user = usercol.get_by_userid(identity.userid)
     if user["is_administrator"]:
         return True
+
+    config_perm = eval_config_grouppermissions(request, model, permission, identity)
+    if config_perm is not None:
+        return config_perm
     pcol = request.get_collection("morpcc.permissionassignment")
 
     user_roles = []
@@ -103,19 +151,9 @@ def _rule_from_assignment(request, model, permission, identity):
         return resolved
 
     # find global/site permission
-    model_hierarchy = []
-    for klass in model.__class__.__mro__:
-        model_name = "%s:%s" % (klass.__module__, klass.__name__)
-        model_hierarchy.append(model_name)
-
-    for model_name in model_hierarchy:
-        found_perms = []
-        for perm in pcol.lookup_permission(model_name, permission_name, True):
-            found_perms.append(perm)
-
-        res = eval_permissions(request, model, found_perms, identity)
-        if res is not None:
-            return res
+    res = eval_permissions(request, model, permission, pcol.all_enabled(), identity)
+    if res is not None:
+        return res
 
     return False
 

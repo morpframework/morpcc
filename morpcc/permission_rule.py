@@ -42,6 +42,6 @@ def resolve_model_permission(request, model, permission, identity):
         ):
             found_perms.append(perm)
 
-        res = eval_permissions(request, model, found_perms, identity)
+        res = eval_permissions(request, model, permission, found_perms, identity)
         if res is not None:
             return res
