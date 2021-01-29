@@ -307,10 +307,12 @@ def datatable_search(
     try:
         objs = collection.search(
             query=search, limit=data["length"], offset=data["start"], order_by=order_by,
+            secure=True
         )
     except NotImplementedError:
         objs = collection.search(
-            limit=data["length"], offset=data["start"], order_by=order_by
+            limit=data["length"], offset=data["start"], order_by=order_by,
+            secure=True
         )
     total = collection.aggregate(
         query=data["filter"], group={"count": {"function": "count", "field": "uuid"}}
