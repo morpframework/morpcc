@@ -122,8 +122,8 @@ def rule_from_assignment(request, model, permission, identity):
         ret = _rule_from_assignment(request, model, permission, identity)
         return ret
 
-    # return cache.get(cache_key, createfunc=create)
-    return create()
+    return cache.get(cache_key, createfunc=create)
+    # return create()
 
 
 def _rule_from_assignment(request, model, permission, identity):
