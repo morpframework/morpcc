@@ -3,7 +3,11 @@
 <metal:master metal:use-macro="load_template('master/page.pt').macros.master">
 
     <body>
-
+        <div metal:fill-slot="page-actions">
+            <metal:slot fill-slot="panel-title-content">
+                <metal:buttons use-macro="load_template('master/crud/macros.pt').macros.action_buttons" />
+            </metal:slot>
+        </div>
         <div metal:fill-slot="page-body">
             <div class="row">
                 <tal:block

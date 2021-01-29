@@ -9,6 +9,7 @@
                 <h2>
                     <metal:slot define-slot="panel-title">Panel Title</metal:slot>
                 </h2>
+
                 <ul class="nav navbar-right panel_toolbox">
                     <metal:slot define-slot="panel-toolbox">
                     </metal:slot>
@@ -19,6 +20,11 @@
                         </a>
                     </li>
                 </ul>
+
+                <div class="pull-right">
+                    <metal:slot define-slot="panel-buttons">
+                    </metal:slot>
+                </div>
                 <div class="clearfix"></div>
             </div>
             <div class="x_content" tal:define="collapse_panel collapse_panel|nothing"
