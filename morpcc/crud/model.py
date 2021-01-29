@@ -126,6 +126,8 @@ class CollectionUI(object):
             title = field.metadata.get("title", default_title)
             columns.append({"title": title, "name": n})
 
+        columns.append({"title": "Actions", "name": "structure:buttons"})
+
         for n, field in self.collection.schema.__dataclass_fields__.items():
             if n in morpfw.Schema.__dataclass_fields__.keys():
                 continue
@@ -138,7 +140,6 @@ class CollectionUI(object):
                 title = bref.get_title(self.request)
                 columns.append({"title": title, "name": "backreference:%s" % bref.name})
 
-        columns.append({"title": "Actions", "name": "structure:buttons"})
         return columns
 
     @property
