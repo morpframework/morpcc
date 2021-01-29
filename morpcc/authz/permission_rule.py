@@ -71,11 +71,9 @@ def eval_permissions(request, model, permission, permissions, identity):
     else:
         is_creator = False
     for perm in sorted(permissions, key=lambda x: 0 if x["rule"] == "reject" else 1):
-        model_klass = perm.model_class()
-        perm_klass = perm.permission_class()
-
-        if not isinstance(model, model_klass):
+        if not perm.match(model):
             continue
+        perm_klass = perm.permission_class()
 
         if (not issubclass(permission, perm_klass)) and (
             not (permission == perm_klass)
@@ -87,6 +85,7 @@ def eval_permissions(request, model, permission, permissions, identity):
                 return True
             else:
                 return False
+
         if identity.userid in (perm["users"] or []):
             if perm["rule"] == "allow":
                 return True
@@ -110,6 +109,16 @@ def eval_permissions(request, model, permission, permissions, identity):
 
 
 def rule_from_assignment(request, model, permission, identity):
+    usercol = request.get_collection("morpfw.pas.user")
+    user = usercol.get_by_userid(identity.userid)
+    if user["is_administrator"]:
+        return True
+
+    config_perm = eval_config_grouppermissions(request, model, permission, identity)
+    if config_perm is not None:
+        return config_perm
+
+    # looking up permission from permission assignment is expensive. cache!
     cache = request.cache.get_cache("morpcc.permission_rule", expire=3600)
     permission_name = "%s:%s" % (permission.__module__, permission.__name__,)
     model_name = "%s:%s" % (model.__class__.__module__, model.__class__.__name__)
@@ -127,22 +136,8 @@ def rule_from_assignment(request, model, permission, identity):
 
 
 def _rule_from_assignment(request, model, permission, identity):
-    permission_name = "%s:%s" % (permission.__module__, permission.__name__,)
-    usercol = request.get_collection("morpfw.pas.user")
-    user = usercol.get_by_userid(identity.userid)
-    if user["is_administrator"]:
-        return True
 
-    config_perm = eval_config_grouppermissions(request, model, permission, identity)
-    if config_perm is not None:
-        return config_perm
     pcol = request.get_collection("morpcc.permissionassignment")
-
-    user_roles = []
-    for gid, roles in user.group_roles().items():
-        for role in roles:
-            role_ref = "%s::%s" % (gid, role)
-            user_roles.append(role_ref)
 
     resolved = request.app.resolve_permissionassignment(
         request, model, permission, identity

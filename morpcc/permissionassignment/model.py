@@ -28,6 +28,9 @@ class PermissionAssignmentModel(morpfw.Model):
         mod = importlib.import_module(modname)
         return getattr(mod, objname)
 
+    def match(self, obj):
+        return isinstance(obj, self.model_class())
+
 
 class PermissionAssignmentCollection(morpfw.Collection):
     schema = PermissionAssignmentSchema
