@@ -186,9 +186,20 @@ def _dt_result_render(context, request, columns, objs):
         fs = formschema()
         fs = fs.bind(context=o, request=request)
         form = deform.Form(fs)
+        brefs = o.backreferences()
         for c in columns:
             if c["name"].startswith("structure:"):
                 row.append(context.get_structure_column(o, request, c["name"]))
+            elif c["name"].startswith("backreference:"):
+                brefname = c["name"].replace("backreference:", "")
+                brefdata = o.resolve_backreference(brefs[brefname])
+                if brefdata:
+                    row.append(
+                        '<a href="%s">%s</a>'
+                        % (request.link(brefdata[0].ui()), brefdata[0].title())
+                    )
+                else:
+                    row.append("")
             else:
                 field = form[c["name"]]
                 value = o.data[c["name"]]

@@ -133,6 +133,11 @@ class CollectionUI(object):
             title = field.metadata.get("title", default_title)
             columns.append({"title": title, "name": n})
 
+        for bref in self.collection.schema.__backreferences__:
+            if bref.single_reference:
+                title = bref.get_title(self.request)
+                columns.append({"title": title, "name": "backreference:%s" % bref.name})
+
         columns.append({"title": "Actions", "name": "structure:buttons"})
         return columns
 
