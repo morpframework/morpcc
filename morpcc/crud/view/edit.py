@@ -21,6 +21,9 @@ from ..model import CollectionUI, ModelUI
 def edit(context, request):
     if not context.update_view_enabled:
         raise HTTPNotFound()
+    if not context.model.is_editable():
+        request.notify("warning", "Readonly", "Object in readonly state")
+        return morepath.redirect(request.link(context))
     formschema = dc2colander.convert(
         context.model.schema,
         request=request,
@@ -60,6 +63,9 @@ def modal_edit(context, request):
 def process_edit(context, request):
     if not context.update_view_enabled:
         raise HTTPNotFound()
+    if not context.model.is_editable():
+        request.notify("warning", "Readonly", "Object in readonly state")
+        return morepath.redirect(request.link(context))
     formschema = dc2colander.convert(
         context.model.schema,
         request=request,
@@ -130,6 +136,10 @@ def modal_process_edit(context, request):
 def xattredit(context, request):
     if not context.update_view_enabled:
         raise HTTPNotFound()
+    if not context.model.is_editable():
+        request.notify("warning", "Readonly", "Object in readonly state")
+        return morepath.redirect(request.link(context))
+
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
         xattrformschema = dc2colander.convert(
@@ -167,6 +177,10 @@ def modal_xattredit(context, request):
 def process_xattredit(context, request):
     if not context.update_view_enabled:
         raise HTTPNotFound()
+    if not context.model.is_editable():
+        request.notify("warning", "Readonly", "Object in readonly state")
+        return morepath.redirect(request.link(context))
+
     xattrprovider = context.model.xattrprovider()
     if xattrprovider:
         xattrformschema = dc2colander.convert(
