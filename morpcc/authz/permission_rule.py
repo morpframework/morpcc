@@ -10,6 +10,7 @@ from morpfw.authz.pas import APIKeyModel, CurrentUserModel, UserModel
 from morpfw.crud import permission as crudperms
 from morpfw.crud.model import Collection, Model
 from morpfw.permission import All
+from morpfw.permission_rule import eval_config_groupperms
 
 from ..crud.model import CollectionUI, ModelUI
 from ..util import permits
@@ -22,32 +23,6 @@ def rule_from_config(request, key, default=True):
     app = request.app
     value = app.get_config(key, default)
     return value
-
-
-def eval_config_grouppermissions(request, model, permission, identity):
-    usercol = request.get_collection("morpfw.pas.user")
-    user = usercol.get_by_userid(identity.userid)
-    config = request.app.get_config("morpcc.authz.group_permissions", {})
-    for g in user.groups():
-        group_conf = config.get(g["groupname"], {})
-        if not group_conf:
-            continue
-
-        model_conf = None
-        for model_name in group_conf.keys():
-            model_klass = import_name(model_name)
-            if isinstance(model, model_klass):
-                model_conf = group_conf[model_name]
-                break
-
-        if not model_conf:
-            continue
-
-        for permission_name in model_conf.keys():
-            perm_klass = import_name(permission_name)
-            if issubclass(permission, perm_klass) or permission == perm_klass:
-                return model_conf[permission_name]
-    return None
 
 
 def import_name(name):
@@ -114,7 +89,7 @@ def rule_from_assignment(request, model, permission, identity):
     if user["is_administrator"]:
         return True
 
-    config_perm = eval_config_grouppermissions(request, model, permission, identity)
+    config_perm = eval_config_groupperms(request, model, permission, identity)
     if config_perm is not None:
         return config_perm
 
@@ -153,11 +128,6 @@ def _rule_from_assignment(request, model, permission, identity):
     return False
 
 
-@Policy.permission_rule(model=UserCollection, permission=authperm.Register)
-def allow_api_registration(identity, model, permission):
-    return model.request.app.get_config("morpfw.new_registration.enabled", True)
-
-
 @Policy.permission_rule(model=Collection, permission=All)
 def collection_permission(identity, model, permission):
     return rule_from_assignment(model.request, model, permission, identity)
@@ -177,41 +147,3 @@ def modelui_permission(identity, model, permission):
 def model_permission(identity, model, permission):
     return rule_from_assignment(model.request, model, permission, identity)
 
-
-def currentuser_permission(identity, model, permission):
-    request = model.request
-    usercol = request.get_collection("morpfw.pas.user")
-    user = usercol.get_by_userid(identity.userid)
-    if user["is_administrator"]:
-        return True
-    userid = identity.userid
-    if isinstance(model, UserModel):
-        if model.userid == userid:
-            return True
-    elif isinstance(model, APIKeyModel):
-        if model["userid"] == userid:
-            return True
-
-    return rule_from_assignment(
-        request=model.request, model=model, permission=permission, identity=identity
-    )
-
-
-@Policy.permission_rule(model=UserModel, permission=crudperms.All)
-def allow_user_crud(identity, model, permission):
-    return currentuser_permission(identity, model, permission)
-
-
-@Policy.permission_rule(model=UserModel, permission=authperm.ChangePassword)
-def allow_change_password(identity, model, permission):
-    return currentuser_permission(identity, model, permission)
-
-
-@Policy.permission_rule(model=CurrentUserModel, permission=authperm.ChangePassword)
-def allow_self_change_password(identity, model, permission):
-    return currentuser_permission(identity, model, permission)
-
-
-@Policy.permission_rule(model=APIKeyModel, permission=crudperms.All)
-def allow_apikey_management(identity, model, permission):
-    return currentuser_permission(identity, model, permission)
