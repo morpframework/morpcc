@@ -235,11 +235,21 @@ def statemachine(context, request):
     transition = request.POST.get("transition", None)
     sm = context.model.statemachine()
     if transition:
-        attr = getattr(sm, transition, None)
-        if attr:
-            attr()
+        transition_callable = getattr(sm, transition, None)
+
+        if transition_callable and (transition not in sm.get_triggers()):
+            request.notify(
+                "error",
+                "Transition not allowed",
+                'Transition "%s" is not allowed' % transition,
+            )
+            return morepath.redirect(request.link(context))
+
+        if transition_callable:
+            transition_callable()
             request.notify("success", "State updated", "Object state have been updated")
             return morepath.redirect(request.link(context))
+
     request.notify(
         "error", "Unknown transition", 'Transition "%s" is unknown' % transition
     )

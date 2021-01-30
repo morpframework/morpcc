@@ -61,13 +61,7 @@ class ModelUI(object):
     def transitions(self):
         sm = self.model.statemachine()
         if sm:
-            return list(
-                [
-                    i
-                    for i in sm._machine.get_triggers(sm.state)
-                    if not i.startswith("to_")
-                ]
-            )
+            return sm.get_triggers()
         return []
 
     def __getitem__(self, key):
