@@ -114,10 +114,12 @@
             </div>
 
             <div class="row" tal:repeat="ref references">
-                <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-md-12 col-lg-12" tal:condition="ref['content']|nothing">
                     <div metal:use-macro="load_template('master/panel.pt').macros.panel"
                         tal:define="collapse_panel True">
-                        <h2 metal:fill-slot="panel-title">${ ref['title'] }</h2>
+                        <h2 metal:fill-slot="panel-title">
+                            <a href="${request.link(ref['content'])}">${ ref['title']}</a>
+                        </h2>
                         <div metal:fill-slot="panel-content">
                             <div
                                 tal:replace="structure:ref['form'].render(ref['form_data'], request=request, context=ref['content'], readonly=True)">
@@ -128,10 +130,12 @@
             </div>
 
             <div class="row" tal:repeat="sbref single_backreferences">
-                <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-md-12 col-lg-12" tal:condition="sbref['content']|nothing">
                     <div metal:use-macro="load_template('master/panel.pt').macros.panel"
                         tal:define="collapse_panel True">
-                        <h2 metal:fill-slot="panel-title">${sbref['title']}
+                        <h2 metal:fill-slot="panel-title"> <a href="${request.link(sbref['content'])}">
+                                ${sbref['title']} &raquo;
+                            </a>
                         </h2>
                         <div metal:fill-slot="panel-content">
                             <div tal:condition="sbref['content']|nothing"
