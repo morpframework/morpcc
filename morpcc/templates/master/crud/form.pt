@@ -12,6 +12,11 @@
                     <ul>
                         <metal:slot fill-slot="panel-toolbox">
                             <metal:macro define-macro="toolbox">
+                                <li tal:condition="context.model.statemachine()">
+                                    <span class="label-wrapper">
+                                        <span class="label label-primary">${context.model.state_title()}</span>
+                                    </span>
+                                </li>
                             </metal:macro>
                         </metal:slot>
                     </ul>

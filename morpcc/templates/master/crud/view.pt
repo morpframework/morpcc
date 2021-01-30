@@ -118,8 +118,15 @@
                     <div metal:use-macro="load_template('master/panel.pt').macros.panel"
                         tal:define="collapse_panel True">
                         <h2 metal:fill-slot="panel-title">
-                            <a href="${request.link(ref['content'])}">${ ref['title']}</a>
+                            <a href="${request.link(ref['content'])}">${ ref['title']} &raquo;</a>
                         </h2>
+                        <metal:slot fill-slot="panel-toolbox">
+                            <li tal:condition="ref['content'].model.statemachine()">
+                                <span class="label-wrapper"><span
+                                        class="label label-primary">${ref['content'].model.state_title()}</span>
+                                </span>
+                            </li>
+                        </metal:slot>
                         <div metal:fill-slot="panel-content">
                             <div
                                 tal:replace="structure:ref['form'].render(ref['form_data'], request=request, context=ref['content'], readonly=True)">
@@ -137,6 +144,14 @@
                                 ${sbref['title']} &raquo;
                             </a>
                         </h2>
+                        <metal:slot fill-slot="panel-toolbox">
+                            <li tal:condition="sbref['content'].model.statemachine()">
+
+                                <span class="label-wrapper"><span
+                                        class="label label-primary">${sbref['content'].model.state_title()}</span>
+                                </span>
+                            </li>
+                        </metal:slot>
                         <div metal:fill-slot="panel-content">
                             <div tal:condition="sbref['content']|nothing"
                                 tal:replace="structure:sbref['form'].render(sbref['form_data'], request=request, context=sbref['content'], readonly=True)">

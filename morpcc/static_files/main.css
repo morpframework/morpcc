@@ -10,6 +10,12 @@ form p a {
     color: #fff;
 }
 
+.panel_toolbox .label-wrapper {
+    display: block;
+    padding:5px;
+}
+
+
 .alert small.error-msg-detail {
     color: white;
 }
