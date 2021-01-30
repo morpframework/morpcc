@@ -187,6 +187,12 @@ def _dt_result_render(context, request, columns, objs):
         fs = fs.bind(context=o, request=request)
         form = deform.Form(fs)
         brefs = o.backreferences()
+        if not request.permits(o, crudperms.View):
+            for c in columns:
+                row.append("<i>Restricted</i>")
+            rows.append(row)
+            continue
+
         for c in columns:
             if c["name"].startswith("structure:"):
                 row.append(context.get_structure_column(o, request, c["name"]))
@@ -307,12 +313,10 @@ def datatable_search(
     try:
         objs = collection.search(
             query=search, limit=data["length"], offset=data["start"], order_by=order_by,
-            secure=True
         )
     except NotImplementedError:
         objs = collection.search(
             limit=data["length"], offset=data["start"], order_by=order_by,
-            secure=True
         )
     total = collection.aggregate(
         query=data["filter"], group={"count": {"function": "count", "field": "uuid"}}

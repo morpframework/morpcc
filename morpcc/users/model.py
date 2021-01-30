@@ -27,11 +27,11 @@ class UserCollectionUI(CollectionUI):
     create_view_enabled = True
 
     columns = [
-        {"title": "Username", "name": "username"},
         {"title": "Created", "name": "created"},
-        {"title": "State", "name": "state"},
-        {"title": "Source", "name": "source"},
         {"title": "Actions", "name": "structure:buttons"},
+        {"title": "State", "name": "structure:state"},
+        {"title": "Username", "name": "username"},
+        {"title": "Source", "name": "source"},
     ]
 
 
