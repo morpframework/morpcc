@@ -1,4 +1,4 @@
-0.1.0a8 (unreleased)
+0.1.0a8 (2021-01-31)
 --------------------
 
 - Reference widget can now filter by selection from different field
