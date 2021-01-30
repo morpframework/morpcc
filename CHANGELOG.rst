@@ -1,7 +1,14 @@
 0.1.0a8 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Reference widget can now filter by selection from different field
+- relocate `/api/v1/` to `/api`
+- improvement in permission rule resolution
+- fixed permission inheritance
+- utilize config based permission rule configuration from morpfw
+- added default permissions for notifications
+- added default permissions for site root
+- automatically activate user if no email verification needed
 
 
 0.1.0a7 (2021-01-27)
