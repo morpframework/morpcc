@@ -12,6 +12,16 @@ def get_type_column(model, request, name):
     return str(model.__class__.__name__)
 
 
+@App.structure_column(model=Model, name="state")
+def get_state_column(model, request, name):
+    return (
+        '<span class="label-wrapper">'
+        '<span class="label label-primary">'
+        "%s"
+        "</span></span>"
+    ) % model.state_title()
+
+
 @App.structure_column(model=Model, name="object_string")
 def get_objectstring_column(model, request, name):
     return html.escape(str(model))

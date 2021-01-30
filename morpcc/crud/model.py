@@ -122,6 +122,13 @@ class CollectionUI(object):
 
         columns.append({"title": "Actions", "name": "structure:buttons"})
 
+        typeinfo = self.request.app.get_typeinfo_by_schema(
+            self.collection.schema, self.request
+        )
+        model_class = typeinfo.get("model", None)
+        if self.request.app.get_statemachine_factory(model_class):
+            columns.append({"title": "State", "name": "structure:state"})
+
         for n, field in self.collection.schema.__dataclass_fields__.items():
             if n in morpfw.Schema.__dataclass_fields__.keys():
                 continue
