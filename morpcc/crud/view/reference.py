@@ -7,6 +7,7 @@ import rulez
 from morpfw.crud import permission as crudperms
 
 from ...app import App
+from ...permission import ViewHome
 from ...root import Root
 from ...util import permits
 from ..model import CollectionUI, ModelUI
@@ -60,6 +61,6 @@ def _term_search(context, request):
     return result
 
 
-@App.json(model=Root, name="term-search", permission=crudperms.View)
+@App.json(model=Root, name="term-search", permission=ViewHome)
 def root_term_search(context, request):
     return _term_search(context, request)
