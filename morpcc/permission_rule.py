@@ -8,12 +8,25 @@ from morpcc.authz import rule_from_assignment
 from .app import App
 from .authz.permission_rule import eval_permissions
 from .crud.model import CollectionUI, ModelUI
+from .permission import EditOwnProfile, SiteSearch, ViewHome
 from .root import Root
 from .users.model import CurrentUserModelUI
 
 
 @App.permission_rule(model=Root, permission=MFWAll)
 def root_view_permission(identity, model, permission):
+    request = model.request
+    users = request.get_collection("morpfw.pas.user")
+    user = users.get_by_userid(identity.userid)
+    if user["is_administrator"]:
+        return True
+
+    if (
+        issubclass(permission, EditOwnProfile)
+        or issubclass(permission, SiteSearch)
+        or issubclass(permission, ViewHome)
+    ):
+        return True
     return rule_from_assignment(model.request, model, permission, identity)
 
 
