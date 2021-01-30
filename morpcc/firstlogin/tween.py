@@ -11,7 +11,18 @@ EXCLUDE_PATHS = ["/logout", "/send-verification", "/verify"]
 def make_tween(app, handler):
     verify_email = app.get_config("morpcc.registration_verify_email", False)
     if not verify_email:
-        return handler
+
+        def activate_user(request):
+            userid = request.identity.userid
+            if userid:
+                col = request.get_collection("morpfw.pas.user")
+                userobj = col.get_by_userid(userid)
+                if userobj["state"] == "new":
+                    sm = userobj.statemachine()
+                    sm.initialize()
+            return handler(request)
+
+        return activate_user
 
     def redirect_to_firstlogin(request: morepath.Request):
         for path in EXCLUDE_PREFIXES:
@@ -24,7 +35,7 @@ def make_tween(app, handler):
 
         userid = request.identity.userid
         if userid:
-            col = get_user_collection(request)
+            col = request.get_collection("morpfw.pas.user")
             userobj = col.get_by_userid(userid)
             if userobj["state"] == "new" and not request.path.startswith("/firstlogin"):
                 resp = morepath.redirect(request.relative_url("/firstlogin"))
