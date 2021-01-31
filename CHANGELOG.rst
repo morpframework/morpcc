@@ -1,4 +1,4 @@
-0.1.0a9 (unreleased)
+0.1.0a9 (2021-01-31)
 --------------------
 
 - hide reference panel if no permission to view
