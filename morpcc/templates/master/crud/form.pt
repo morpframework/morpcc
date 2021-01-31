@@ -14,7 +14,8 @@
                             <metal:macro define-macro="toolbox">
                                 <li tal:condition="context.model.statemachine()">
                                     <span class="label-wrapper">
-                                        <span class="label label-primary">${context.model.state_title()}</span>
+                                        <span
+                                            class="label label-primary state-${context.model.state()}">${context.model.state_title()}</span>
                                     </span>
                                 </li>
                             </metal:macro>

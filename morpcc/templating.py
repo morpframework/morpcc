@@ -3,12 +3,12 @@ import json
 import os
 from importlib import import_module
 
-from pkg_resources import resource_filename
-
 import morepath
 import morpfw
-from deform import Form
 from morepath.publish import resolve_model
+from pkg_resources import resource_filename
+
+from deform import Form
 
 from .app import App
 from .root import Root

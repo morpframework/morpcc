@@ -57,7 +57,8 @@
                                 <tbody>
                                 </tbody>
                             </table>
-                            <div tal:condition="context.create_view_enabled">
+                            <div
+                                tal:condition="context.create_view_enabled and permits('morpfw.crud.permission:Create')">
                                 <a class="modal-link" tal:attributes="data-url request.link(context, '+modal-create')"
                                     href="#">
                                     <button class="btn btn-primary">

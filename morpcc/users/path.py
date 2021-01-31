@@ -1,3 +1,4 @@
+from morpfw.authn.pas.user.model import CurrentUserModel
 from morpfw.authn.pas.user.path import get_user, get_user_collection
 
 from ..app import App
@@ -32,4 +33,6 @@ def get_current_user_model_ui(request):
     user = col.get_by_userid(userid)
     if user is None:
         return None
-    return CurrentUserModelUI(request, user, UserCollectionUI(request, col))
+
+    current_user = CurrentUserModel(request, col, user.data.data)
+    return CurrentUserModelUI(request, current_user, UserCollectionUI(request, col))

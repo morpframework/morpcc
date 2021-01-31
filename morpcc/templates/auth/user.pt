@@ -13,9 +13,9 @@
     <body>
 
         <div metal:fill-slot="page-actions">
-            <a href="${request.link(context,'+edit')}" class="btn btn-default">
-                <i class="fa fa-edit"></i> Edit Profile
-            </a>
+            <metal:slot fill-slot="panel-title-content">
+                <metal:buttons use-macro="load_template('master/crud/macros.pt').macros.action_buttons" />
+            </metal:slot>
         </div>
         <div metal:fill-slot="page-body" class="row">
             <div metal:use-macro="load_template('master/panel.pt').macros.panel">

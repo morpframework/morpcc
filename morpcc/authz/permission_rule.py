@@ -10,7 +10,7 @@ from morpfw.authz.pas import APIKeyModel, CurrentUserModel, UserModel
 from morpfw.crud import permission as crudperms
 from morpfw.crud.model import Collection, Model
 from morpfw.permission import All
-from morpfw.permission_rule import eval_config_groupperms
+from morpfw.permission_rule import currentuser_permission, eval_config_groupperms
 
 from ..crud.model import CollectionUI, ModelUI
 from ..util import permits
@@ -146,4 +146,14 @@ def modelui_permission(identity, model, permission):
 @Policy.permission_rule(model=Model, permission=All)
 def model_permission(identity, model, permission):
     return rule_from_assignment(model.request, model, permission, identity)
+
+
+@Policy.permission_rule(model=CurrentUserModel, permission=All)
+def profile_permission(identity, model, permission):
+    return currentuser_permission(identity, model, permission)
+
+
+@Policy.permission_rule(model=UserModel, permission=All)
+def user_permission(identity, model, permission):
+    return currentuser_permission(identity, model, permission)
 

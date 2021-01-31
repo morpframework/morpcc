@@ -16,10 +16,10 @@ def get_type_column(model, request, name):
 def get_state_column(model, request, name):
     return (
         '<span class="label-wrapper">'
-        '<span class="label label-primary">'
+        '<span class="label label-primary state-%s">'
         "%s"
         "</span></span>"
-    ) % model.state_title()
+    ) % (model.state(), model.state_title())
 
 
 @App.structure_column(model=Model, name="object_string")

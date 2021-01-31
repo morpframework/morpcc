@@ -51,6 +51,8 @@ class Portlet(object):
         portletdata = self.factory(context, request)
 
         def _permits(permission, request=request, context=context):
+            if isinstance(context, str):
+                context = request.resolve_path(context)
             return permits(request, context, permission)
 
         if self.permission and not permits(request, context, self.permission):

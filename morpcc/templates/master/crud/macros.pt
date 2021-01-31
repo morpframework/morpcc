@@ -1,16 +1,16 @@
 <metal:macro define-macro="action_buttons">
     <div class="btn-group" tal:define="has_xattr context.model.xattrprovider()">
-        <a class="btn btn-default" condition="permits('morpfw.crud.permission:View')"
+        <a class="btn btn-default" tal:condition="permits('morpfw.crud.permission:View')"
             tal:attributes="href request.link(context, '+%s' % context.default_view)">
             <i data-toggle="tooltip" data-placement="top" data-original-title="View" class="fa fa-eye"></i>
         </a>
 
-        <a class="btn btn-default" condition="permits('morpfw.crud.permission:Edit') and not has_xattr"
+        <a class="btn btn-default" tal:condition="permits('morpfw.crud.permission:Edit') and not has_xattr"
             tal:attributes="href request.link(context, '+edit')">
             <i data-toggle="tooltip" data-placement="top" data-original-title="Edit" class="fa fa-edit"></i>
         </a>
 
-        <div class="btn-group" condition="permits('morpfw.crud.permission:Edit')" tal:condition="has_xattr">
+        <div class="btn-group" tal:condition="permits('morpfw.crud.permission:Edit') and has_xattr">
 
             <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                 <i data-toggle="tooltip" data-placement="top" data-original-title="Edit" class="fa fa-edit"></i>

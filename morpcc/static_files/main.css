@@ -215,3 +215,14 @@ table.dataTable>tbody>tr.child span.dtr-title {
 #notification-listing .batch-items .x_panel.read {
     background: #fff;
 }
+
+
+/* states */
+
+.label.state-approved {
+    background-color: #556b2f;
+}
+
+.label.state-new {
+    background-color:#ff8c00;
+}

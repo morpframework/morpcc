@@ -6,9 +6,9 @@
         </a>
         <ul class="dropdown-menu dropdown-usermenu pull-right">
             <li>
-                <a tal:attributes="href request.relative_url('/profile')"> Profile</a>
+                <a tal:attributes="href request.relative_url('/profile')">Profile</a>
             </li>
-            <li>
+            <li tal:condition="permits('morpcc.permission:ManageSite', context='/')">
                 <a tal:attributes="href request.relative_url('/+site-settings')">
                     <span>Settings</span>
                 </a>
