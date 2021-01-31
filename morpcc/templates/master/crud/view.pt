@@ -114,51 +114,58 @@
             </div>
 
             <div class="row" tal:repeat="ref references">
-                <div class="col-xs-12 col-md-12 col-lg-12" tal:condition="ref['content']|nothing">
-                    <div metal:use-macro="load_template('master/panel.pt').macros.panel"
-                        tal:define="collapse_panel True">
-                        <h2 metal:fill-slot="panel-title">
-                            <a href="${request.link(ref['content'])}">${ ref['title']} &raquo;</a>
-                        </h2>
-                        <metal:slot fill-slot="panel-toolbox">
-                            <li tal:condition="ref['content'].model.statemachine()">
-                                <span class="label-wrapper"><span
-                                        class="label label-primary">${ref['content'].model.state_title()}</span>
-                                </span>
-                            </li>
-                        </metal:slot>
-                        <div metal:fill-slot="panel-content">
-                            <div
-                                tal:replace="structure:ref['form'].render(ref['form_data'], request=request, context=ref['content'], readonly=True)">
+                <tal:block define="content ref['content']|nothing;
+                                     has_permission permits('morpcc.crud.permission.View', context=content)">
+                    <div class="col-xs-12 col-md-12 col-lg-12" tal:condition="content and has_permission">
+                        <div metal:use-macro="load_template('master/panel.pt').macros.panel"
+                            tal:define="collapse_panel True">
+                            <h2 metal:fill-slot="panel-title">
+                                <a href="${request.link(ref['content'])}">${ ref['title']} &raquo;</a>
+                            </h2>
+                            <metal:slot fill-slot="panel-toolbox">
+                                <li tal:condition="ref['content'].model.statemachine()">
+                                    <span class="label-wrapper"><span
+                                            class="label label-primary">${ref['content'].model.state_title()}</span>
+                                    </span>
+                                </li>
+                            </metal:slot>
+                            <div metal:fill-slot="panel-content">
+                                <div
+                                    tal:replace="structure:ref['form'].render(ref['form_data'], request=request, context=ref['content'], readonly=True)">
+                                </div>
                             </div>
                         </div>
+
                     </div>
-                </div>
+                </tal:block>
             </div>
 
             <div class="row" tal:repeat="sbref single_backreferences">
-                <div class="col-xs-12 col-md-12 col-lg-12" tal:condition="sbref['content']|nothing">
-                    <div metal:use-macro="load_template('master/panel.pt').macros.panel"
-                        tal:define="collapse_panel True">
-                        <h2 metal:fill-slot="panel-title"> <a href="${request.link(sbref['content'])}">
-                                ${sbref['title']} &raquo;
-                            </a>
-                        </h2>
-                        <metal:slot fill-slot="panel-toolbox">
-                            <li tal:condition="sbref['content'].model.statemachine()">
+                <tal:block define="content sbref['content']|nothing;
+                                has_permission permits('morpfw.crud.permission:View', context=content);">
+                    <div class="col-xs-12 col-md-12 col-lg-12" tal:condition="content and has_permission">
+                        <div metal:use-macro="load_template('master/panel.pt').macros.panel"
+                            tal:define="collapse_panel True">
+                            <h2 metal:fill-slot="panel-title"> <a href="${request.link(sbref['content'])}">
+                                    ${sbref['title']} &raquo;
+                                </a>
+                            </h2>
+                            <metal:slot fill-slot="panel-toolbox">
+                                <li tal:condition="sbref['content'].model.statemachine()">
 
-                                <span class="label-wrapper"><span
-                                        class="label label-primary">${sbref['content'].model.state_title()}</span>
-                                </span>
-                            </li>
-                        </metal:slot>
-                        <div metal:fill-slot="panel-content">
-                            <div tal:condition="sbref['content']|nothing"
-                                tal:replace="structure:sbref['form'].render(sbref['form_data'], request=request, context=sbref['content'], readonly=True)">
+                                    <span class="label-wrapper"><span
+                                            class="label label-primary">${sbref['content'].model.state_title()}</span>
+                                    </span>
+                                </li>
+                            </metal:slot>
+                            <div metal:fill-slot="panel-content">
+                                <div tal:condition="sbref['content']|nothing"
+                                    tal:replace="structure:sbref['form'].render(sbref['form_data'], request=request, context=sbref['content'], readonly=True)">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </tal:block>
             </div>
 
             <div class="row">
