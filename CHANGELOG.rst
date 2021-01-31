@@ -1,7 +1,12 @@
 0.1.0a9 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- hide reference panel if no permission to view
+- excluding results from datatable search creates odd pagination, 
+  show item as restricted instead
+- display state column by default if statemachine exists
+- added transition guarding capability
+- `site/+term-search` is now using `ViewHome` permission
 
 
 0.1.0a8 (2021-01-31)
