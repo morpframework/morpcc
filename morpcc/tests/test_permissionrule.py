@@ -8,7 +8,7 @@ from .democms_common import follow, get_democms_client
 def cache_test(context, request):
     userid = request.GET.get("userid", request.identity.userid)
     cache_key = str(
-        [userid, "morpcc.tests.democms.app:AppRoot", "morpcc.permission:ViewHome",]
+        [userid, "morpcc.tests.democms.app:AppRoot", "morpcc.permission:ManageSite",]
     )
     try:
         cache = request.cache.get_cache("morpcc.permission_rule", expire=3600)
@@ -18,7 +18,7 @@ def cache_test(context, request):
     return {"exists": True, "value": value}
 
 
-def test_permissionrule(pgsql_db, pgsql_db_cache):
+def test_permissionrule(pgsql_db, pgsql_db_warehouse, pgsql_db_cache):
     c = get_democms_client()
     request = c.mfw_request
 
@@ -55,7 +55,6 @@ def test_permissionrule(pgsql_db, pgsql_db_cache):
 
     # logout admin
     r = c.get("/logout")
-
     # login as user
     r = c.post(
         "/login",
@@ -67,7 +66,7 @@ def test_permissionrule(pgsql_db, pgsql_db_cache):
         },
     )
 
-    r = r.follow(expect_errors=True)
+    r = c.get("/+site-settings", expect_errors=True)
 
     assert r.status_code == 403
 
@@ -95,7 +94,7 @@ def test_permissionrule(pgsql_db, pgsql_db_cache):
         (
             ("__formid__", "deform"),
             ("model", "morpcc.root:Root"),
-            ("permission", "morpcc.permission:ViewHome"),
+            ("permission", "morpcc.permission:ManageSite"),
             ("__start__", "roles:sequence"),
             ("roles", "__default__::member"),
             ("__end__", "roles:sequence"),
@@ -121,7 +120,7 @@ def test_permissionrule(pgsql_db, pgsql_db_cache):
         },
     )
 
-    r = r.follow()
+    r = c.get("/+site-settings")
 
     # logout admin
     r = c.get("/logout")

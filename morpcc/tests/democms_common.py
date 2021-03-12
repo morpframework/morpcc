@@ -29,9 +29,8 @@ def get_democms_client():
         "morpfw.storage.sqlstorage.dburi.warehouse"
     ] = "postgresql://postgres@localhost:45678/morpcc_warehouse"
 
-    settings["configuration"][
-        "morpfw.beaker.session.url"
-    ] = "postgresql://postgres@localhost:45678/morpcc_cache"
+    settings["configuration"]["morpfw.beaker.session.type"] = "memory"
+    settings["configuration"]["morpfw.beaker.cache.type"] = "memory"
 
     test_settings = tempfile.mktemp()
     with open(test_settings, "w") as ts:
