@@ -1,4 +1,4 @@
-0.1.0a11 (unreleased)
+0.1.0a11 (2021-03-19)
 ---------------------
 
 - Fixed issue with dangling user session token after deleting user
