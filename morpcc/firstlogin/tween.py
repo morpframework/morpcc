@@ -17,7 +17,7 @@ def make_tween(app, handler):
             if userid:
                 col = request.get_collection("morpfw.pas.user")
                 userobj = col.get_by_userid(userid)
-                if userobj["state"] == "new":
+                if userobj and userobj["state"] == "new":
                     sm = userobj.statemachine()
                     sm.initialize()
             return handler(request)
@@ -37,7 +37,7 @@ def make_tween(app, handler):
         if userid:
             col = request.get_collection("morpfw.pas.user")
             userobj = col.get_by_userid(userid)
-            if userobj["state"] == "new" and not request.path.startswith("/firstlogin"):
+            if userobj and userobj["state"] == "new" and not request.path.startswith("/firstlogin"):
                 resp = morepath.redirect(request.relative_url("/firstlogin"))
                 resp.headers["Cache-Control"] = "no-store"
                 return resp

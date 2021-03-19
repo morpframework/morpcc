@@ -18,6 +18,9 @@ def root_view_permission(identity, model, permission):
     request = model.request
     users = request.get_collection("morpfw.pas.user")
     user = users.get_by_userid(identity.userid)
+    if not user:
+        return False
+
     if user["is_administrator"]:
         return True
 
