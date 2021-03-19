@@ -2,7 +2,9 @@ from ..crud.model import CollectionUI, ModelUI
 
 
 class APIKeyModelUI(ModelUI):
-    pass
+    @property
+    def view_exclude_fields(self):
+        return super().view_exclude_fields + ["api_secret"]
 
 
 class APIKeyCollectionUI(CollectionUI):
