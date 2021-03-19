@@ -22,12 +22,8 @@ class ModelUI(object):
 
     @property
     def view_exclude_fields(self) -> list:
-        protected = self.model.schema.__protected_fields__ + []
-        hidden = []
-        for fn, fo in self.model.schema.__dataclass_fields__.items():
-            if fo.metadata.get("hidden", False):
-                hidden.append(fn)
-        return protected + hidden
+        protected = self.model.schema.__protected_fields__
+        return protected.copy()
 
     @property
     def default_view(self):
