@@ -1,4 +1,4 @@
-0.1.0a10 (unreleased)
+0.1.0a10 (2021-03-19)
 ---------------------
 
 - generating api key now only show api_secret once
