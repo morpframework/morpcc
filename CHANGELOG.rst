@@ -1,7 +1,7 @@
 0.1.0a10 (unreleased)
 ---------------------
 
-- Nothing changed yet.
+- generating api key now only show api_secret once
 
 
 0.1.0a9 (2021-01-31)
