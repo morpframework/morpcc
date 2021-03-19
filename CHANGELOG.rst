@@ -1,7 +1,8 @@
 0.1.0a11 (unreleased)
 ---------------------
 
-- Nothing changed yet.
+- Fixed issue with dangling user session token after deleting user
+- Fixed implementation of api_secret hiding
 
 
 0.1.0a10 (2021-03-19)
