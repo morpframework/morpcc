@@ -9,17 +9,6 @@ from inverter import dc2colander
 class ModelUI(object):
 
     view_include_fields: list = []
-    view_exclude_fields: list = [
-        "id",
-        "uuid",
-        "creator",
-        "created",
-        "modified",
-        "state",
-        "deleted",
-        "xattrs",
-        "blobs",
-    ]
     edit_include_fields: list = []
 
     @property
@@ -31,7 +20,18 @@ class ModelUI(object):
                 noneditable.append(fn)
         return protected + noneditable
 
-    default_view = "view"
+    @property
+    def view_exclude_fields(self) -> list:
+        protected = self.model.schema.__protected_fields__ + []
+        hidden = []
+        for fn, fo in self.model.schema.__dataclass_fields__.items():
+            if fo.metadata.get("hidden", False):
+                hidden.append(fn)
+        return protected + hidden
+
+    @property
+    def default_view(self):
+        return "view"
 
     @property
     def update_view_enabled(self):

@@ -13,8 +13,10 @@ def get_user_blobstorage(model, request):
 
 
 class UserModelUI(ModelUI):
+    @property
+    def view_exclude_fields(self) -> list:
+        return super().view_exclude_fields + ["password", "nonce"]
 
-    view_exclude_fields = ModelUI.view_exclude_fields + ["password", "nonce"]
     edit_include_fields = ["email", "timezone"]
 
 
