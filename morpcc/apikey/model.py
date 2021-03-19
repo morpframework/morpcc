@@ -9,6 +9,7 @@ class APIKeyModelUI(ModelUI):
 class APIKeyCollectionUI(CollectionUI):
 
     modelui_class = APIKeyModelUI
+    create_view_enabled = True
 
     create_include_fields = ["name"]
 
