@@ -1,4 +1,4 @@
-0.1.0a12 (unreleased)
+0.1.0a12 (2021-03-22)
 ---------------------
 
 - Use dictConfig for migration logging config
