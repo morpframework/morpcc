@@ -1,7 +1,7 @@
 0.1.0a12 (unreleased)
 ---------------------
 
-- Nothing changed yet.
+- Use dictConfig for migration logging config
 
 
 0.1.0a11 (2021-03-19)
