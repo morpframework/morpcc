@@ -25,7 +25,7 @@ setup(name='morpcc',
       zip_safe=False,
       install_requires=[
           # -*- Extra requirements: -*-
-          "morpfw>=0.4.0b8<0.5.0",
+          "morpfw>=0.4.0b9<0.5.0",
           "more.chameleon",
           "more.static",
           "deform",
