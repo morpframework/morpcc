@@ -17,7 +17,7 @@ def get_user_sqlstorage(model, request, blobstorage):
     settings = request.get_collection("morpcc.setting")
     if not settings.resolve_raw("morpcc.ldap.enabled", None):
         return UserSQLStorage(request, blobstorage=blobstorage)
-    ldap_uri = settings.resolve_raw("morpcc.ldap.uri", None)
+    ldap_url = settings.resolve_raw("morpcc.ldap.url", None)
     use_tls = settings.resolve_raw("morpcc.ldap.use_tls", None)
     bind_dn = settings.resolve_raw("morpcc.ldap.bind_dn", None)
     bind_password = settings.resolve_raw("morpcc.ldap.bind_password", None)
@@ -29,7 +29,7 @@ def get_user_sqlstorage(model, request, blobstorage):
     search_scope = _scopes.get(search_scope, None)
     username_attr = settings.resolve_raw("morpcc.ldap.username_attr", None)
     email_attr = settings.resolve_raw("morpcc.ldap.email_attr", None)
-    reqcheck = [ldap_uri, bind_dn, bind_password, base_dn, search_filter, search_scope]
+    reqcheck = [ldap_url, bind_dn, bind_password, base_dn, search_filter, search_scope]
     if None in reqcheck:
         print(reqcheck)
         if not request.environ.get("morpcc.ldap.configerror.notified", False):
@@ -44,7 +44,7 @@ def get_user_sqlstorage(model, request, blobstorage):
     try:
         return LDAP3SQLUserStorage(
             request,
-            ldap_uri=ldap_uri,
+            ldap_url=ldap_url,
             base_dn=base_dn,
             bind_dn=bind_dn,
             bind_password=bind_password,

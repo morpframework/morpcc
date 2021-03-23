@@ -22,11 +22,11 @@ def get_democms_client():
         settings = yaml.load(sf, Loader=yaml.Loader)
 
     settings["configuration"][
-        "morpfw.storage.sqlstorage.dburi"
+        "morpfw.storage.sqlstorage.dburl"
     ] = "postgresql://postgres@localhost:45678/morpcc_tests"
 
     settings["configuration"][
-        "morpfw.storage.sqlstorage.dburi.warehouse"
+        "morpfw.storage.sqlstorage.dburl.warehouse"
     ] = "postgresql://postgres@localhost:45678/morpcc_warehouse"
 
     settings["configuration"]["morpfw.beaker.session.type"] = "memory"

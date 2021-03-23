@@ -22,22 +22,22 @@ def valid_ldapurl(request, schema, field, value, mode=None):
     try:
         parsed = urlparse(value)
     except:
-        return "Invalid URI"
+        return "Invalid URL"
     if parsed.scheme.lower() not in ["ldap", "ldaps"]:
-        return "Invalid URI"
+        return "Invalid URL"
 
 
 @dataclass
 class LDAPSetting(object):
 
-    ldap_uri: typing.Optional[str] = field(
+    ldap_url: typing.Optional[str] = field(
         default=None,
         metadata={
-            "title": "LDAP URI",
-            "description": "LDAP connection URI (eg: ldap://ldap.service.local)",
-            "morpcc.setting.key": "morpcc.ldap.uri",
+            "title": "LDAP URL",
+            "description": "LDAP connection URL (eg: ldap://ldap.service.local)",
+            "morpcc.setting.key": "morpcc.ldap.url",
             "required": True,
-            "validators": [valid_ldapurl]
+            "validators": [valid_ldapurl],
         },
     )
     use_tls: typing.Optional[bool] = field(
