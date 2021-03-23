@@ -1,7 +1,7 @@
 0.1.0a13 (unreleased)
 ---------------------
 
-- Nothing changed yet.
+- rename uri to url (dburl, ldap_url, blobstorage.url) (BREAKS COMPAT)
 
 
 0.1.0a12 (2021-03-22)
