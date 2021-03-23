@@ -7,9 +7,9 @@ configuration:
   morpfw.scan:
     - morpcc.tests.democms
   morpfw.authn.policy: morpcc.app:AuthnPolicy
-  morpfw.storage.sqlstorage.dburi: 'postgresql://postgres:postgres@localhost:5432/morpcc_democms'
-  morpfw.storage.sqlstorage.dburi.warehouse: 'postgresql://postgres:postgres@localhost:5432/morpcc_democms_warehouse'
-  morpfw.blobstorage.uri: 'fsblob://%(here)s/blobstorage'
+  morpfw.storage.sqlstorage.dburl: 'postgresql://postgres:postgres@localhost:5432/morpcc_democms'
+  morpfw.storage.sqlstorage.dburl.warehouse: 'postgresql://postgres:postgres@localhost:5432/morpcc_democms_warehouse'
+  morpfw.blobstorage.url: 'fsblob://%(here)s/blobstorage'
   morpfw.secret.fernet_key: ghVRZXc-6nijmxqmcn5SnkAwjdCo39hCC9cH9SSUKPE=
   morpfw.beaker.session.type: ext:database
   morpfw.beaker.session.url: 'postgresql://postgres:postgres@localhost:5432/morpcc_democms_cache'
