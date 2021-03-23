@@ -1,7 +1,7 @@
 0.1.0a14 (unreleased)
 ---------------------
 
-- Nothing changed yet.
+- added `settings.yml.tmpl` with morpcc authnpolicy
 
 
 0.1.0a13 (2021-03-23)
