@@ -1,4 +1,4 @@
-0.1.0a15 (unreleased)
+0.1.0a15 (2021-03-23)
 ---------------------
 
 - fix config generator bug (dburi vs dburl)
