@@ -5,11 +5,12 @@ from datetime import date, datetime
 from importlib import import_module
 
 import colander
-from deform.widget import HiddenWidget
 from inverter.common import dataclass_check_type, dataclass_get_type
 from morpfw.crud import permission as crudperms
 from morpfw.interfaces import ISchema
 from pkg_resources import resource_filename
+
+from deform.widget import HiddenWidget
 
 
 def permits(request, context, permission):
@@ -48,11 +49,21 @@ def validate_form(request, obj, schema, form):
     for validate in schema.__validators__:
         error_msg = validate(request, schema, validation_dict)
         if error_msg:
-            form_errors.append(error_msg)
+            if isinstance(error_msg, dict) and "fields" in error_msg:
+                for ef in error_msg["fields"]:
+                    emsg = {"field": ef, "message": error_msg["message"]}
+                    form_errors.append(emsg)
+            else:
+                form_errors.append(error_msg)
 
     if form_errors:
         form_error = colander.Invalid(form.widget, form_errors)
         form.widget.handle_error(form, form_error)
+        for fe in form_errors:
+            if "field" in fe:
+                fattr = form[fe["field"]]
+                field_error = colander.Invalid(fattr.widget, "boo")
+                fattr.widget.handle_error(fattr, "boo")
 
 
 def typeinfo_link(request, type_name):
