@@ -18,7 +18,7 @@ from .path import get_collection
 @App.html(
     model=IndexCollectionUI,
     name="schema-upgrade",
-    template="master/application/schema-upgrade.pt",
+    template="master/index/schema-upgrade.pt",
     permission=crudperm.Edit,
 )
 def schema_upgrade(context, request):
