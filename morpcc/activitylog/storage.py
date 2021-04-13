@@ -12,10 +12,13 @@ class ActivityLog(morpfw.sql.Base):
 
     userid = sa.Column(morpfw.sql.GUID())
     resource_uuid = sa.Column(morpfw.sql.GUID())
-    resource_type = sa.Column(sa.String(length=256))
+    metalink_type = sa.Column(sa.String(length=128))
+    metalink = sa.Column(sajson.JSONField())
     view_name = sa.Column(sa.String(length=128))
     source_ip = sa.Column(sa.String(length=64))
     activity = sa.Column(sa.Text())
+    request_url = sa.Column(sa.String(length=2000))
+    request_method = sa.Column(sa.String(length=12))
 
 
 class ActivityLogStorage(morpfw.SQLStorage):

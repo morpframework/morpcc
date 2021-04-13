@@ -40,15 +40,16 @@ class ActivityLogCollection(morpfw.Collection):
             userid = None
 
         link = self.request.metalink(
-            context, view_name=getattr(request, "view_name", None)
+            context
         )
         self.create(
             {
                 "userid": userid,
-                "resource_uuid": context.uuid,
-                "resource_type": "dummy",
-                "view_name": "dummy",
+                "metalink_type": link["type"],
+                "metalink": link,
                 "activity": activity,
                 "source_ip": request.client_addr,
+                "request_url": request.url,
+                'request_method': request.method
             }
         )

@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 
 import morpfw
 
+from ..deform.codewidget import JSONCodeWidget
 from ..deform.referencewidget import ReferenceWidget
 
 
@@ -19,9 +20,12 @@ class ActivityLogSchema(morpfw.Schema):
         },
     )
     source_ip: typing.Optional[str] = None
-    resource_type: typing.Optional[str] = None
-    resource_uuid: typing.Optional[str] = field(
-        default=None, metadata={"format": "uuid"}
+    resource_uuid: typing.Optional[str] = None
+    metalink_type: typing.Optional[str] = None
+    metalink: typing.Optional[dict] = field(
+        default=None, metadata={"deform.widget": JSONCodeWidget()}
     )
     view_name: typing.Optional[str] = None
     activity: typing.Optional[str] = None
+    request_url: typing.Optional[str] = None
+    request_method: typing.Optional[str] = None
