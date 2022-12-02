@@ -59,10 +59,10 @@
                             </table>
                             <div
                                 tal:condition="context.create_view_enabled and permits('morpfw.crud.permission:Create')">
-                                <a class="modal-link" tal:attributes="data-url request.link(context, '+modal-create')"
+                                <a tal:attributes="href request.link(context, '+create')"
                                     href="#">
                                     <button class="btn btn-primary">
-                                        <i class="fa fa-plus"></i>Add</button>
+                                        <i class="fa fa-plus"></i> Add</button>
                                 </a>
                             </div>
                         </div>
@@ -75,7 +75,6 @@
                     tal:define="portletprovider request.app.get_contextportletprovider(context, 'morpcc.context.after_content_body')"
                     tal:condition="portletprovider"
                     tal:replace="structure:portletprovider.render(context, request, load_template)">
-                    >
                 </tal:block>
             </div>
         </div>
