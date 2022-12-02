@@ -39,10 +39,7 @@ def create(context, request):
         form_data[f] = request.GET.get(f)
 
     return {
-        "page_title": "Create %s"
-        % html.escape(
-            str(context.collection.__class__.__name__.replace("Collection", ""))
-        ),
+        "page_title": "Create %s" % context.page_title,
         "form_title": "Create",
         "form": deform.Form(fs, buttons=("Submit",)),
         "form_data": form_data,
