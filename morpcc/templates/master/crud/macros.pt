@@ -25,12 +25,13 @@
                     <a tal:attributes="href request.link(context, '+xattredit')">
                         Edit Extended Attributes</a>
                 </li>
-                <li tal:condition="context.model.blob_fields">
-                    <a tal:attributes="href request.link(context, '+upload')">
-                        Edit File Attachments</a>
-                </li>
             </ul>
         </div>
+
+        <a class="btn btn-default" tal:condition="permits('morpfw.crud.permission:Edit') and context.model.blob_fields"
+            tal:attributes="href request.link(context, '+upload')">
+            <i data-toggle="tooltip" data-placement="top" data-original-title="Manage Attachments" class="fa fa-paperclip"></i>
+        </a>
 
         <a class="btn btn-default" tal:condition="permits('morpcc.permission:ManagePermission')"
             tal:attributes="href request.link(context, '+manage-permissions')">
