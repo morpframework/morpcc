@@ -12,6 +12,17 @@ class ModelUI(object):
     edit_include_fields: list = []
 
     @property
+    def type_title(self) -> str:
+        try:
+            typeinfo = self.request.app.get_typeinfo_by_schema(
+                schema=self.collection.schema, request=self.request
+            )
+            return typeinfo["title"]
+        except KeyError:
+            pass
+        return str(self.collection.__class__.__name__)
+
+    @property
     def edit_exclude_fields(self) -> list:
         protected = self.model.schema.__protected_fields__ + []
         noneditable = []
