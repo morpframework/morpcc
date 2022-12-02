@@ -14,7 +14,6 @@
                     tal:define="portletprovider request.app.get_contextportletprovider(context, 'morpcc.context.before_content_body')"
                     tal:condition="portletprovider"
                     tal:replace="structure:portletprovider.render(context, request, load_template)">
-                    >
                 </tal:block>
             </div>
             <div class="row">
@@ -36,7 +35,6 @@
                     tal:define="portletprovider request.app.get_contextportletprovider(context, 'morpcc.context.before_content_main')"
                     tal:condition="portletprovider"
                     tal:replace="structure:portletprovider.render(context, request, load_template)">
-                    >
                 </tal:block>
             </div>
             <div class="row">
@@ -109,7 +107,6 @@
                     tal:define="portletprovider request.app.get_contextportletprovider(context, 'morpcc.context.before_references')"
                     tal:condition="portletprovider"
                     tal:replace="structure:portletprovider.render(context, request, load_template)">
-                    >
                 </tal:block>
             </div>
 
